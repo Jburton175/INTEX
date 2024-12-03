@@ -163,12 +163,15 @@ app.post('/addVolunteer', (req, res) => {
         })
         .then(() => {
             console.log('Form submitted successfully!');
-            res.redirect('login'); 
+            console.log('Request body:', req.body);
+            res.redirect('/login'); 
         })
   
         .catch(error => {
             console.error('Error adding a volunteer:', error);
+            console.log('Request body:', req.body);
             res.status(500).send('Internal Server Error');
+
         });
   });
 
