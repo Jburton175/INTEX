@@ -49,7 +49,7 @@ app.use((req, res, next) => {
 // Define route for home page
 app.get('/', (req, res) => {
 
-  res.render('/');
+  res.render('index');
 
 });
 
