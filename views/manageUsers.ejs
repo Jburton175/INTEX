@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteers</title>
+</head>
+<body>
+    <h1>All Volunteers</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Sewing Level</th>
+                <th>Hours/Month</th>
+                <th>Source</th>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (volunteers.length > 0) { %>
+                <% volunteers.forEach(row => { %>
+                    <tr>
+                        <td><%= row.vol_first_name %></td>
+                        <td><%= row.vol_last_name %></td>
+                        <td><%= row.vol_email %></td>
+                        <td><%= row.vol_phone %></td>
+                        <td><%= row.vol_city %></td>
+                        <td><%= row.vol_state %></td>
+                        <td><%= row.vol_sewing_level%></td>
+                        <td><%= row.vol_hours_per_month %></td>
+                        <td><%= row.vol_source_type%></td>
+                        <td><%= row.vol_role%></td>
+                        <td style="text-align: center;">
+                            <form action="/editVolunteer/<%= row.task_id %>" method="GET" style="display: inline;">
+                                <button type="submit">Edit</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="9">No volunteers found.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+    <div class="center-button">
+        <form action="/addVolunteer" method="GET" >
+            <button type="submit">Add Volunteer</button>
+        </form>
+    </div>
+</body>
+</html>

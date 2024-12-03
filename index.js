@@ -27,7 +27,8 @@ const knex = require("knex") ({
 })
 
 
-const excludedRoutes = ['/', '/about', "/requestEvent", '/help'];
+
+const excludedRoutes = ['/', '/about', "/requestEvent", '/help', '/addVolunteer'];
 
 // Middleware to enforce login check
 app.use((req, res, next) => {
@@ -38,7 +39,7 @@ app.use((req, res, next) => {
     
     // If security is false, render the login page
     if (!security) {
-        return res.render('/login'); // Render the login page
+        return res.render('login'); // Render the login page
     }
 
     next(); // Proceed to the requested route
@@ -48,9 +49,40 @@ app.use((req, res, next) => {
 
 // Define route for home page
 app.get('/', (req, res) => {
-
   res.render('index');
 
+});
+
+
+app.get('/login', (req, res) => {
+  res.render('login');
+
+});
+
+
+app.post('/login', async (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    try {
+        // Query the user table to find the record
+        const volunteer = await knex('volunteers')
+            .select('*')
+            .where("vol_email", username)
+            .where("password", password) // Replace with hashed password comparison in production
+            .first(); // Returns the first matching record
+
+        // Update security variable based on query result
+        if (volunteer) {
+            security = true;
+        } else {
+            security = false;
+        }
+    } catch (error) {
+        return res.status(500).send('Database query failed: ' + error.message);
+    }
+
+    res.redirect("/manageRequests");
 });
 
 
@@ -85,18 +117,96 @@ app.get('/manageRequests', (req, res) => {
       res.status(500).json({err});
   });
 })
+
+
 app.get('/addVolunteer', (req, res) => {
   res.render('addVolunteer');  // Render the EJS form template
 });
 
 // Handle form submission
-// app.post('/submit', (req, res) => {
-//   const formData = req.body;  // Access form data sent via POST
-//   console.log(formData);       // For demonstration, log the submitted data
-//   res.send('Form submitted successfully!');
-// });
+app.post('/addVolunteer', (req, res) => {
+  const firstname = req.body.firstName || '';  // Access form data sent via POST
+  const lastname = req.body.lastName || '';  
+  const email = req.body.email || '';  
+  const phone = req.body.phone || '';  
+  const password = req.body.password;  
+  const sAddress1 = req.body.address1 || '';  
+  const sAddress2 = req.body.address2 || '';  
+  const city = req.body.city || '';  
+  const state = req.body.state || '';  
+  const zip = req.body.zip || '';  
+  const source = parseInt(req.body.source) || 6;  
+  const sew_id = parseInt(req.body.sewLevel) || 1;  
+  const hours = parseInt(req.body.hours) || 0;  
+  const signup_time = new Date();  
+  // const formData = req.body;
+  // console.log(formData);
+  // console.log(formData);       // For demonstration, log the submitted data
+  res.send('Form submitted successfully!');
 
-// this is an experiment to see how git works! 
+  knex('volunteers')
+      .insert({
+          vol_first_name: firstname,
+          vol_last_name: lastname, 
+          vol_phone: phone,
+          vol_email: email,
+          vol_password: password,
+          role_id: 2,
+          vol_street_1: sAddress1,
+          vol_street_2: sAddress2,
+          vol_city: city,
+          vol_state: state.toUpperCase(),
+          vol_zip: zip,
+          source_id: source,
+          vol_signup_date: signup_time,
+          vol_sew_level_id: sew_id,
+          vol_hours_per_month: hours,
+      })
+
+      .catch(error => {
+          console.error('Error adding a volunteer:', error);
+          res.status(500).send('Internal Server Error');
+      });
+});
+
+
+
+// route for admin to view all volunteers (manageUsers page)
+app.get('manageUsers', (req, res) => {
+  knex('volunteers')
+  .join('roles', 'volunteers.role_id', '=', 'roles.role_id')
+  .join('sewing_proficiency', 'volunteers.vol_sew_level_id', '=', 'sewing_proficiency.level_id')
+  .join('vol_source', 'volunteers.source_id', '=', 'vol_source.source_id')
+  .select(
+      'volunteers.vol_id',
+      'volunteers.vol_first_name',
+      'volunteers.vol_last_name',
+      'volunteers.vol_email',
+      'volunteers.vol_phone',
+      'volunteers.password',
+      'volunteers.vol_street_1',
+      'volunteers.vol_street_2',
+      'volunteers.vol_city',
+      'volunteers.vol_state',
+      'volunteers.vol_zip',
+      'volunteers.vol_signup_date',
+      'volunteers.vol_hours_per_month',
+      'volunteers.source_id',
+      'volunteers.vol_sew_level_id',
+      'volunteers.role_id',
+      'vol_source.source_type as vol_source_type',
+      'sewing_proficiency.level as vol_sewing_level',
+      'roles.role_name as vol_role'
+  )
+  .orderBy('vol_signup_date', 'asc')
+  .then(volunteers => {
+      res.render('manageUsers', { volunteers });
+  })
+  .catch(error => {
+      console.error('Error querying database: ', error);
+      res.status(500).send('Internal Server Error');
+  });
+});
 
 // port number, (parameters) => what you want it to do.
 app.listen(PORT, () => console.log('Server started on port ' + PORT));
