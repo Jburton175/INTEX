@@ -48,16 +48,27 @@ app.use((req, res, next) => {
 
 // Define route for home page
 app.get('/', (req, res) => {
-
-  res.render('/');
-
+// <<<<<<<<< Temporary merge branch 1
+  res.render('index');
+// =========
+  // write a sql statement to pull something in. here
 });
 
 
 // Serve static files (e.g., CSS) if needed
 // app.use(express.static('public'));
 
-// this is an experiment to see how git works! 
+app.get('/addVolunteer', (req, res) => {
+  res.render('addVolunteer');  // Render the EJS form template
+});
+
+// Handle form submission
+// app.post('/submit', (req, res) => {
+//   const formData = req.body;  // Access form data sent via POST
+//   console.log(formData);       // For demonstration, log the submitted data
+//   res.send('Form submitted successfully!');
+// });
+
 
 // port number, (parameters) => what you want it to do.
 app.listen(PORT, () => console.log('Server started on port ' + PORT));
