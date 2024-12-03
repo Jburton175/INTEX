@@ -170,5 +170,43 @@ app.post('/addVolunteer', (req, res) => {
 });
 
 
+
+// route for admin to view all volunteers (manageUsers page)
+app.get('manageUsers', (req, res) => {
+  knex('volunteers')
+  .join('roles', 'volunteers.role_id', '=', 'roles.role_id')
+  .join('sewing_proficiency', 'volunteers.vol_sew_level_id', '=', 'sewing_proficiency.level_id')
+  .join('vol_source', 'volunteers.source_id', '=', 'vol_source.source_id')
+  .select(
+      'volunteers.vol_id',
+      'volunteers.vol_first_name',
+      'volunteers.vol_last_name',
+      'volunteers.vol_email',
+      'volunteers.vol_phone',
+      'volunteers.password',
+      'volunteers.vol_street_1',
+      'volunteers.vol_street_2',
+      'volunteers.vol_city',
+      'volunteers.vol_state',
+      'volunteers.vol_zip',
+      'volunteers.vol_signup_date',
+      'volunteers.vol_hours_per_month',
+      'volunteers.source_id',
+      'volunteers.vol_sew_level_id',
+      'volunteers.role_id',
+      'vol_source.source_type as vol_source_type',
+      'sewing_proficiency.level as vol_sewing_level',
+      'roles.role_name as vol_role'
+  )
+  .orderBy('vol_signup_date', 'asc')
+  .then(volunteers => {
+      res.render('manageUsers', { volunteers });
+  })
+  .catch(error => {
+      console.error('Error querying database: ', error);
+      res.status(500).send('Internal Server Error');
+  });
+});
+
 // port number, (parameters) => what you want it to do.
 app.listen(PORT, () => console.log('Server started on port ' + PORT));
