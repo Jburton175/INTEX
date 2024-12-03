@@ -82,7 +82,7 @@ app.post('/login', async (req, res) => {
         return res.status(500).send('Database query failed: ' + error.message);
     }
 
-    res.redirect("/manageRequests");
+    res.redirect("/");
 });
 
 
@@ -141,7 +141,7 @@ app.post('/addVolunteer', (req, res) => {
     // const formData = req.body;
     // console.log(formData);
     // console.log(formData);       // For demonstration, log the submitted data
-    res.send('Form submitted successfully!');
+    
   
     knex('volunteers')
         .insert({
@@ -159,6 +159,11 @@ app.post('/addVolunteer', (req, res) => {
             source_id: source,
             vol_sew_level_id: sew_id,
             vol_hours_per_month: hours,
+            
+        })
+        .then(() => {
+            console.log('Form submitted successfully!');
+            res.redirect('login'); 
         })
   
         .catch(error => {
