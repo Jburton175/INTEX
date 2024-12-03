@@ -9,9 +9,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Bryce512/CodePipelinetoEB"
+    "url": "git+https://github.com/Bryce512/CodePipelinetoEB.git"
   },
-  "author": "",
+  "author": "Porter Iverson",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Bryce512/CodePipelinetoEB"
@@ -26,5 +26,8 @@
   },
   "devDependencies": {
     "mocha": "^10.8.2"
+  },
+  "directories": {
+    "test": "tests"
   }
 }
