@@ -57,6 +57,34 @@ app.get('/', (req, res) => {
 // Serve static files (e.g., CSS) if needed
 // app.use(express.static('public'));
 
+app.get('/manageRequests', (req, res) => {
+  knex("requests").join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
+  .select("requests.request_id",
+          "requests.request_datetime",
+          "requests.organization_name",
+          "requests.contact_phone",
+          "requests.est_attendees",
+          "requests.basic_sewers",
+          "requests.advanced_sewers",
+          "requests.proposed_datetime",
+          "requests.alt_datetime",
+          "requests.est_duration",
+          "requests.contact_first_name",
+          "requests.contact_last_name",
+          "requests.num_machines",
+          "requests.num_sergers",
+          "requests.contact_email",
+          "requests.jen_story",
+          "requests.request_status_id as request_status",
+          "request_status.request_status_id",
+          "request_status.request_status_name")
+          .then(requests => { // selects all the info from the requests table and passes it to display characters ejs
+      res.render("manageRequests", {myrequests : requests});
+  }).catch( err => {
+      console.log(err);
+      res.status(500).json({err});
+  });
+})
 app.get('/addVolunteer', (req, res) => {
   res.render('addVolunteer');  // Render the EJS form template
 });
