@@ -119,6 +119,11 @@ app.get('/manageRequests', (req, res) => {
 })
 
 
+app.get('/addVolunteer', (req, res) => {
+    res.render('addVolunteer');
+  
+  });
+
 app.post('/addVolunteer', (req, res) => {
     const firstname = req.body.firstName || '';  // Access form data sent via POST
     const lastname = req.body.lastName || '';  
