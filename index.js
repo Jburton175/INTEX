@@ -27,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve the login page (login.ejs)
 app.get('/', (req, res) => {
+  // write a sql statement to pull something in. here
   res.render('home');  // Renders 'login.ejs' file
 });
 
