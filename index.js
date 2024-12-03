@@ -29,17 +29,25 @@ const knex = require("knex") ({
 // Define route for home page
 app.get('/', (req, res) => {
 // <<<<<<<<< Temporary merge branch 1
-  res.render('/');
+  res.render('index');
 // =========
   // write a sql statement to pull something in. here
-  res.render('home');  // Renders 'login.ejs' file
-// >>>>>>>>> Temporary merge branch 2
 });
 
 
 // Serve static files (e.g., CSS) if needed
 // app.use(express.static('public'));
 
+app.get('/addVolunteer', (req, res) => {
+  res.render('addVolunteer');  // Render the EJS form template
+});
+
+// Handle form submission
+// app.post('/submit', (req, res) => {
+//   const formData = req.body;  // Access form data sent via POST
+//   console.log(formData);       // For demonstration, log the submitted data
+//   res.send('Form submitted successfully!');
+// });
 
 
 // port number, (parameters) => what you want it to do.
