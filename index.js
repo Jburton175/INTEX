@@ -119,31 +119,29 @@ app.get('/manageRequests', (req, res) => {
 })
 
 
-app.get('/addVolunteer', (req, res) => {
-  res.render('addVolunteer');  // Render the EJS form template
-});
-
-// Handle form submission
-app.post('/addVolunteer', async (req, res) => {
-    try {
-        const firstname = req.body.firstName || '';
-        const lastname = req.body.lastName || '';
-        const email = req.body.email || '';
-        const phone = req.body.phone || '';
-        const password = req.body.password;  
-        const sAddress1 = req.body.address1 || '';
-        const sAddress2 = req.body.address2 || '';
-        const city = req.body.city || '';
-        const state = (req.body.state || '').toUpperCase();
-        const zip = req.body.zip || '';
-        const source = parseInt(req.body.source) || 6;
-        const sew_id = parseInt(req.body.sewLevel) || 1;
-        const hours = parseInt(req.body.hours) || 0;
-        const signup_time = new Date();
-
-        await knex('volunteers').insert({
+app.post('/addVolunteer', (req, res) => {
+    const firstname = req.body.firstName || '';  // Access form data sent via POST
+    const lastname = req.body.lastName || '';  
+    const email = req.body.email || '';  
+    const phone = req.body.phone || '';  
+    const password = req.body.password;  
+    const sAddress1 = req.body.address1 || '';  
+    const sAddress2 = req.body.address2 || '';  
+    const city = req.body.city || '';  
+    const state = req.body.state || '';  
+    const zip = req.body.zip || '';  
+    const source = parseInt(req.body.source) || 6;  
+    const sew_id = parseInt(req.body.sewLevel) || 1;  
+    const hours = parseInt(req.body.hours) || 0;  
+    // const formData = req.body;
+    // console.log(formData);
+    // console.log(formData);       // For demonstration, log the submitted data
+    res.send('Form submitted successfully!');
+  
+    knex('volunteers')
+        .insert({
             vol_first_name: firstname,
-            vol_last_name: lastname,
+            vol_last_name: lastname, 
             vol_phone: phone,
             vol_email: email,
             vol_password: password,
@@ -151,21 +149,18 @@ app.post('/addVolunteer', async (req, res) => {
             vol_street_1: sAddress1,
             vol_street_2: sAddress2,
             vol_city: city,
-            vol_state: state,
+            vol_state: state.toUpperCase(),
             vol_zip: zip,
             source_id: source,
-            vol_signup_date: signup_time,
             vol_sew_level_id: sew_id,
             vol_hours_per_month: hours,
+        })
+  
+        .catch(error => {
+            console.error('Error adding a volunteer:', error);
+            res.status(500).send('Internal Server Error');
         });
-
-        res.send('Form submitted successfully!');
-    } catch (error) {
-        console.error('Error adding a volunteer:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
+  });
 
 
 
