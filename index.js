@@ -3,6 +3,8 @@ let express = require('express');
 let app = express();
 let path = require('path');
 const PORT = process.env.PORT || 3000
+// Set Security 
+let security = false;
 app.use(express.urlencoded( {extended: true} )); 
 
 app.set("views", path.join(__dirname, "views"));
@@ -25,15 +27,30 @@ const knex = require("knex") ({
 })
 
 
+const excludedRoutes = ['/', '/about', "/requestEvent", '/help'];
+
+// Middleware to enforce login check
+app.use((req, res, next) => {
+    // Check if the route is excluded
+    if (excludedRoutes.includes(req.path)) {
+        return next(); // Skip login check for excluded routes
+    }
+    
+    // If security is false, render the login page
+    if (!security) {
+        return res.render('/login'); // Render the login page
+    }
+
+    next(); // Proceed to the requested route
+});
+
+
 
 // Define route for home page
 app.get('/', (req, res) => {
-// <<<<<<<<< Temporary merge branch 1
+
   res.render('/');
-// =========
-  // write a sql statement to pull something in. here
-  res.render('home');  // Renders 'login.ejs' file
-// >>>>>>>>> Temporary merge branch 2
+
 });
 
 
