@@ -28,7 +28,12 @@ const knex = require("knex") ({
 
 // Define route for home page
 app.get('/', (req, res) => {
+<<<<<<< HEAD
   res.render('/');
+=======
+  // write a sql statement to pull something in. here
+  res.render('home');  // Renders 'login.ejs' file
+>>>>>>> portdiver
 });
 
 
