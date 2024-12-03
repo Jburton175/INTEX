@@ -172,7 +172,7 @@ app.post('/addVolunteer', (req, res) => {
 
 
 // route for admin to view all volunteers (manageUsers page)
-app.get('manageUsers', (req, res) => {
+app.get('/manageUsers', (req, res) => {
   knex('volunteers')
   .join('roles', 'volunteers.role_id', '=', 'roles.role_id')
   .join('sewing_proficiency', 'volunteers.vol_sew_level_id', '=', 'sewing_proficiency.level_id')
