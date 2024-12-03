@@ -1,0 +1,127 @@
+/* Base Styles - Mobile First */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+header {
+    background: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.5rem;
+}
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    background: #004080;
+    color: white;
+    padding: 10px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+main {
+    padding: 20px;
+}
+
+footer {
+    background: #222;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+}
+
+/* Grid Layout for Larger Screens */
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Media Queries for Larger Screens */
+@media (min-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    nav {
+        justify-content: space-between;
+    }
+
+    nav a {
+        font-size: 1.2rem;
+    }
+
+    .container {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .card {
+        flex: 1 1 calc(33.333% - 20px); /* 3 cards per row, with gaps */
+        box-sizing: border-box;
+    }
+}
+
+@media (min-width: 1024px) {
+    main {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .container {
+        gap: 30px;
+    }
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+form input,
+form button {
+    padding: 10px;
+    font-size: 1rem;
+}
+
+form button {
+    background: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background: #0056b3;
+}
