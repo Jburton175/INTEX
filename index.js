@@ -26,8 +26,7 @@ const knex = require("knex") ({
 }
 })
 
-
-const excludedRoutes = ['/', '/about', "/requestEvent", '/help'];
+const excludedRoutes = ['/', '/about', '/requestEvent', '/help'];
 
 // Middleware to enforce login check
 app.use((req, res, next) => {
@@ -38,7 +37,7 @@ app.use((req, res, next) => {
     
     // If security is false, render the login page
     if (!security) {
-        return res.render('/login'); // Render the login page
+        return res.render('login'); // Render the login page
     }
 
     next(); // Proceed to the requested route
@@ -48,9 +47,40 @@ app.use((req, res, next) => {
 
 // Define route for home page
 app.get('/', (req, res) => {
-
   res.render('index');
 
+});
+
+
+app.get('/login', (req, res) => {
+  res.render('login');
+
+});
+
+
+app.post('/login', async (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    try {
+        // Query the user table to find the record
+        const volunteer = await knex('volunteers')
+            .select('*')
+            .where("vol_email", username)
+            .where("password", password) // Replace with hashed password comparison in production
+            .first(); // Returns the first matching record
+
+        // Update security variable based on query result
+        if (volunteer) {
+            security = true;
+        } else {
+            security = false;
+        }
+    } catch (error) {
+        return res.status(500).send('Database query failed: ' + error.message);
+    }
+
+    res.redirect("/manageRequests");
 });
 
 
