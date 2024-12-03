@@ -28,12 +28,12 @@ const knex = require("knex") ({
 
 // Define route for home page
 app.get('/', (req, res) => {
-<<<<<<< HEAD
+// <<<<<<<<< Temporary merge branch 1
   res.render('/');
-=======
+// =========
   // write a sql statement to pull something in. here
   res.render('home');  // Renders 'login.ejs' file
->>>>>>> portdiver
+// >>>>>>>>> Temporary merge branch 2
 });
 
 
