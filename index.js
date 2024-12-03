@@ -141,14 +141,14 @@ app.post('/addVolunteer', async (req, res) => {
         const hours = parseInt(req.body.hours) || 0;
         const signup_time = new Date();
 
-        // Check if email already exists
-        const existingVolunteer = await knex('volunteers')
-            .where({ vol_email: email })
-            .first();
+        // // Check if email already exists
+        // const existingVolunteer = await knex('volunteers')
+        //     .where({ vol_email: email })
+        //     .first();
 
-        if (existingVolunteer) {
-            return res.status(400).send('Email is already registered.');
-        }
+        // if (existingVolunteer) {
+        //     return res.status(400).send('Email is already registered.');
+        // }
 
         // Insert new volunteer
         await knex('volunteers').insert({
