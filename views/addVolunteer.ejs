@@ -8,7 +8,7 @@
 </head>
 <body>
   <h1>Volunteer Registration Form</h1>
-  
+  <br><br><br><br><br>
   <form action="/addVolunteer" method="POST">
     <div>
       <label for="firstName">First Name:</label>
@@ -31,8 +31,18 @@
     </div>
 
     <div>
-      <label for="address">Street Address:</label>
-      <input type="text" id="address" name="address" required>
+      <label for="password">Enter a Password:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+
+    <div>
+      <label for="address1">Street Address 1:</label>
+      <input type="text" id="address1" name="address1" required>
+    </div>
+
+    <div>
+      <label for="address2">Street Address 2:</label>
+      <input type="text" id="address2" name="address2">
     </div>
 
     <div>
@@ -42,7 +52,7 @@
 
     <div>
       <label for="state">State:</label>
-      <input type="text" id="state" name="state" required>
+      <input type="text" id="state" name="state" maxlength="2" required>
     </div>
 
     <div>
@@ -53,14 +63,32 @@
     <div>
       <label for="source">How did you hear about us?</label>
       <select id="source" name="source" required>
-        <option value="friendsFamily">Friends/Family</option>
-        <option value="socialMedia">Social Media</option>
-        <option value="advertisement">Advertisement</option>
-        <option value="website">Website</option>
-        <option value="poster">Poster</option>
-        <option value="other">Other</option>
+        <option value="1">Friends/Family</option>
+        <option value="2">Social Media</option>
+        <option value="3">Advertisement</option>
+        <option value="4">Website</option>
+        <option value="5">Poster</option>
+        <option value="6">Other</option>
       </select>
     </div>
+
+    <div>
+        <label for="role" hidden>Role:</label>
+        <select id="role" name="role" hidden>
+          <option value="1">Admin</option>
+          <option value="2">Member</option>
+        </select>
+      </div>
+
+    <div>
+        <label for="sewLevel">Sewing Level:</label>
+        <select id="sewLevel" name="sewLevel">
+          <option value="1">No Experience</option>
+          <option value="2">Beginner</option>
+          <option value="3">Intermediate</option>
+          <option value="4">Experienced</option>
+        </select>
+      </div>
 
     <div>
       <label for="hours">Hours per month you are willing to serve:</label>
