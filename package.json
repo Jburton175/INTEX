@@ -1,0 +1,30 @@
+{
+  "name": "splitit",
+  "version": "1.0.0",
+  "description": "# GitHub Common Terminal Commands Follow this guide to using common commands from command line to access GitHub.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests/*.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bryce512/CodePipelinetoEB"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bryce512/CodePipelinetoEB"
+  },
+  "homepage": "https://github.com/Bryce512/CodePipelinetoEB/#readme",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "knex": "^3.1.0",
+    "materialize-css": "^1.0.0",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "mocha": "^10.8.2"
+  }
+}
