@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-# sudo certbot -n -d <your domain>  --nginx --agree-tos --email <your email>
+sudo certbot -n -d section1group9intex.is404.net  --nginx --agree-tos --email jburton175@gmail.com
