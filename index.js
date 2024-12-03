@@ -48,10 +48,9 @@ app.use((req, res, next) => {
 
 // Define route for home page
 app.get('/', (req, res) => {
-// <<<<<<<<< Temporary merge branch 1
+
   res.render('index');
-// =========
-  // write a sql statement to pull something in. here
+
 });
 
 
@@ -69,6 +68,7 @@ app.get('/addVolunteer', (req, res) => {
 //   res.send('Form submitted successfully!');
 // });
 
+// this is an experiment to see how git works! 
 
 // port number, (parameters) => what you want it to do.
 app.listen(PORT, () => console.log('Server started on port ' + PORT));
