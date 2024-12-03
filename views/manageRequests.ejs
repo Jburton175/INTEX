@@ -6,6 +6,71 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <label><b>Requests:</b></label>
+        <br><br>
+        <table style="width: 100%; background-color: antiquewhite; border: 1px solid black">
+            <thead style="background-color: cornflowerblue; color:white;">
+                <tr>
+                    <th style="text-align: left;">Request Made:</th>
+                    <th style="text-align: left;">Organization Name:</th>
+                    <th style="text-align: left;">Contact Name:</th>
+                    <th style="text-align: left;">Contact Phone:</th>
+                    <th style="text-align: left;">Contact Email:</th>
+                    <th style="text-align: left;">Estimated # of Attendees:</th>
+                    <th style="text-align: left;"># of Basic Sewers</th>
+                    <th style="text-align: left;"># of Advanced Sewers</th>
+                    <th style="text-align: left;"># of Machines</th>
+                    <th style="text-align: left;"># of Sergers</th>
+                    <th style="text-align: left;">Jen's Story</th>
+                    <th style="text-align: left;">Proposed Date and Time</th>
+                    <th style="text-align: left;">Alternate Date and Time</th>
+                    <th style="text-align: left;">Estimated Duration</th>
+                    <th style="text-align: left;">Request Status</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody style="font-family: Arial, Helvetica, sans-serif; font-size: 9pt;">
+                <% for (let iCount = 0; iCount < myrequests.length; iCount++) { %>
+                    <tr>
+                        <td><%= myrequests[iCount].request_datetime %></td>
+                        <td><%= myrequests[iCount].organization_name %></td>
+                        <td><%= myrequests[iCount].contact_first_name %> <%= myplanets[iCount].contact_last_name %></td>
+                        <td><%= myrequests[iCount].contact_phone %></td>
+                        <td><%= myrequests[iCount].contact_email %></td>
+                        <td><%= myrequests[iCount].est_attendees %></td>
+                        <td><%= myrequests[iCount].basic_sewers %></td>
+                        <td><%= myrequests[iCount].advanced_sewers %></td>
+                        <td><%= myrequests[iCount].num_machines %></td>
+                        <td><%= myrequests[iCount].num_sergers %></td>
+                        <td><%= myrequests[iCount].jen_story %></td>
+                        <td><%= myrequests[iCount].proposed_datetime %></td>
+                        <td><%= myrequests[iCount].alt_datetime %></td>
+                        <td><%= myrequests[iCount].est_duration %></td>
+                        <td><%= myrequests[iCount].request_status_name %></td>
+                        <td style="text-align: center;">
+                            <form action="/editPlanet/<%= myplanets[iCount].id %>" method="GET">
+                                <button type="submit">Edit</button>
+                            </form>
+                        </td>
+                        <td style="text-align: center;">
+                            <form action="/deletePlanet/<%= myplanets[iCount].id %>" method="POST">
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+
+        </table>
+        <br>
+        <form action="/addPlanet" method="GET">
+            <button type="submit">Add Planet</button>
+        </form>
+        <br><br>
+        <form action="/" method="GET">
+            <button type="submit">Characters</button>
+        </form>
 </body>
 </html>
+
