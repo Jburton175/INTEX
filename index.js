@@ -149,7 +149,7 @@ app.post('/addVolunteer', (req, res) => {
             vol_last_name: lastname, 
             vol_phone: phone,
             vol_email: email,
-            vol_password: password,
+            password: password,
             role_id: 2,
             vol_street_1: sAddress1,
             vol_street_2: sAddress2,
