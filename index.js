@@ -81,6 +81,22 @@ app.post('/login', (req, res) => {
         });
 });
 
+
+// Logout route
+app.get('/logout', (req, res) => {
+    // Destroy the session
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error during session destruction:', err.stack);
+            return res.status(500).send('Failed to log out. Please try again.');
+        }
+
+        // Redirect to the login page after logging out
+        res.redirect('/login');
+    });
+});
+
+
 // Dashboard route (protected)
 app.get('/dashboard', (req, res) => {
     console.log('Session on /dashboard:', req.session); // Debug session
