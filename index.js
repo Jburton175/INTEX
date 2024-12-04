@@ -1,6 +1,7 @@
 // this is porter trying to use git hub and push changes and such
 let express = require('express');
 let app = express();
+app.use(express.json());
 let path = require('path');
 const PORT = process.env.PORT || 3000
 // Set Security 
@@ -64,36 +65,41 @@ app.get('/login', (req, res) => {
 });
 
 
+
 app.post('/login', async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
+    console.log('Request body:', req.body); // Log incoming data
+
     try {
-        // Query the user table to find the record
-        volunteer = await knex('volunteers')
+        const volunteer = await knex('volunteers')
             .join('roles', 'roles.role_id', '=', 'volunteers.role_id')
-            .select('volunteers.vol_id',
-                    'roles.role_name')
+            .select(
+                'volunteers.vol_id',
+                'roles.role_name'
+            )
             .where("vol_email", username)
-            .where("password", password) // Replace with hashed password comparison in production
-            .first(); // Returns the first matching record
-            
-            // Update security variable based on query result
+            .where("password", password) // Insecure: Replace with hashed password comparison
+            .first();
+
         if (volunteer) {
             security = true;
             console.log('Set Security to True');
-            console.log('Actual Security: '+ security);
+            console.log('Actual Security: ' + security);
         } else {
             security = false;
             console.log('Set Security to False');
-            console.log('Actual Security: '+ security);
+            console.log('Actual Security: ' + security);
         }
-            
+
+        console.log('Volunteer record:', volunteer);
+        res.send(volunteer ? 'Login Successful' : 'Login Failed'); // Temporary response for testing
+        // res.render("/dashboard", {volunteer});
     } catch (error) {
+        console.error('Error during database query:', error.stack);
         return res.status(500).send('Database query failed: ' + error.message);
     }
-    console.log(volunteer);
-    res.render("/dashboard", {volunteer});
 });
 
 
