@@ -1,67 +1,97 @@
-// this is porter trying to use git hub and push changes and such
 let express = require('express');
 let app = express();
-app.use(express.json());
-let path = require('path');
-const PORT = process.env.PORT || 3000
-// Set Security 
-let security = false;
-let volunteer;
-app.use(express.urlencoded( {extended: true} )); 
+const path = require('path');
+const session = require('express-session');
+const PORT = process.env.PORT || 3000;
 
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
-// Serve static files (CSS, images, etc.)
+// Middleware for parsing request bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Static files (CSS, images, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Set up EJS for templating
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
+// Initialize session middleware
+app.use(session({
+    secret: 'intex2346235346', // Replace with a strong secret key
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: True } // Use `true` for HTTPS
+}));
 
-const knex = require("knex") ({
-  client : "pg",
-  connection : {
-  host : process.env.RDS_HOSTNAME || "localhost",
-  user : process.env.RDS_USERNAME || "postgres",
-  password : process.env.RDS_PASSWORD || "Admin",
-  database : process.env.RDS_DB_NAME || "TurtleShelter",
-  port : process.env.RDS_PORT || 5432,
-  ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false  // Fixed line
-}
-})
+const knex = require("knex")({
+    client: "pg",
+    connection: {
+        host: process.env.RDS_HOSTNAME || "localhost",
+        user: process.env.RDS_USERNAME || "postgres",
+        password: process.env.RDS_PASSWORD || "admin",
+        database: process.env.RDS_DB_NAME || "TurtleShelter",
+        port: process.env.RDS_PORT || 5432,
+        ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false
+    }
+});
 
-
-
-const excludedRoutes = ['/', '/about', '/login', "/requestEvent", '/help', '/addVolunteer', '/manageUsers', '/createRequest', '/manageRequests'];
+// Excluded routes that don't require login
+const excludedRoutes = ['/', '/about', '/login', '/requestEvent', '/help'];
 
 // Middleware to enforce login check
 app.use((req, res, next) => {
-    // console.log("Middleware triggered:");
-    // console.log("Request path:", req.path);
-    // console.log("Excluded routes:", excludedRoutes);
-    // console.log("Security value:", security);
-
-    // Exclude favicon.ico requests
-    if (req.path === '/favicon.ico') {
-        // console.log("Skipping favicon.ico request.");
-        return next(); // Skip further middleware for favicon requests
+    // Skip excluded routes and favicon.ico
+    if (excludedRoutes.includes(req.path) || req.path === '/favicon.ico') {
+        return next();
     }
 
-    // Check if the route is excluded
-    if (excludedRoutes.includes(req.path)) {
-        // console.log("Path is excluded. Proceeding to next middleware.");
-        return next(); // Skip login check for excluded routes
+    // Redirect to login if no session exists
+    if (!req.session.volunteer) {
+        console.log('Access denied. Redirecting to login.');
+        return res.redirect('/login');
     }
 
-    // Check if security is false
-    if (!security) {
-        // console.log("Security is false. Rendering login page.");
-        return res.render('login'); // Render the login page
-    }
-
-    // console.log("Proceeding to next middleware.");
-    next(); // Proceed to the requested route
+    next(); // Allow access if logged in
 });
 
+// Login route
+app.post('/login', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
 
+    knex('volunteers')
+        .join('roles', 'roles.role_id', '=', 'volunteers.role_id')
+        .select('volunteers.vol_id', 'roles.role_name')
+        .where("vol_email", username)
+        .where("password", password) // Replace with hashed password comparison
+        .first()
+        .then(volunteer => {
+            if (volunteer) {
+                req.session.volunteer = volunteer; // Save volunteer to session
+                console.log('Volunteer logged in:', req.session.volunteer);
+                res.redirect('/dashboard');
+            } else {
+                console.log('Invalid username or password');
+                res.status(401).send("Invalid username or password");
+            }
+        })
+        .catch(error => {
+            console.error('Error during database query:', error.stack);
+            res.status(500).send('Database query failed: ' + error.message);
+        });
+});
+
+// Dashboard route (protected)
+app.get('/dashboard', (req, res) => {
+    console.log('Session on /dashboard:', req.session); // Debug session
+    if (req.session.volunteer) {
+        console.log('Logged-in role:', req.session.volunteer.role_name);
+        res.render("dashboard", { volunteer: req.session.volunteer });
+    } else {
+        console.log('No session found. Redirecting to login.');
+        res.redirect('/login');
+    }
+});
 
 
 
@@ -79,37 +109,6 @@ app.get('/login', (req, res) => {
 
 
 
-app.post('/login', (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-
-    try {
-        volunteer = knex('volunteers')
-            .join('roles', 'roles.role_id', '=', 'volunteers.role_id')
-            .select(
-                'volunteers.vol_id',
-                'roles.role_name'
-            )
-            .where("vol_email", username)
-            .where("password", password) // Insecure: Replace with hashed password comparison
-            .first();
-
-        if (volunteer) {
-            security = true;
-            // console.log('Actual Security: ' + security);
-            // console.log('Volunteer record Pass:', volunteer.role_name);
-            res.render("dashboard", {volunteer});
-        } else {
-            security = false;
-            // console.log('Actual Security: ' + security);
-            return res.status(401).send("Invalid username or password");
-        }
-
-    } catch (error) {
-        console.error('Error during database query:', error.stack);
-        return res.status(500).send('Database query failed: ' + error.message);
-    }
-});
 
 
 // Serve static files (e.g., CSS) if needed
