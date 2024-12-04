@@ -86,7 +86,30 @@ app.get('/dashboard', (req, res) => {
     console.log('Session on /dashboard:', req.session); // Debug session
     if (req.session.volunteer) {
         console.log('Logged-in role:', req.session.volunteer.role_name);
-        res.render("dashboard", { volunteer: req.session.volunteer });
+        if(req.session.volunteer.role_name === "Admin"){
+            knex("events")
+            .select('events.*', knex.raw('COUNT(event_volunteers.vol_id) as volunteers_signed_up'))
+            .leftJoin('event_volunteers', 'event_volunteers.event_id', '=', 'events.event_id')
+            .groupBy('events.event_id')  // Group by event_id to count volunteers per event
+            .orderBy("event_datetime", "desc")
+            .then(vol_events => {
+                res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
+            });
+        } else {
+            knex("events")
+            .leftJoin("event_volunteers", function() {
+                this.on("event_volunteers.event_id", "=", "events.event_id")
+                    .andOn("event_volunteers.vol_id", "=", req.session.volunteer.vol_id);
+            })
+            .select('events.*', knex.raw('COUNT(event_volunteers.vol_id) as volunteers_signed_up'))
+            .leftJoin('event_volunteers', 'event_volunteers.event_id', '=', 'events.event_id')
+            .groupBy('events.event_id')  // Group by event_id to count volunteers per event
+            .orderBy("event_datetime", "desc")
+            .then(vol_events => {
+                res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
+            });
+        }
+        
     } else {
         console.log('No session found. Redirecting to login.');
         res.redirect('/login');
