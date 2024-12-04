@@ -114,7 +114,7 @@ app.get('/dashboard', (req, res) => {
                     "event_type.event_type_name",
                     knex.raw("COUNT(ev.vol_id) as volunteers_signed_up")
                 )
-                .join("event_status", "events.status_id", "=", "event_status.status_id")
+                .join("event_status", "events.event_status_id", "=", "event_status.status_id")
                 .join("event_type", "events.event_type_id", "=", "event_type.event_type_id")
                 .leftJoin("event_volunteers as ev", "ev.event_id", "=", "events.event_id")
                 .where("events.event_datetime", ">", now) // Only include events after the current date
