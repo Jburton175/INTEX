@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Information Form</title>
-  <link rel="stylesheet" href="2styles.css"> <!-- You can link to a CSS file if you need styling -->
+  <link rel="stylesheet" href="chatstyles.css"> <!-- You can link to a CSS file if you need styling -->
 <!-- </head>
 <body>
   <h1>Volunteer Registration Form</h1>
@@ -182,14 +182,12 @@
                     <input type="text" id="city" name="city" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="state">State:</label>
-                    <select id="state" name="state" required>
-                        <option value="">Select a State</option>
-                        <option value="AL">Alabama</option>
-                        <option value="AK">Alaska</option>
-                        <option value="AZ">Arizona</option>
-                        <!-- Add other states here -->
+                <div class="form-group"></div>
+                    <select name="state" id="state" required>
+                        <option value="" disabled selected>Select a state</option>
+                        <% states.forEach(function(state) { %>
+                            <option value="<%= state %>"><%= state %></option>
+                        <% }) %>
                     </select>
                 </div>
 
@@ -200,23 +198,20 @@
 
                 <div class="form-group">
                     <label for="source">How did you hear about us?</label>
-                    <select id="source" name="source" required>
-                        <option value="1">Friends/Family</option>
-                        <option value="2">Social Media</option>
-                        <option value="3">Advertisement</option>
-                        <option value="4">Website</option>
-                        <option value="5">Poster</option>
-                        <option value="6">Other</option>
-                    </select>
-                </div>
+                    <select name="source" id="source">
+                      <% source.forEach(item => { %>
+                          <option value="<%= item.vol_source %>"><%= item.source_type %></option>
+                      <% }) %>
+                  </select>    
+                  </div>
+
 
                 <div class="form-group">
                     <label for="sewLevel">Sewing Level:</label>
-                    <select id="sewLevel" name="sewLevel">
-                        <option value="1">No Experience</option>
-                        <option value="2">Beginner</option>
-                        <option value="3">Intermediate</option>
-                        <option value="4">Experienced</option>
+                    <select name="sewLevel" id="sewLevel">
+                        <% proficiency.forEach(item => { %>
+                            <option value="<%= item.level_id %>"><%= item.level %></option>
+                        <% }) %>
                     </select>
                 </div>
 
