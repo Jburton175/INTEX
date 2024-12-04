@@ -30,7 +30,7 @@ const knex = require("knex") ({
 
 
 
-const excludedRoutes = ['/', '/about', "/requestEvent", '/help', '/addVolunteer', '/manageUsers'];
+const excludedRoutes = ['/', '/about', "/requestEvent", '/help', '/addVolunteer', '/manageUsers', '/createRequest', '/manageRequests'];
 
 // Middleware to enforce login check
 app.use((req, res, next) => {
