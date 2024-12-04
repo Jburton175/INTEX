@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/createEvent" method="POST">
+        <fieldset style="width: 0px">
+            <legend>Create an Event:</legend>
+            <br>
+            <!-- NAME AUTO FILLING TXT FIELDS WITH EXISTING NAME -->
+            <input type="hidden" id="character_id" name="id">
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name">
+            <br><br>
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name">
+            <br><br>
+            <!-- PLANET NAME DROP DOWN BOX -->
+            <label for="planet_name">Planet Name:</label>
+            <select id="planet_name" name="planet_name">
+            <% planet_name.forEach(planet => { %> <!-- for every record in planet_names, make a new option for the dropdown box-->
+                <option value="<%= planet.id %>"> <!-- make sure everything matches-->
+                <%= planet.planet_name %> <!-- show the planet name in the dropdown box-->
+                </option>
+            <% }) %>
+            </select>
+            <br><br>
+            <!-- CHECKBOX FOR JEDI -->
+            <label for="Jedi">Jedi (Y/N):</label>
+                <input type="checkbox" id="jedi" name="jedi"> <!-- if the character is a jedi-->
+                <br><br>
+            <!-- WEAPON (RADIO BUTTONS AUTO FILLING WITH DATA) -->
+            <label>Weapon:</label>
+            <br>
+            <label>
+              <input type="radio" name="weapon" value="L"> LIGHTSABER
+            </label>
+            <br>
+            <label>
+              <input type="radio" name="weapon" value="B"> BLASTER
+            </label>
+            <br>
+            <label>
+              <input type="radio" name="weapon" value="N"> NONE
+            </label>
+            <br><br>
+            <button type="submit">Save</button>
+        </fieldset>
+    </form>
+</body>
+</html>
