@@ -102,7 +102,7 @@ app.get('/dashboard', (req, res) => {
                     .andOn("ev_signed_up.vol_id", "=", req.session.volunteer.vol_id);
             })
             .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')  // Use alias for counting volunteers
-            .select('events.*', knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
+            .select('events.*', "ev_signed_up.vol_id", knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
             .groupBy('events.event_id')  // Group by event_id to count volunteers per event
             .orderBy("event_datetime", "desc")
             .then(vol_events => {
@@ -130,7 +130,54 @@ app.get('/login', (req, res) => {
 
 });
 
+app.post('/signupEvent/:event_id', (req, res) => {
+    const eventId = req.params.event_id;
+    const volunteerId = req.session.volunteer.vol_id;
 
+    // Check if the volunteer is already signed up
+    knex('event_volunteers')
+        .where({ event_id: eventId, vol_id: volunteerId })
+        .first()
+        .then(existingSignup => {
+            if (existingSignup) {
+                return res.status(400).send('You are already signed up for this event.');
+            }
+
+            // Proceed with signing up
+            knex('event_volunteers')
+                .insert({ event_id: eventId, vol_id: volunteerId })
+                .then(() => {
+                    res.redirect('/dashboard'); // Redirect to dashboard after signing up
+                })
+                .catch(error => {
+                    console.error('Error signing up:', error);
+                    res.status(500).send('An error occurred during sign up.');
+                });
+        })
+        .catch(error => {
+            console.error('Error checking signup:', error);
+            res.status(500).send('An error occurred.');
+        });
+});
+
+
+
+app.post('/deleteSignup/:eventId', (req, res) => {
+    const eventId = req.params.eventId;
+    const volunteerId = req.session.volunteer.vol_id;
+
+    knex('event_volunteers')
+        .where({ event_id: eventId, vol_id: volunteerId })
+        .del()
+        .then(() => {
+            console.log(`Volunteer ${volunteerId} removed from event ${eventId}`);
+            res.redirect('/dashboard'); // Redirect back to the dashboard after deletion
+        })
+        .catch(err => {
+            console.error('Error deleting signup:', err);
+            res.status(500).send('Error deleting signup');
+        });
+});
 
 
 
@@ -279,14 +326,6 @@ app.post('/denyRequest/:request_id', (req, res) => {
 
 // render the addVolunteer page
 app.get('/addVolunteer', (req, res) => {
-  const states = [
-    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
-    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
-    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
-];
-  console.log('States:', states);
   knex('sewing_proficiency')
       .select('level_id', 'level') // Query sewing_proficiency
       .then(proficiency => {
@@ -297,39 +336,23 @@ app.get('/addVolunteer', (req, res) => {
                       .select('vol_source', 'source_type') // Query vol_source
                       .then(source => {
                           // Render the EJS template with all data
-                          console.log('Rendering with data:', { proficiency, role, source, states });  // Log the data to check what's being passed
-                          res.render('addVolunteer', { proficiency, role, source, states });
+                          res.render('addVolunteer', { proficiency, role, source });
                       })
                       .catch(error => {
                           console.error('Error fetching sources: ', error);
-                          res.status(500).send('Internal Server Error 1');
+                          res.status(500).send('Internal Server Error');
                       });
               })
               .catch(error => {
                   console.error('Error fetching roles: ', error);
-                  res.status(500).send('Internal Server Error 2');
+                  res.status(500).send('Internal Server Error');
               });
       })
       .catch(error => {
           console.error('Error fetching proficiency: ', error);
-          res.status(500).send('Internal Server Error 3');
+          res.status(500).send('Internal Server Error');
       });
 });
-
-
-//testing a few things in this route
-app.get('/test', (req, res) => {
-  const states = [
-    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
-    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
-    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
-  ];
-
-  res.render('test', { states });
-});
-
 
 app.post('/addVolunteer', (req, res) => {
     const firstname = req.body.firstName || '';  // Access form data sent via POST
