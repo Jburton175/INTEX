@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,10 +9,9 @@
 </head>
 <body>
     <div class="container">
-        <h1>Congratulations!</h1>
-        <h1>We are doing some good things
-        </h1>
-        <p>You successfully created your Elastic Beanstalk App Deployed from CodePipline!</p>
+        <h1>Turtle Shelter Project!</h1>
+        <h1>We are doing some good things</h1>
+
         <button class="cta-button">Get Started</button>
         <form action="/addVolunteer" method="GET">
             <button type="submit">Add Volunteer</button>
@@ -21,5 +20,88 @@
             <button type="submit">View Volunteers</button>
         </form>   
     </div>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Support Turtle Shelter Project.">
+    <meta name="keywords" content="turtle, shelter, project, homelessness, donate">
+    <meta name="author" content="Turtle Shelter Project">
+    <title>Turtle Shelter Project</title>
+    <link rel="stylesheet" href="/2styles.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="#">Turtle Shelter Project</a>
+                <img src="https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1532816947856-MIMDFIUYZHABRDQ4TWZC/Original+logo+low+resolution.png?format=1000w" alt="Turtle Shelter Project Logo" width="25%">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#donate">Donate</a></li>
+                <li><a href="addVolunteer.ejs">Volunteer</a></li>
+                <li><a href="login.ejs">Sign In</a></li>
+                <li><a href="createRequest.ejs">Request an Event</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>It Starts With You</h1>
+            <p>Helping to save lives of people experiencing homelessness</p>
+            <a href="#donate" class="cta-button">Donate Today</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <img src="https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1532816947856-MIMDFIUYZHABRDQ4TWZC/Original+logo+low+resolution.png?format=1000w" alt="Turtle Shelter Project Logo">
+        <h2>About the Project</h2>
+        <p>What Is a Turtle Shelter Vest? A High-Tech but Simple Solution to Help Save Lives -
+            A Portable "Shelter" You Can Carry with You, Just Like a Turtle...
+            And You Can Help!</p>
+    </section>
+
+    <!-- Donate Section -->
+    <section id="donate" class="donate">
+        <h2>Make a Difference</h2>
+        <p>Every donation counts. Your support can save the lives people in your community</p>
+        <a href="https://www.donate-link.com" class="cta-button">Donate Now</a><br><br><br><br>
+        <img class=responsive-img src="https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1546483059624-20A5FMARTG66Q5SRRUF7/Resized_20181219_120150.jpg?format=1500w" alt="Recipients">
+        <img class=responsive-img src="https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1627863598267-P2A08OTOD3MKAIBTX0SN/20200218_111850.jpg?format=2500w" alt="Event">
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <h2>Contact Us</h2>
+        <form action="#" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Turtle Shelter Project | All rights reserved</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

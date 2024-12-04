@@ -30,25 +30,38 @@ const knex = require("knex") ({
 
 
 
-const excludedRoutes = ['/', '/about', "/requestEvent", '/help', '/addVolunteer', '/manageUsers', '/createRequest', '/manageRequests'];
+const excludedRoutes = ['/', '/about', '/login', "/requestEvent", '/help', '/addVolunteer', '/manageUsers', '/createRequest', '/manageRequests'];
 
 // Middleware to enforce login check
 app.use((req, res, next) => {
+    // console.log("Middleware triggered:");
+    // console.log("Request path:", req.path);
+    // console.log("Excluded routes:", excludedRoutes);
+    // console.log("Security value:", security);
+
+    // Exclude favicon.ico requests
+    if (req.path === '/favicon.ico') {
+        // console.log("Skipping favicon.ico request.");
+        return next(); // Skip further middleware for favicon requests
+    }
+
     // Check if the route is excluded
     if (excludedRoutes.includes(req.path)) {
-        console.log(excludedRoutes);
-        console.log(req.path);
+        // console.log("Path is excluded. Proceeding to next middleware.");
         return next(); // Skip login check for excluded routes
     }
-    
-    // If security is false, render the login page
+
+    // Check if security is false
     if (!security) {
-        console.log(security);
+        // console.log("Security is false. Rendering login page.");
         return res.render('login'); // Render the login page
     }
 
+    // console.log("Proceeding to next middleware.");
     next(); // Proceed to the requested route
 });
+
+
 
 
 
@@ -66,14 +79,12 @@ app.get('/login', (req, res) => {
 
 
 
-app.post('/login', async (req, res) => {
+app.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    console.log('Request body:', req.body); // Log incoming data
-
     try {
-        const volunteer = await knex('volunteers')
+        volunteer = knex('volunteers')
             .join('roles', 'roles.role_id', '=', 'volunteers.role_id')
             .select(
                 'volunteers.vol_id',
@@ -85,17 +96,15 @@ app.post('/login', async (req, res) => {
 
         if (volunteer) {
             security = true;
-            console.log('Set Security to True');
-            console.log('Actual Security: ' + security);
+            // console.log('Actual Security: ' + security);
+            // console.log('Volunteer record Pass:', volunteer.role_name);
+            res.render("dashboard", {volunteer});
         } else {
             security = false;
-            console.log('Set Security to False');
-            console.log('Actual Security: ' + security);
+            // console.log('Actual Security: ' + security);
+            return res.status(401).send("Invalid username or password");
         }
 
-        console.log('Volunteer record:', volunteer);
-        res.send(volunteer ? 'Login Successful' : 'Login Failed'); // Temporary response for testing
-        // res.render("/dashboard", {volunteer});
     } catch (error) {
         console.error('Error during database query:', error.stack);
         return res.status(500).send('Database query failed: ' + error.message);
