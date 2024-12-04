@@ -55,15 +55,13 @@
                 <thead style="background-color: cornflowerblue; color:white;">
                     <tr>
                         <th style="text-align: left;">Date of Event:</th>
-                        <th style="text-align: left;">Supervisor Name:</th>
+                        <th style="text-align: left;">Duration of Event</th>
                         <th style="text-align: left;">Event Status:</th>
                         <th style="text-align: left;">Event Type:</th>
                         <th style="text-align: left;">Event Location:</th>
-                        <th style="text-align: left;">Location Type:</th>
-                        <th style="text-align: left;"># of Particpants</th>
-                        <th style="text-align: left;">Duration of Event</th>
-                        <th style="text-align: left;"># of Vests Distributed</th>
-                        <th style="text-align: left;"># of Volunteers Present</th>
+                        <th style="text-align: left;">Estimated Participants</th>
+                        <th style="text-align: left;">Volunteers Needed</th>
+                        <th style="text-align: left;">Volunteers Attending</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -71,19 +69,23 @@
                     <% for (let iCount = 0; iCount < vol_events.length; iCount++) { %>
                         <tr>
                             <td><%= vol_events[iCount].event_datetime %></td>
-                            <td><%= vol_events[iCount].vol_first_name %> <%= vol_events[iCount].vol_last_name %></td>
+                            <td><%= vol_events[iCount].event_duration %></td>
                             <td><%= vol_events[iCount].event_status_name %></td>
                             <td><%= vol_events[iCount].event_type_name %></td>
                             <td><%= vol_events[iCount].event_street_1 %> <%= vol_events[iCount].event_street_2 %>, <%= vol_events[iCount].event_city %>, <%= vol_events[iCount].event_state %>, <%= vol_events[iCount].event_zip %></td>
-                            <td><%= vol_events[iCount].location_type_name %></td>
                             <td><%= vol_events[iCount].participants %></td>
-                            <td><%= vol_events[iCount].event_duration %></td>
-                            <td><%= vol_events[iCount].distributed_products %></td>
-                            <td><%= vol_events[iCount].volunteers_present %></td>
+                            <td><%= vol_events[iCount].volunteers_needed %></td>
+                            <td><%= vol_events[iCount].volunteers_signed_up %></td>
                             <td style="text-align: center;">
                                 <% if (vol_events[iCount].volunteers_signed_up >= vol_events[iCount].volunteers_needed) { %>
                                     <button disabled>Sign Up (Full)</button>
+                                <% } else if (vol_events[iCount].signed_up_vol_id) { %>
+                                    <!-- If user is signed up, show Delete button -->
+                                    <form action="/deleteSignup/<%= vol_events[iCount].event_id %>" method="POST">
+                                        <button type="submit">Delete Signup</button>
+                                    </form>
                                 <% } else { %>
+                                    <!-- If user is not signed up, show Sign Up button -->
                                     <form action="/signupEvent/<%= vol_events[iCount].event_id %>" method="POST">
                                         <button type="submit">Sign Up</button>
                                     </form>
@@ -92,16 +94,7 @@
                         </tr>
                     <% } %>
                 </tbody>
-    
-            </table>
-            <br>
-            <form action="/createEvent" method="GET">
-                <button type="submit">Add an Event</button>
-            </form>
-            <br><br>
-            <form action="/" method="GET">
-                <button type="submit">Home</button>
-            </form>
+            </table>            
         <% } %>
     </div>
 </body>
