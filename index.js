@@ -92,7 +92,12 @@ app.get('/dashboard', (req, res) => {
 
         if (req.session.volunteer.role_name === "Admin") {
             knex("events")
-                .select('events.*', knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
+                .select('events.*', 
+                    "request_status.request_status_name",
+                    "event_type.event_type_name",
+                     knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
+                .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
+                .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
                 .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')
                 .where('events.event_datetime', '>', now) // Only include events after the current date
                 .groupBy('events.event_id') // Group by event_id to count volunteers per event
@@ -102,6 +107,8 @@ app.get('/dashboard', (req, res) => {
                 });
         } else {
             knex("events")
+                .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
+                .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
                 .leftJoin("event_volunteers as ev_signed_up", function () {
                     this.on("ev_signed_up.event_id", "=", "events.event_id")
                         .andOn("ev_signed_up.vol_id", "=", req.session.volunteer.vol_id);
@@ -110,6 +117,8 @@ app.get('/dashboard', (req, res) => {
                 .select(
                     "events.*",
                     "ev_signed_up.vol_id as signed_up_vol_id", // Alias this for clarity
+                    "request_status.request_status_name",
+                    "event_type.event_type_name", 
                     knex.raw("COUNT(ev.vol_id) as volunteers_signed_up")
                 )
                 .where("events.event_datetime", ">", now) // Only include events after the current date
