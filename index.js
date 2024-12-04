@@ -67,22 +67,25 @@ app.post('/login', async (req, res) => {
     try {
         // Query the user table to find the record
         const volunteer = await knex('volunteers')
-            .select('*')
+            .join('roles', 'roles.role_id', '=', 'volunteers.role_id')
+            .select('volunteers.vol_id',
+                    'roles.role_name')
             .where("vol_email", username)
             .where("password", password) // Replace with hashed password comparison in production
             .first(); // Returns the first matching record
-
-        // Update security variable based on query result
+            
+            // Update security variable based on query result
         if (volunteer) {
             security = true;
         } else {
             security = false;
         }
+            
     } catch (error) {
         return res.status(500).send('Database query failed: ' + error.message);
     }
 
-    res.redirect("/");
+    res.render("dashboard", {volunteer});
 });
 
 
@@ -216,21 +219,23 @@ app.get('/manageUsers', (req, res) => {
   });
 });
 
+
 // route to delete volunteer
 app.post('/deleteVolunteer/:id', (req, res) => {
-  const id = req.params.id;
-
-  knex('volunteers')
-      .where ('vol_id', id)
-      .del()
-      .then(() => {
-          res.redirect('/manageUsers');
-      })
-      .catch(error => {
-          console.error('Error deleting volunteer:', error);
-          res.status(500).send('Internal Server Error');
-      });
-});
+    const id = req.params.id;
+  
+    knex('volunteers')
+        .where ('vol_id', id)
+        .del()
+        .then(() => {
+            res.redirect('/manageUsers');
+        })
+        .catch(error => {
+            console.error('Error deleting volunteer:', error);
+            res.status(500).send('Internal Server Error');
+        });
+  });
+  
 
 // port number, (parameters) => what you want it to do.
 app.listen(PORT, () => console.log('Server started on port ' + PORT));
