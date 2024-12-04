@@ -88,8 +88,8 @@ app.get('/dashboard', (req, res) => {
         console.log('Logged-in role:', req.session.volunteer.role_name);
         if(req.session.volunteer.role_name === "Admin"){
             knex("events")
-            .select('events.*', knex.raw('COUNT(event_volunteers.vol_id) as volunteers_signed_up'))
-            .leftJoin('event_volunteers', 'event_volunteers.event_id', '=', 'events.event_id')
+            .select('events.*', knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
+            .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')
             .groupBy('events.event_id')  // Group by event_id to count volunteers per event
             .orderBy("event_datetime", "desc")
             .then(vol_events => {
@@ -97,12 +97,12 @@ app.get('/dashboard', (req, res) => {
             });
         } else {
             knex("events")
-            .leftJoin("event_volunteers", function() {
-                this.on("event_volunteers.event_id", "=", "events.event_id")
-                    .andOn("event_volunteers.vol_id", "=", req.session.volunteer.vol_id);
+            .leftJoin("event_volunteers as ev_signed_up", function() {
+                this.on("ev_signed_up.event_id", "=", "events.event_id")
+                    .andOn("ev_signed_up.vol_id", "=", req.session.volunteer.vol_id);
             })
-            .select('events.*', knex.raw('COUNT(event_volunteers.vol_id) as volunteers_signed_up'))
-            .leftJoin('event_volunteers', 'event_volunteers.event_id', '=', 'events.event_id')
+            .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')  // Use alias for counting volunteers
+            .select('events.*', knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
             .groupBy('events.event_id')  // Group by event_id to count volunteers per event
             .orderBy("event_datetime", "desc")
             .then(vol_events => {
