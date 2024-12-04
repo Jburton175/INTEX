@@ -94,18 +94,17 @@ app.get('/dashboard', (req, res) => {
             knex("events")
                 .select(
                     "events.*", 
-                    "request_status.request_status_name",
+                    "event_status.event_status_name",
                     "event_type.event_type_name",
                     knex.raw("COUNT(ev.vol_id) as volunteers_signed_up")
                 )
-                .join("requests", "events.request_id", "=", "requests.request_id") // Join requests table
-                .join("request_status", "requests.request_status_id", "=", "request_status.request_status_id")
-                .join("event_type", "requests.req_type_id", "=", "event_type.event_type_id")
+                .join("event_status", "events.status_id", "=", "event_status.status_id")
+                .join("event_type", "events.event_type_id", "=", "event_type.event_type_id")
                 .leftJoin("event_volunteers as ev", "ev.event_id", "=", "events.event_id")
                 .where("events.event_datetime", ">", now) // Only include events after the current date
                 .groupBy(
                     "events.event_id",
-                    "request_status.request_status_name",
+                    "event_status.event_status_name",
                     "event_type.event_type_name"
                 ) // Include all selected non-aggregated fields
                 .orderBy("event_datetime", "asc")
@@ -118,9 +117,8 @@ app.get('/dashboard', (req, res) => {
                 });
         } else {
             knex("events")
-                .join("requests", "events.request_id", "=", "requests.request_id") // Join requests table
-                .join("request_status", "requests.request_status_id", "=", "request_status.request_status_id")
-                .join("event_type", "requests.req_type_id", "=", "event_type.event_type_id")
+                .join("event_status", "events.status_id", "=", "event_status.status_id")
+                .join("event_type", "events.event_type_id", "=", "event_type.event_type_id")
                 .leftJoin("event_volunteers as ev_signed_up", function () {
                     this.on("ev_signed_up.event_id", "=", "events.event_id")
                         .andOn("ev_signed_up.vol_id", "=", req.session.volunteer.vol_id);
@@ -129,7 +127,7 @@ app.get('/dashboard', (req, res) => {
                 .select(
                     "events.*",
                     "ev_signed_up.vol_id as signed_up_vol_id", // Alias this for clarity
-                    "request_status.request_status_name",
+                    "event_status.event_status_name",
                     "event_type.event_type_name",
                     knex.raw("COUNT(ev.vol_id) as volunteers_signed_up")
                 )
@@ -137,7 +135,7 @@ app.get('/dashboard', (req, res) => {
                 .groupBy(
                     "events.event_id",
                     "ev_signed_up.vol_id",
-                    "request_status.request_status_name",
+                    "event_status.event_status_name",
                     "event_type.event_type_name"
                 ) // Include all selected non-aggregated fields
                 .orderBy("event_datetime", "asc")
