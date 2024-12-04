@@ -28,8 +28,8 @@ const knex = require("knex")({
     connection: {
         host: process.env.RDS_HOSTNAME || "localhost",
         user: process.env.RDS_USERNAME || "postgres",
-        password: process.env.RDS_PASSWORD || "admin",
-        database: process.env.RDS_DB_NAME || "TurtleShelter",
+        password: process.env.RDS_PASSWORD || "leomessi",
+        database: process.env.RDS_DB_NAME || "intex_local",
         port: process.env.RDS_PORT || 5432,
         ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false
     }
@@ -279,14 +279,6 @@ app.post('/denyRequest/:request_id', (req, res) => {
 
 // render the addVolunteer page
 app.get('/addVolunteer', (req, res) => {
-  const states = [
-    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
-    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
-    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
-];
-  console.log('States:', states);
   knex('sewing_proficiency')
       .select('level_id', 'level') // Query sewing_proficiency
       .then(proficiency => {
@@ -294,11 +286,10 @@ app.get('/addVolunteer', (req, res) => {
               .select('role_id', 'role_name') // Query roles
               .then(role => {
                   knex('vol_source')
-                      .select('vol_source', 'source_type') // Query vol_source
+                      .select('source_id', 'source_type') // Query vol_source
                       .then(source => {
                           // Render the EJS template with all data
-                          console.log('Rendering with data:', { proficiency, role, source, states });  // Log the data to check what's being passed
-                          res.render('addVolunteer', { proficiency, role, source, states });
+                          res.render('addVolunteer', { proficiency, role, source });
                       })
                       .catch(error => {
                           console.error('Error fetching sources: ', error);
@@ -317,19 +308,6 @@ app.get('/addVolunteer', (req, res) => {
 });
 
 
-//testing a few things in this route
-app.get('/test', (req, res) => {
-  const states = [
-    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
-    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
-    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
-  ];
-
-  res.render('test', { states });
-});
-
 
 app.post('/addVolunteer', (req, res) => {
     const firstname = req.body.firstName || '';  // Access form data sent via POST
@@ -342,12 +320,12 @@ app.post('/addVolunteer', (req, res) => {
     const city = req.body.city || '';  
     const state = req.body.state || '';  
     const zip = req.body.zip || '';  
-    const source = parseInt(req.body.source) || 6;  
+    const source = parseInt(req.body.source);  
     const sew_id = parseInt(req.body.sewLevel) || 1;  
     const hours = parseInt(req.body.hours) || 0;  
     // const formData = req.body;
     // console.log(formData);
-    // console.log(formData);       // For demonstration, log the submitted data
+    // console.log(formData);
     console.log('Request body:', req.body);
   
     knex('volunteers')
