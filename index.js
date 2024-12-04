@@ -92,23 +92,35 @@ app.get('/dashboard', (req, res) => {
 
         if (req.session.volunteer.role_name === "Admin") {
             knex("events")
-                .select('events.*', 
+                .select(
+                    "events.*", 
                     "request_status.request_status_name",
                     "event_type.event_type_name",
-                     knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
-                .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
-                .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
-                .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')
-                .where('events.event_datetime', '>', now) // Only include events after the current date
-                .groupBy('events.event_id') // Group by event_id to count volunteers per event
+                    knex.raw("COUNT(ev.vol_id) as volunteers_signed_up")
+                )
+                .join("requests", "events.request_id", "=", "requests.request_id") // Join requests table
+                .join("request_status", "requests.request_status_id", "=", "request_status.request_status_id")
+                .join("event_type", "requests.req_type_id", "=", "event_type.event_type_id")
+                .leftJoin("event_volunteers as ev", "ev.event_id", "=", "events.event_id")
+                .where("events.event_datetime", ">", now) // Only include events after the current date
+                .groupBy(
+                    "events.event_id",
+                    "request_status.request_status_name",
+                    "event_type.event_type_name"
+                ) // Include all selected non-aggregated fields
                 .orderBy("event_datetime", "asc")
                 .then(vol_events => {
                     res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
+                })
+                .catch(error => {
+                    console.error("Admin Query Error:", error);
+                    res.status(500).send("Error fetching admin events.");
                 });
         } else {
             knex("events")
-                .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
-                .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
+                .join("requests", "events.request_id", "=", "requests.request_id") // Join requests table
+                .join("request_status", "requests.request_status_id", "=", "request_status.request_status_id")
+                .join("event_type", "requests.req_type_id", "=", "event_type.event_type_id")
                 .leftJoin("event_volunteers as ev_signed_up", function () {
                     this.on("ev_signed_up.event_id", "=", "events.event_id")
                         .andOn("ev_signed_up.vol_id", "=", req.session.volunteer.vol_id);
@@ -118,22 +130,31 @@ app.get('/dashboard', (req, res) => {
                     "events.*",
                     "ev_signed_up.vol_id as signed_up_vol_id", // Alias this for clarity
                     "request_status.request_status_name",
-                    "event_type.event_type_name", 
+                    "event_type.event_type_name",
                     knex.raw("COUNT(ev.vol_id) as volunteers_signed_up")
                 )
                 .where("events.event_datetime", ">", now) // Only include events after the current date
-                .groupBy("events.event_id", "ev_signed_up.vol_id")
+                .groupBy(
+                    "events.event_id",
+                    "ev_signed_up.vol_id",
+                    "request_status.request_status_name",
+                    "event_type.event_type_name"
+                ) // Include all selected non-aggregated fields
                 .orderBy("event_datetime", "asc")
-                .then((vol_events) => {
+                .then(vol_events => {
                     res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
+                })
+                .catch(error => {
+                    console.error("Volunteer Query Error:", error);
+                    res.status(500).send("Error fetching volunteer events.");
                 });
         }
-
     } else {
-        console.log('No session found. Redirecting to login.');
-        res.redirect('/login');
+        console.log("No session found. Redirecting to login.");
+        res.redirect("/login");
     }
 });
+
 
 
 
