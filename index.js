@@ -612,7 +612,7 @@ app.get('/manageEvents', (req, res) => {
         "event_status.event_status_name",
         "event_type.event_type_name",
         "location_type.location_type_name"
-    )
+    ).whereNot('events.event_status_id', 3) // Exclude rows where event_status_id = cancelled
     .then(events => {
         res.render('manageEvents', { events });
     })
