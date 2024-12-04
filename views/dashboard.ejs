@@ -6,6 +6,50 @@
     <title>Dashboard</title>
 
     <link rel="stylesheet" href="/chatstyles.css">
+    <style>
+        table {
+            width: 100%;
+            background-color: white;
+            border: 5px solid black;
+            border-collapse: collapse; /* Merges borders for cleaner visuals */
+            margin: 20px auto; /* Adds margin between the table and page boundaries */
+        }
+        thead {
+            background-color: gray;
+            color: white;
+        }
+        th, td {
+            text-align: center; /* Centers text in both header and data cells */
+            border: 2px solid black; /* Makes borders more visible */
+            padding: 10px; /* Adds spacing within the cells */
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        tbody td {
+            font-size: 12pt; /* Increases font size for the values */
+        }
+        button {
+            padding: 5px 10px;
+            font-size: 10pt;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: lightgray;
+            cursor: not-allowed;
+        }
+        button[type="submit"] {
+            background-color: #f5f5f5; /* Lighter gray color for the delete button */
+            color: black;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover {
+            background-color: #dcdcdc; /* Darker shade of gray on hover */
+        }
+        table {
+            margin: 30px; /* Extra margin around the table */
+        }
+    </style>
     
 </head>
 <body>
@@ -51,41 +95,45 @@
         <% if (volunteer.role_name.toLowerCase() === 'admin') { %>
             <p>This is the admin dashboard.</p>
         <% } else { %>
-            <table style="width: 100%; background-color: antiquewhite; border: 1px solid black">
-                <thead style="background-color: cornflowerblue; color:white;">
+            <table>
+                <thead>
                     <tr>
-                        <th style="text-align: left;">Date of Event:</th>
-                        <th style="text-align: left;">Duration of Event</th>
-                        <th style="text-align: left;">Event Status:</th>
-                        <th style="text-align: left;">Event Type:</th>
-                        <th style="text-align: left;">Event Location:</th>
-                        <th style="text-align: left;">Estimated Participants</th>
-                        <th style="text-align: left;">Volunteers Needed</th>
-                        <th style="text-align: left;">Volunteers Attending</th>
-                        <th></th>
+                        <th>Date of Event</th>
+                        <th>Duration of Event</th>
+                        <th>Event Status</th>
+                        <th>Event Type</th>
+                        <th>Event Location</th>
+                        <th>Estimated Participants</th>
+                        <th>Volunteers Needed</th>
+                        <th>Volunteers Attending</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
-                <tbody style="font-family: Arial, Helvetica, sans-serif; font-size: 9pt;">
+                <tbody>
                     <% for (let iCount = 0; iCount < vol_events.length; iCount++) { %>
                         <tr>
-                            <td><%= vol_events[iCount].event_datetime %></td>
+                            <td><%= new Date(vol_events[iCount].event_datetime).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %></td>
                             <td><%= vol_events[iCount].event_duration %></td>
                             <td><%= vol_events[iCount].event_status_name %></td>
                             <td><%= vol_events[iCount].event_type_name %></td>
-                            <td><%= vol_events[iCount].event_street_1 %> <%= vol_events[iCount].event_street_2 %>, <%= vol_events[iCount].event_city %>, <%= vol_events[iCount].event_state %>, <%= vol_events[iCount].event_zip %></td>
+                            <td>
+                                <%= vol_events[iCount].event_street_1 %> <%= vol_events[iCount].event_street_2 %>, 
+                                <%= vol_events[iCount].event_city %>, <%= vol_events[iCount].event_state %>, 
+                                <%= vol_events[iCount].event_zip %>
+                            </td>
                             <td><%= vol_events[iCount].participants %></td>
                             <td><%= vol_events[iCount].volunteers_needed %></td>
                             <td><%= vol_events[iCount].volunteers_signed_up %></td>
-                            <td style="text-align: center;">
+                            <td>
                                 <% if (vol_events[iCount].volunteers_signed_up >= vol_events[iCount].volunteers_needed) { %>
                                     <button disabled>Sign Up (Full)</button>
                                 <% } else if (vol_events[iCount].signed_up_vol_id) { %>
-                                    <!-- If user is signed up, show Delete button -->
-                                    <form action="/deleteSignup/<%= vol_events[iCount].event_id %>" method="POST">
-                                        <button type="submit">Delete Signup</button>
+                                    <!-- Show Delete button if already signed up -->
+                                    <form action="/deleteSignup/<%= vol_events[iCount].event_id %>" method="POST" onsubmit="return confirm('Are you sure you want to remove your signup for this event?');">
+                                        <button type="submit">Remove Signup</button>
                                     </form>
                                 <% } else { %>
-                                    <!-- If user is not signed up, show Sign Up button -->
+                                    <!-- Show Sign Up button if not signed up -->
                                     <form action="/signupEvent/<%= vol_events[iCount].event_id %>" method="POST">
                                         <button type="submit">Sign Up</button>
                                     </form>
@@ -94,7 +142,7 @@
                         </tr>
                     <% } %>
                 </tbody>
-            </table>            
+            </table>           
         <% } %>
     </div>
 </body>
