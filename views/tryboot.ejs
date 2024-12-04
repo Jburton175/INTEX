@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Support Turtle Shelter Project.">
+    <meta name="keywords" content="turtle, shelter, project, homelessness, donate">
+    <meta name="author" content="Turtle Shelter Project">
+    <title>Volunteer Registration - Turtle Shelter Project</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/2styles.css"> <!-- Custom Styles if needed -->
+</head>
+<body id="page-top">
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#">Turtle Shelter Project</a>
+            <img src="https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1532816947856-MIMDFIUYZHABRDQ4TWZC/Original+logo+low+resolution.png?format=1000w" alt="Turtle Shelter Project Logo" width="30%">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#donate">Donate</a></li>
+                    <li class="nav-item"><a class="nav-link" href="addVolunteer.ejs">Volunteer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.ejs">Sign In</a></li>
+                    <li class="nav-item"><a class="nav-link" href="createRequest.ejs">Request an Event</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="masthead bg-primary text-white text-center" style="background-image: url('https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1532816947856-MIMDFIUYZHABRDQ4TWZC/Original+logo+low+resolution.png?format=1000w'); background-size: cover; background-position: center;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="display-4">It Starts With You</h1>
+                    <p class="lead">Helping to save lives of people experiencing homelessness</p>
+                    <a href="#donate" class="btn btn-light btn-xl">Donate Today</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Volunteer Registration Form Section -->
+    <section class="page-section" id="volunteer">
+        <div class="container">
+            <h2 class="text-center">Volunteer Registration</h2>
+            <form action="/addVolunteer" method="POST" class="form-control-lg">
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="firstName" name="firstName" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" name="lastName" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="phone" name="phone" pattern="^\+?[1-9]\d{1,14}$" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Enter a Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="address1" class="form-label">Street Address 1</label>
+                    <input type="text" class="form-control" id="address1" name="address1" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="address2" class="form-label">Street Address 2 (Optional)</label>
+                    <input type="text" class="form-control" id="address2" name="address2">
+                </div>
+
+                <div class="mb-3">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" name="city" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="state" class="form-label">State</label>
+                    <input type="text" class="form-control" id="state" name="state" maxlength="2" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="zip" class="form-label">ZIP Code</label>
+                    <input type="text" class="form-control" id="zip" name="zip" pattern="^\d{5}(-\d{4})?$" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="source" class="form-label">How did you hear about us?</label>
+                    <select id="source" name="source" class="form-control" required>
+                        <option value="1">Friends/Family</option>
+                        <option value="2">Social Media</option>
+                        <option value="3">Advertisement</option>
+                        <option value="4">Website</option>
+                        <option value="5">Poster</option>
+                        <option value="6">Other</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="sewLevel" class="form-label">Sewing Level</label>
+                    <select id="sewLevel" name="sewLevel" class="form-control">
+                        <option value="1">No Experience</option>
+                        <option value="2">Beginner</option>
+                        <option value="3">Intermediate</option>
+                        <option value="4">Experienced</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="hours" class="form-label">Hours per month you are willing to serve</label>
+                    <input type="number" class="form-control" id="hours" name="hours" min="0" required>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4">
+        <p>&copy; 2024 Turtle Shelter Project | All rights reserved</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
