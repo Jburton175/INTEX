@@ -86,15 +86,20 @@ app.get('/dashboard', (req, res) => {
     console.log('Session on /dashboard:', req.session); // Debug session
     if (req.session.volunteer) {
         console.log('Logged-in role:', req.session.volunteer.role_name);
-        if(req.session.volunteer.role_name === "Admin"){
+
+        // Get the current date and time
+        const now = new Date();
+
+        if (req.session.volunteer.role_name === "Admin") {
             knex("events")
-            .select('events.*', knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
-            .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')
-            .groupBy('events.event_id')  // Group by event_id to count volunteers per event
-            .orderBy("event_datetime", "desc")
-            .then(vol_events => {
-                res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
-            });
+                .select('events.*', knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
+                .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')
+                .where('events.event_datetime', '>', now) // Only include events after the current date
+                .groupBy('events.event_id') // Group by event_id to count volunteers per event
+                .orderBy("event_datetime", "asc")
+                .then(vol_events => {
+                    res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
+                });
         } else {
             knex("events")
                 .leftJoin("event_volunteers as ev_signed_up", function () {
@@ -107,13 +112,14 @@ app.get('/dashboard', (req, res) => {
                     "ev_signed_up.vol_id as signed_up_vol_id", // Alias this for clarity
                     knex.raw("COUNT(ev.vol_id) as volunteers_signed_up")
                 )
+                .where("events.event_datetime", ">", now) // Only include events after the current date
                 .groupBy("events.event_id", "ev_signed_up.vol_id")
-                .orderBy("event_datetime", "desc")
+                .orderBy("event_datetime", "asc")
                 .then((vol_events) => {
                     res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
                 });
         }
-        
+
     } else {
         console.log('No session found. Redirecting to login.');
         res.redirect('/login');
