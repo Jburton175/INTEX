@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/2styles.css">
 </head>
 <body>
     <form action="/createRequest" method="POST">
@@ -48,13 +49,13 @@
             <input type="text" id="req_zip" name="req_zip" required>
             <br><br>
             <label for="est_attendees">Estimated # of Atendees:</label>
-            <input type="number" id="est_attendees" name="est_attendees" value="0" min="0" max="100">
+            <input type="number" id="est_attendees" name="est_attendees" value="0" min="0" max="500">
             <br><br>
             <label for="basic_sewers"># of Basic Sewers:</label>
-            <input type="number" id="basic_sewers" name="basic_sewers" value="0" min="0" max="100">
+            <input type="number" id="basic_sewers" name="basic_sewers" value="0" min="0" max="500">
             <br><br>
             <label for="advanced_sewers"># of Advanced Sewers:</label>
-            <input type="number" id="advanced_sewers" name="advanced_sewers" value="0" min="0" max="100">
+            <input type="number" id="advanced_sewers" name="advanced_sewers" value="0" min="0" max="500">
             <br><br>
             <label for="proposed_datetime">Date for Event:</label>
             <input type="date" id="proposed_datetime" name="proposed_datetime" required>
@@ -81,5 +82,6 @@
             <button type="submit">Save</button>
         </fieldset>
     </form>
+    <img class=responsive-img src="https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1627863598267-P2A08OTOD3MKAIBTX0SN/20200218_111850.jpg?format=2500w" alt="Event">
 </body>
 </html>

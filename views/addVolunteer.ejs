@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Information Form</title>
-  <link rel="stylesheet" href="styles.css"> <!-- You can link to a CSS file if you need styling -->
-</head>
+  <link rel="stylesheet" href="chatstyles.css"> <!-- You can link to a CSS file if you need styling -->
+<!-- </head>
 <body>
   <h1>Volunteer Registration Form</h1>
   <br><br><br><br><br>
@@ -96,6 +96,141 @@
       <button type="submit">Submit</button>
     </div>
   </form>
+
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Volunteer registration for the Turtle Shelter Project.">
+    <meta name="keywords" content="volunteer, shelter, homeless, donation, community">
+    <meta name="author" content="Turtle Shelter Project">
+    <title>Volunteer Registration - Turtle Shelter Project</title>
+    <link rel="stylesheet" href="chatstyles.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="#">Turtle Shelter Project</a>
+                <img src="https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1532816947856-MIMDFIUYZHABRDQ4TWZC/Original+logo+low+resolution.png?format=1000w" alt="Turtle Shelter Project Logo" width="15%">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#donate">Donate</a></li>
+                <li><a href="addVolunteer.ejs">Volunteer</a></li>
+                <li><a href="login.ejs">Sign In</a></li>
+                <li><a href="createRequest.ejs">Request an Event</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Volunteer and Make a Difference</h1>
+            <p>Your time and effort can help change lives.</p>
+        </div>
+    </section>
+
+    <!-- Volunteer Registration Form -->
+    <section id="volunteer" class="volunteer-form">
+        <div class="form-container">
+            <h2>Volunteer Registration</h2>
+            <form action="/addVolunteer" method="POST">
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" name="phone" pattern="^\+?[1-9]\d{1,14}$" required placeholder="+1 234 567 890">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Enter a Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address1">Street Address 1:</label>
+                    <input type="text" id="address1" name="address1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address2">Street Address 2 (optional):</label>
+                    <input type="text" id="address2" name="address2">
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+
+                <div class="form-group"></div>
+                    <select name="state" id="state" required>
+                        <option value="" disabled selected>Select a state</option>
+                        <% states.forEach(function(state) { %>
+                            <option value="<%= state %>"><%= state %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="zip">ZIP Code:</label>
+                    <input type="text" id="zip" name="zip" pattern="^\d{5}(-\d{4})?$" required placeholder="12345 or 12345-6789">
+                </div>
+
+                <div class="form-group">
+                    <label for="source">How did you hear about us?</label>
+                    <select name="source" id="source">
+                      <% source.forEach(item => { %>
+                          <option value="<%= item.vol_source %>"><%= item.source_type %></option>
+                      <% }) %>
+                  </select>    
+                  </div>
+
+
+                <div class="form-group">
+                    <label for="sewLevel">Sewing Level:</label>
+                    <select name="sewLevel" id="sewLevel">
+                        <% proficiency.forEach(item => { %>
+                            <option value="<%= item.level_id %>"><%= item.level %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="hours">Hours per month you are willing to serve:</label>
+                    <input type="number" id="hours" name="hours" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="cta-button">Submit</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Turtle Shelter Project | All rights reserved</p>
+    </footer>
 
 </body>
 </html>

@@ -1,53 +1,96 @@
-// this is porter trying to use git hub and push changes and such
 let express = require('express');
 let app = express();
-app.use(express.json());
-let path = require('path');
-const PORT = process.env.PORT || 3000
-// Set Security 
-let security = false;
-let volunteer;
-app.use(express.urlencoded( {extended: true} )); 
+const path = require('path');
+const session = require('express-session');
+const PORT = process.env.PORT || 3000;
 
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
-// Serve static files (CSS, images, etc.)
+// Middleware for parsing request bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Static files (CSS, images, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Set up EJS for templating
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
+// Initialize session middleware
+app.use(session({
+    secret: 'intex2346235346', // Replace with a strong secret key
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } // Use `true` for HTTPS
+}));
 
-const knex = require("knex") ({
-  client : "pg",
-  connection : {
-  host : process.env.RDS_HOSTNAME || "localhost",
-  user : process.env.RDS_USERNAME || "postgres",
-  password : process.env.RDS_PASSWORD || "Admin",
-  database : process.env.RDS_DB_NAME || "TurtleShelter",
-  port : process.env.RDS_PORT || 5432,
-  ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false  // Fixed line
-}
-})
+const knex = require("knex")({
+    client: "pg",
+    connection: {
+        host: process.env.RDS_HOSTNAME || "localhost",
+        user: process.env.RDS_USERNAME || "postgres",
+        password: process.env.RDS_PASSWORD || "admin",
+        database: process.env.RDS_DB_NAME || "TurtleShelter",
+        port: process.env.RDS_PORT || 5432,
+        ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false
+    }
+});
 
-
-
-const excludedRoutes = ['/', '/about', "/requestEvent", '/help', '/addVolunteer', '/manageUsers', '/createRequest', '/manageRequests'];
+// Excluded routes that don't require login
+const excludedRoutes = ['/', '/login', '/requestEvent', '/addVolunteer','/createRequest'];
 
 // Middleware to enforce login check
 app.use((req, res, next) => {
-    // Check if the route is excluded
-    if (excludedRoutes.includes(req.path)) {
-        console.log(excludedRoutes);
-        console.log(req.path);
-        return next(); // Skip login check for excluded routes
-    }
-    
-    // If security is false, render the login page
-    if (!security) {
-        console.log(security);
-        return res.render('login'); // Render the login page
+    // Skip excluded routes and favicon.ico
+    if (excludedRoutes.includes(req.path) || req.path === '/favicon.ico') {
+        return next();
     }
 
-    next(); // Proceed to the requested route
+    // Redirect to login if no session exists
+    if (!req.session.volunteer) {
+        console.log('Access denied. Redirecting to login.');
+        return res.redirect('/login');
+    }
+
+    next(); // Allow access if logged in
+});
+
+// Login route
+app.post('/login', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    knex('volunteers')
+        .join('roles', 'roles.role_id', '=', 'volunteers.role_id')
+        .select('volunteers.vol_id', 'roles.role_name')
+        .where("vol_email", username)
+        .where("password", password) // Replace with hashed password comparison
+        .first()
+        .then(volunteer => {
+            if (volunteer) {
+                req.session.volunteer = volunteer; // Save volunteer to session
+                console.log('Volunteer logged in:', req.session.volunteer);
+                res.redirect('/dashboard');
+            } else {
+                console.log('Invalid username or password');
+                res.status(401).send("Invalid username or password");
+            }
+        })
+        .catch(error => {
+            console.error('Error during database query:', error.stack);
+            res.status(500).send('Database query failed: ' + error.message);
+        });
+});
+
+// Dashboard route (protected)
+app.get('/dashboard', (req, res) => {
+    console.log('Session on /dashboard:', req.session); // Debug session
+    if (req.session.volunteer) {
+        console.log('Logged-in role:', req.session.volunteer.role_name);
+        res.render("dashboard", { volunteer: req.session.volunteer });
+    } else {
+        console.log('No session found. Redirecting to login.');
+        res.redirect('/login');
+    }
 });
 
 
@@ -66,41 +109,6 @@ app.get('/login', (req, res) => {
 
 
 
-app.post('/login', async (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-
-    console.log('Request body:', req.body); // Log incoming data
-
-    try {
-        const volunteer = await knex('volunteers')
-            .join('roles', 'roles.role_id', '=', 'volunteers.role_id')
-            .select(
-                'volunteers.vol_id',
-                'roles.role_name'
-            )
-            .where("vol_email", username)
-            .where("password", password) // Insecure: Replace with hashed password comparison
-            .first();
-
-        if (volunteer) {
-            security = true;
-            console.log('Set Security to True');
-            console.log('Actual Security: ' + security);
-        } else {
-            security = false;
-            console.log('Set Security to False');
-            console.log('Actual Security: ' + security);
-        }
-
-        console.log('Volunteer record:', volunteer);
-        res.send(volunteer ? 'Login Successful' : 'Login Failed'); // Temporary response for testing
-        // res.render("/dashboard", {volunteer});
-    } catch (error) {
-        console.error('Error during database query:', error.stack);
-        return res.status(500).send('Database query failed: ' + error.message);
-    }
-});
 
 
 // Serve static files (e.g., CSS) if needed
@@ -325,6 +333,111 @@ app.post('/addVolunteer', (req, res) => {
   });
 
 
+// render page to edit a volunteer
+app.get('/editVolunteer/:id', (req, res) => {
+  let id = req.params.id
+  
+  knex('volunteers')
+  .where('vol_id', id)
+  .first()
+  .then(volunteer => {
+      if (!volunteer) {
+          return res.status(404).send('Volunteer not found');
+      }
+
+      // query for sewing proficiency dropdown
+      knex('sewing_proficiency')
+      .select('level_id', 'level') 
+      .then(proficiency => {
+          // query for roles dropdown
+          knex('roles')
+              .select('role_id', 'role_name')
+              .then(role => {
+                  // query for source dropdown
+                  knex('vol_source')
+                      .select('source_id', 'source_type') 
+                      .then(source => {
+                          // Render the EJS template with all data
+                          res.render('editVolunteer', { volunteer, proficiency, role, source });
+                      })
+                      .catch(error => {
+                          console.error('Error fetching sources: ', error);
+                          res.status(500).send('Internal Server Error');
+                      });
+              })
+              .catch(error => {
+                  console.error('Error fetching roles: ', error);
+                  res.status(500).send('Internal Server Error');
+              });
+      })
+      .catch(error => {
+          console.error('Error fetching proficiency: ', error);
+          res.status(500).send('Internal Server Error');
+      });
+  })
+  .catch(error => {
+      console.error('Error fetching volunteer: ', error);
+      res.status(500).send('Internal Server Error');
+  });
+})
+
+
+
+// post edits to a volunteer
+app.post('/editVolunteer/:id', (req, res) => {
+  const id = req.params.id;
+
+  const firstname = req.body.firstName;  // Access form data sent via POST
+  const lastname = req.body.lastName;  
+  const email = req.body.email;  
+  const phone = req.body.phone;  
+  const password = req.body.password;  
+  const sAddress1 = req.body.address1;  
+  const sAddress2 = req.body.address2;  
+  const city = req.body.city;  
+  const state = req.body.state;  
+  const zip = req.body.zip;  
+  const source = parseInt(req.body.source); 
+  const role = parseInt(req.body.role);
+  const sew_id = parseInt(req.body.sewLevel);  
+  const hours = parseInt(req.body.hours);  
+  // const formData = req.body;
+  // console.log(formData);
+  // console.log(formData);       // For demonstration, log the submitted data
+  console.log('Request body:', req.body);
+
+  knex('volunteers')
+      .where('vol_id', id)
+      .update({
+          vol_first_name: firstname,
+          vol_last_name: lastname, 
+          vol_phone: phone,
+          vol_email: email,
+          password: password,
+          role_id: role,
+          vol_street_1: sAddress1,
+          vol_street_2: sAddress2,
+          vol_city: city,
+          vol_state: state.toUpperCase(),
+          vol_zip: zip,
+          source_id: source,
+          vol_sew_level_id: sew_id,
+          vol_hours_per_month: hours,
+          
+      })
+      .then(() => {
+          console.log('Form submitted successfully!');
+          console.log('Request body:', req.body);
+          res.redirect('/manageUsers'); 
+      })
+
+      .catch(error => {
+          console.error('Error adding a volunteer:', error);
+          console.log('Request body:', req.body);
+          res.status(500).send('Internal Server Error');
+
+      });
+});
 
 
 
