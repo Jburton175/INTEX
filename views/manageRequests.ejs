@@ -53,7 +53,7 @@
                         <td><%= myrequests[iCount].est_duration %></td>
                         <td><%= myrequests[iCount].request_status_name %></td>
                         <td style="text-align: center;">
-                            <form action="/createEvent/<%= myrequests[iCount].id %>" method="GET">
+                            <form action="/createEvent/<%= myrequests[iCount].request_id %>" method="GET">
                                 <button type="submit">Approve</button>
                             </form>
                         </td>

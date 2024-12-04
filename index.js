@@ -81,40 +81,96 @@ app.post('/login', (req, res) => {
         });
 });
 
+
+// Logout route
+app.get('/logout', (req, res) => {
+    // Destroy the session
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error during session destruction:', err.stack);
+            return res.status(500).send('Failed to log out. Please try again.');
+        }
+
+        // Redirect to the login page after logging out
+        res.redirect('/login');
+    });
+});
+
+
 // Dashboard route (protected)
 app.get('/dashboard', (req, res) => {
     console.log('Session on /dashboard:', req.session); // Debug session
     if (req.session.volunteer) {
         console.log('Logged-in role:', req.session.volunteer.role_name);
-        if(req.session.volunteer.role_name === "Admin"){
+
+        // Get the current date and time
+        const now = new Date();
+
+        if (req.session.volunteer.role_name === "Admin") {
             knex("events")
-            .select('events.*', knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
-            .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')
-            .groupBy('events.event_id')  // Group by event_id to count volunteers per event
-            .orderBy("event_datetime", "desc")
-            .then(vol_events => {
-                res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
-            });
+                .select(
+                    "events.*", 
+                    "event_status.event_status_name",
+                    "event_type.event_type_name",
+                    knex.raw("COUNT(ev.vol_id) as volunteers_signed_up")
+                )
+                .join("event_status", "events.event_status_id", "=", "event_status.status_id")
+                .join("event_type", "events.event_type_id", "=", "event_type.event_type_id")
+                .leftJoin("event_volunteers as ev", "ev.event_id", "=", "events.event_id")
+                .where("events.event_datetime", ">", now) // Only include events after the current date
+                .where("event_status.event_status_name", "<>", "Canceled")
+                .groupBy(
+                    "events.event_id",
+                    "event_status.event_status_name",
+                    "event_type.event_type_name"
+                ) // Include all selected non-aggregated fields
+                .orderBy("event_datetime", "asc")
+                .then(vol_events => {
+                    res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
+                })
+                .catch(error => {
+                    console.error("Admin Query Error:", error);
+                    res.status(500).send("Error fetching admin events.");
+                });
         } else {
             knex("events")
-            .leftJoin("event_volunteers as ev_signed_up", function() {
-                this.on("ev_signed_up.event_id", "=", "events.event_id")
-                    .andOn("ev_signed_up.vol_id", "=", req.session.volunteer.vol_id);
-            })
-            .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')  // Use alias for counting volunteers
-            .select('events.*', knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
-            .groupBy('events.event_id')  // Group by event_id to count volunteers per event
-            .orderBy("event_datetime", "desc")
-            .then(vol_events => {
-                res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
-            });
+                .join("event_status", "events.event_status_id", "=", "event_status.status_id")
+                .join("event_type", "events.event_type_id", "=", "event_type.event_type_id")
+                .leftJoin("event_volunteers as ev_signed_up", function () {
+                    this.on("ev_signed_up.event_id", "=", "events.event_id")
+                        .andOn("ev_signed_up.vol_id", "=", req.session.volunteer.vol_id);
+                })
+                .leftJoin("event_volunteers as ev", "ev.event_id", "=", "events.event_id") // Count volunteers
+                .select(
+                    "events.*",
+                    "ev_signed_up.vol_id as signed_up_vol_id", // Alias this for clarity
+                    "event_status.event_status_name",
+                    "event_type.event_type_name",
+                    knex.raw("COUNT(ev.vol_id) as volunteers_signed_up")
+                )
+                .where("events.event_datetime", ">", now) // Only include events after the current date
+                .where("event_status.event_status_name", "<>", "Canceled")
+                .groupBy(
+                    "events.event_id",
+                    "ev_signed_up.vol_id",
+                    "event_status.event_status_name",
+                    "event_type.event_type_name"
+                ) // Include all selected non-aggregated fields
+                .orderBy("event_datetime", "asc")
+                .then(vol_events => {
+                    res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
+                })
+                .catch(error => {
+                    console.error("Volunteer Query Error:", error);
+                    res.status(500).send("Error fetching volunteer events.");
+                });
         }
-        
     } else {
-        console.log('No session found. Redirecting to login.');
-        res.redirect('/login');
+        console.log("No session found. Redirecting to login.");
+        res.redirect("/login");
     }
 });
+
 
 
 
@@ -130,7 +186,50 @@ app.get('/login', (req, res) => {
 
 });
 
+app.post('/signupEvent/:event_id', (req, res) => {
+    const eventId = req.params.event_id;
+    const volunteerId = req.session.volunteer.vol_id;
 
+    knex('event_volunteers')
+        .where({ event_id: eventId, vol_id: volunteerId })
+        .first()
+        .then((existingSignup) => {
+            if (existingSignup) {
+                console.log("You are already signed up for this event.");
+                return res.redirect('/dashboard');
+            }
+
+            return knex('event_volunteers')
+                .insert({ event_id: eventId, vol_id: volunteerId })
+                .then(() => {
+                    res.redirect('/dashboard');
+                });
+        })
+        .catch((error) => {
+            console.error('Error signing up:', error);
+            res.status(500).send('An error occurred during sign up.');
+        });
+});
+
+
+
+
+app.post('/deleteSignup/:eventId', (req, res) => {
+    const eventId = req.params.eventId;
+    const volunteerId = req.session.volunteer.vol_id;
+
+    knex('event_volunteers')
+        .where({ event_id: eventId, vol_id: volunteerId })
+        .del()
+        .then(() => {
+            console.log(`Volunteer ${volunteerId} removed from event ${eventId}`);
+            res.redirect('/dashboard'); // Redirect back to the dashboard after deletion
+        })
+        .catch(err => {
+            console.error('Error deleting signup:', err);
+            res.status(500).send('Error deleting signup');
+        });
+});
 
 
 
@@ -167,7 +266,7 @@ app.get('/manageRequests', (req, res) => {
             "request_status.request_status_id",
             "request_status.request_status_name",
             "event_type.event_type_name")
-            .where('request_status' == 1)
+            .where('requests.request_status_id', 1)
             .then(requests => { // selects all the info from the requests table and passes it to display characters ejs
         res.render("manageRequests", {myrequests : requests});
     }).catch( err => {
@@ -293,17 +392,17 @@ app.get('/addVolunteer', (req, res) => {
                       })
                       .catch(error => {
                           console.error('Error fetching sources: ', error);
-                          res.status(500).send('Internal Server Error 1');
+                          res.status(500).send('Internal Server Error');
                       });
               })
               .catch(error => {
                   console.error('Error fetching roles: ', error);
-                  res.status(500).send('Internal Server Error 2');
+                  res.status(500).send('Internal Server Error');
               });
       })
       .catch(error => {
           console.error('Error fetching proficiency: ', error);
-          res.status(500).send('Internal Server Error 3');
+          res.status(500).send('Internal Server Error');
       });
 });
 
@@ -533,13 +632,13 @@ app.get('/manageEvents', (req, res) => {
 	    "events.vests",
 	    "events.completed_products",
 	    "events.distributed_products",
-	    "events.volunteers_present",
+	    "events.volunteers_needed",
         "volunteers.vol_first_name",
         "volunteers.vol_last_name",
         "event_status.event_status_name",
         "event_type.event_type_name",
         "location_type.location_type_name"
-    )
+    ).whereNot('events.event_status_id', 3) // Exclude rows where event_status_id = cancelled
     .then(events => {
         res.render('manageEvents', { events });
     })
@@ -547,7 +646,24 @@ app.get('/manageEvents', (req, res) => {
         console.error('Error querying database: ', error);
         res.status(500).send('Internal Server Error');
     });
-  });
+});
+
+app.post('/cancelEvent/:event_id', (req, res) => {
+    const evtstatus = 3
+    // Update the character in the database
+    knex('events')
+      .where('event_id', parseInt(req.params.event_id))
+      .update({
+        event_status_id: evtstatus 
+      })
+      .then(events => {
+        res.redirect('/manageEvents'); // Redirect to the list of requests
+      })
+      .catch(error => {
+        console.error('Error updating character:', error);
+        res.status(500).send('Internal Server Error');
+      });
+});
 
 // route to delete volunteer
 app.post('/deleteVolunteer/:id', (req, res) => {
@@ -564,6 +680,151 @@ app.post('/deleteVolunteer/:id', (req, res) => {
             res.status(500).send('Internal Server Error');
         });
   });
+
+
+
+// render the createEvent page
+app.get('/createEvent/:id', (req, res) => {
+  let id = req.params.id
+  
+  // querying data for the chosen request that will become an event
+  knex('requests')
+  .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
+  .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
+  .where('request_id', id)
+  .first()
+  .then(request => {
+      if (!request) {
+          return res.status(404).send('Request not found');
+      }
+
+      knex('volunteers')
+      .select('vol_first_name', 'vol_last_name', 'vol_id')
+      .where('role_id', 1)
+      .then(admins => {
+          if (admins.length === 0) {
+              return res.status(404).send('Administrators not found');
+          }
+
+          knex('event_type')
+          .select('event_type_id', 'event_type_name')
+          .then(types => {
+              if (types.length === 0) {
+                  return res.status(404).send('Event types not found');
+              }
+
+              knex('location_type')
+              .select('location_type_id', 'location_type_name')
+              .then(locations => {
+                  if (locations.length === 0) {
+                      return res.status(404).send('Location types not found');
+                  }
+
+                  const states = [
+                      "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+                      "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+                      "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+                      "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+                      "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+                  ];
+      
+                  const hours = [];
+                  for (let i = 1; i <= 12; i++) {
+                      hours.push(i); // Add whole hours
+                      if (i < 12) {
+                      hours.push(i + 0.5); // Add half hour increments
+                  }}
+      
+                  res.render("createEvent", {request, admins, types, locations, states, hours});
+              })
+
+          })
+          .catch(error => {
+              console.error('Error fetching event types: ', error);
+              res.status(500).send('Internal Server Error');
+          });
+      })
+      .catch(error => {
+          console.error('Error fetching administrators: ', error);
+          res.status(500).send('Internal Server Error');
+      });
+  })
+  .catch(error => {
+      console.error('Error fetching request information: ', error);
+      res.status(500).send('Internal Server Error');
+  });
+  // make sure you update event status to approved
+
+})
+  
+// post to create an event
+app.post('/createEvent/:request_id', (req, res) => {
+  const request_id = req.params.request_id;
+
+  const event_datetime = req.body.event_datetime;  
+  const supervisor_id = req.body.supervisor_id;
+  const event_status_id = 1;  
+  const event_type_id = req.body.event_type_id;  
+  const event_street_1 = req.body.event_street_1;  
+  const event_street_2 = req.body.event_street_2 || '';  
+  const event_city = req.body.event_city;  
+  const event_state = req.body.event_state;  
+  const event_zip = req.body.event_zip;  
+  const location_type_id = req.body.location_type_id;  
+  //const participants = req.body.participants;  
+  //const event_duration = req.body.event_duration;  
+  //const pockets = req.body.pockets;
+  //const collars = req.body.collars;
+  //const envelopes = req.body.envelopes;
+  //const vests = req.body.vests;
+  //const completed_products = req.body.completed_products;
+  //const distributed_products =req.body.distributed_products;
+  const volunteers_needed = req.body.volunteers_needed;
+  const organization_name = req.body.organization_name;
+  
+  console.log('Request body:', req.body);
+  if (!supervisor_id || isNaN(parseInt(supervisor_id))) {
+      return res.status(400).send('Invalid supervisor_id: Please select a valid supervisor.');
+  }
+
+  knex('events')
+      .insert({
+          request_id: request_id,  // Access form data sent via POST
+          supervisor_id: supervisor_id,  
+          event_status_id : event_status_id,
+          event_datetime: event_datetime,  
+          event_type_id: event_type_id,  
+          event_status_id: event_status_id,  
+          event_street_1: event_street_1,  
+          event_street_2: event_street_2,  
+          event_city: event_city,  
+          event_state: event_state,  
+          event_zip: event_zip,  
+          location_type_id: location_type_id,  
+          //participants: participants,  
+          //event_duration: event_duration,  
+          //pockets: pockets,
+          //collars: collars,
+          //envelopes: envelopes,
+          //vests: vests,
+          //completed_products: completed_products,
+          //distributed_products:distributed_products,
+          volunteers_needed: volunteers_needed,
+          organization_name: organization_name
+      })
+      .then(() => {
+          console.log('Form submitted successfully!');
+          console.log('Request body:', req.body);
+          res.redirect('/manageRequests'); 
+      })
+
+      .catch(error => {
+          console.error('Error adding a volunteer:', error);
+          console.log('Request body:', req.body);
+          res.status(500).send('Internal Server Error while posting');
+
+      });
+});
   
 
 // port number, (parameters) => what you want it to do.
