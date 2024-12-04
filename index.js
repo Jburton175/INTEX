@@ -325,6 +325,111 @@ app.post('/addVolunteer', (req, res) => {
   });
 
 
+// render page to edit a volunteer
+app.get('/editVolunteer/:id', (req, res) => {
+  let id = req.params.id
+  
+  knex('volunteers')
+  .where('vol_id', id)
+  .first()
+  .then(volunteer => {
+      if (!volunteer) {
+          return res.status(404).send('Volunteer not found');
+      }
+
+      // query for sewing proficiency dropdown
+      knex('sewing_proficiency')
+      .select('level_id', 'level') 
+      .then(proficiency => {
+          // query for roles dropdown
+          knex('roles')
+              .select('role_id', 'role_name')
+              .then(role => {
+                  // query for source dropdown
+                  knex('vol_source')
+                      .select('source_id', 'source_type') 
+                      .then(source => {
+                          // Render the EJS template with all data
+                          res.render('editVolunteer', { volunteer, proficiency, role, source });
+                      })
+                      .catch(error => {
+                          console.error('Error fetching sources: ', error);
+                          res.status(500).send('Internal Server Error');
+                      });
+              })
+              .catch(error => {
+                  console.error('Error fetching roles: ', error);
+                  res.status(500).send('Internal Server Error');
+              });
+      })
+      .catch(error => {
+          console.error('Error fetching proficiency: ', error);
+          res.status(500).send('Internal Server Error');
+      });
+  })
+  .catch(error => {
+      console.error('Error fetching volunteer: ', error);
+      res.status(500).send('Internal Server Error');
+  });
+})
+
+
+
+// post edits to a volunteer
+app.post('/editVolunteer/:id', (req, res) => {
+  const id = req.params.id;
+
+  const firstname = req.body.firstName;  // Access form data sent via POST
+  const lastname = req.body.lastName;  
+  const email = req.body.email;  
+  const phone = req.body.phone;  
+  const password = req.body.password;  
+  const sAddress1 = req.body.address1;  
+  const sAddress2 = req.body.address2;  
+  const city = req.body.city;  
+  const state = req.body.state;  
+  const zip = req.body.zip;  
+  const source = parseInt(req.body.source); 
+  const role = parseInt(req.body.role);
+  const sew_id = parseInt(req.body.sewLevel);  
+  const hours = parseInt(req.body.hours);  
+  // const formData = req.body;
+  // console.log(formData);
+  // console.log(formData);       // For demonstration, log the submitted data
+  console.log('Request body:', req.body);
+
+  knex('volunteers')
+      .where('vol_id', id)
+      .update({
+          vol_first_name: firstname,
+          vol_last_name: lastname, 
+          vol_phone: phone,
+          vol_email: email,
+          password: password,
+          role_id: role,
+          vol_street_1: sAddress1,
+          vol_street_2: sAddress2,
+          vol_city: city,
+          vol_state: state.toUpperCase(),
+          vol_zip: zip,
+          source_id: source,
+          vol_sew_level_id: sew_id,
+          vol_hours_per_month: hours,
+          
+      })
+      .then(() => {
+          console.log('Form submitted successfully!');
+          console.log('Request body:', req.body);
+          res.redirect('/manageUsers'); 
+      })
+
+      .catch(error => {
+          console.error('Error adding a volunteer:', error);
+          console.log('Request body:', req.body);
+          res.status(500).send('Internal Server Error');
+
+      });
+});
 
 
 
