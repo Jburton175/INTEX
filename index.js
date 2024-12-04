@@ -578,7 +578,7 @@ app.get('/manageEvents', (req, res) => {
 	    "events.vests",
 	    "events.completed_products",
 	    "events.distributed_products",
-	    "events.volunteers_present",
+	    "events.volunteers_needed",
         "volunteers.vol_first_name",
         "volunteers.vol_last_name",
         "event_status.event_status_name",
