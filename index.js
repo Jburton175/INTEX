@@ -103,7 +103,7 @@ app.get('/dashboard', (req, res) => {
             })
             .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')  // Use alias for counting volunteers
             .select('events.*', "ev_signed_up.vol_id", knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
-            .groupBy('events.event_id')  // Group by event_id to count volunteers per event
+            .groupBy("events.event_id", "ev_signed_up.vol_id")  // Group by event_id to count volunteers per event
             .orderBy("event_datetime", "desc")
             .then(vol_events => {
                 res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
