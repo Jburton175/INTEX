@@ -365,6 +365,48 @@ app.get('/manageUsers', (req, res) => {
   });
 });
 
+app.get('/manageEvents', (req, res) => {
+    knex('events')
+    .join('volunteers', 'events.supervisor_id', '=', 'volunteers.vol_id')
+    .join('event_status', 'events.event_status_id', '=', 'event_status.status_id')
+    .join('event_type', 'events.event_type_id', '=', 'event_type.event_type_id')
+    .join('location_type', 'events.location_type_id', '=', 'event_type.event_type_id')
+    .select(
+        "events.event_id", // ghost
+	    "events.request_id", // ghost
+	    "events.event_datetime",
+	    "events.supervisor_id", // name of supervisor, from volunteers
+	    "events.event_status_id", // from event_status table we need the name
+	    "events.event_type_id", // from the table we need the type name
+	    "events.event_street_1",
+	    "events.event_street_2",
+	    "events.event_city",
+	    "events.event_state",
+	    "events.event_zip",
+	    "events.location_type_id", // get the location type
+	    "events.participants",
+	    "events.event_duration",
+	    "events.pockets",
+	    "events.collars",
+	    "events.envelopes",
+	    "events.vests",
+	    "events.completed_products",
+	    "events.distributed_products",
+	    "events.volunteers_present",
+        "volunteers.vol_first_name",
+        "volunteers.vol_last_name",
+        "event_status.event_status_name",
+        "event_type.event_type_name",
+        "location_type.location_type_name"
+    )
+    .then(events => {
+        res.render('manageEvents', { events });
+    })
+    .catch(error => {
+        console.error('Error querying database: ', error);
+        res.status(500).send('Internal Server Error');
+    });
+  });
 
 // route to delete volunteer
 app.post('/deleteVolunteer/:id', (req, res) => {

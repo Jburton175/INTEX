@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <label><b>Events:</b></label>
+        <br><br>
+        <table style="width: 100%; background-color: antiquewhite; border: 1px solid black">
+            <thead style="background-color: cornflowerblue; color:white;">
+                <tr>
+                    <th style="text-align: left;">Date of Event:</th>
+                    <th style="text-align: left;">Supervisor Name:</th>
+                    <th style="text-align: left;">Event Status:</th>
+                    <th style="text-align: left;">Event Type:</th>
+                    <th style="text-align: left;">Event Location:</th>
+                    <th style="text-align: left;">Location Type:</th>
+                    <th style="text-align: left;"># of Particpants</th>
+                    <th style="text-align: left;">Duration of Event</th>
+                    <th style="text-align: left;"># of Pockets Produced</th>
+                    <th style="text-align: left;"># of Collars Produced</th>
+                    <th style="text-align: left;"># of Collars Produced</th>
+                    <th style="text-align: left;"># of Collars Produced</th>
+                    <th style="text-align: left;"># of Vests Produced</th>
+                    <th style="text-align: left;"># of Vests Distributed</th>
+                    <th style="text-align: left;"># of Volunteers Present</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody style="font-family: Arial, Helvetica, sans-serif; font-size: 9pt;">
+                <% for (let iCount = 0; iCount < events.length; iCount++) { %>
+                    <tr>
+                        <td><%= events[iCount].event_datetime %></td>
+                        <td><%= events[iCount].vol_first_name %> <%= events[iCount].vol_last_name %></td>
+                        <td><%= events[iCount].event_status_name %></td>
+                        <td><%= events[iCount].event_type_name %></td>
+                        <td><%= events[iCount].event_street_1 %> <%= events[iCount].event_street_2 %>, <%= events[iCount].event_city %>, <%= events[iCount].event_state %>, <%= events[iCount].event_zip %></td>
+                        <td><%= events[iCount].location_type_name %></td>
+                        <td><%= events[iCount].participants %></td>
+                        <td><%= events[iCount].event_duration %></td>
+                        <td><%= events[iCount].pockets %></td>
+                        <td><%= events[iCount].collars %></td>
+                        <td><%= events[iCount].envelopes %></td>
+                        <td><%= events[iCount].vests %></td>
+                        <td><%= events[iCount].completed_products %></td>
+                        <td><%= events[iCount].distributed_products %></td>
+                        <td><%= events[iCount].volunteers_present %></td>
+                        <td style="text-align: center;">
+                            <form action="/editEvent/<%= events[iCount].event_id %>" method="GET">
+                                <button type="submit">Edit</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+
+        </table>
+        <br>
+        <form action="/createEvent" method="GET">
+            <button type="submit">Add an Event</button>
+        </form>
+        <br><br>
+        <form action="/" method="GET">
+            <button type="submit">Home</button>
+        </form>
+</body>
+</html>
+
