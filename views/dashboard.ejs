@@ -115,9 +115,9 @@
                             <td><%= vol_events[iCount].event_type_name %></td>
                             <td>
                                 <%= vol_events[iCount].event_street_1 %>
-                                <% if (vol_events[iCount].event_street_2) { %> 
+                                <% if (vol_events[iCount].event_street_2 && vol_events[iCount].event_street_2.trim() !== "") { %> 
                                     <%= " " + vol_events[iCount].event_street_2 %>
-                                <% } %>,
+                                <% } %>                                
                                 <%= vol_events[iCount].event_city %>, <%= vol_events[iCount].event_state %>, 
                                 <%= vol_events[iCount].event_zip %>
                             </td>
