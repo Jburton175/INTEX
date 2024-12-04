@@ -141,7 +141,7 @@ app.post('/addVolunteer', (req, res) => {
     // const formData = req.body;
     // console.log(formData);
     // console.log(formData);       // For demonstration, log the submitted data
-    
+    console.log('Request body:', req.body);
   
     knex('volunteers')
         .insert({
