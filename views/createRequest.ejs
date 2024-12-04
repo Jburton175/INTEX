@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/createRequest" method="POST">
+        <fieldset style="width: 0px">
+            <legend>Request an Event:</legend>
+            <br>
+            <!-- NAME AUTO FILLING TXT FIELDS WITH EXISTING NAME -->
+            <input type="hidden" id="request_id" name="request_id">
+            <label for="organization_name">Organization Name:</label>
+            <input type="text" id="organization_name" name="organization_name">
+            <br><br>
+            <label for="contact_first_name">First Name:</label>
+            <input type="text" id="contact_first_name" name="contact_first_name">
+            <br><br>
+            <label for="contact_last_name">Last Name:</label>
+            <input type="text" id="contact_last_name" name="contact_last_name">
+            <br><br>
+            <label for="contact_phone">Phone Number:</label>
+            <input type="text" id="contact_phone" name="contact_phone">
+            <br><br>
+            <label for="contact_email">Email:</label>
+            <input type="text" id="contact_email" name="contact_email">
+            <br><br>
+            <label for="req_street_1">Street Address 1:</label>
+            <input type="text" id="req_street_1" name="req_street_1">
+            <br><br>
+            <label for="req_street_2">Street Address 2:</label>
+            <input type="text" id="req_street_2" name="req_street_2">
+            <br><br>
+            <label for="req_city">City:</label>
+            <input type="text" id="req_city" name="req_city">
+            <br><br>
+            <label for="req_state">State:</label>
+            <select name="req_state" id="req_state" required>
+                <option value="" disabled selected>Select a state</option>
+                <% states.forEach(function(state) { %>
+                    <option value="<%= state %>"><%= state %></option>
+                <% }) %>
+            </select>
+            <br><br>
+            <label for="req_zip">Zip:</label>
+            <input type="text" id="req_zip" name="req_zip">
+            <br><br>
+            <label for="est_attendees">Estimated # of Atendees:</label>
+            <input type="text" id="est_attendees" name="est_attendees">
+            <br><br>
+            <label for="basic_sewers"># of Basic Sewers:</label>
+            <input type="text" id="basic_sewers" name="basic_sewers">
+            <br><br>
+            <label for="advanced_sewers"># of Advanced Sewers:</label>
+            <input type="text" id="advanced_sewers" name="advanced_sewers">
+            <br><br>
+            <label for="proposed_datetime">Date for Event:</label>
+            <input type="date" id="proposed_datetime" name="proposed_datetime" required>
+            <br><br>
+            <label for="alt_datetime">Alternate Date for Event:</label>
+            <input type="date" id="alt_datetime" name="alt_datetime" required>
+            <br><br>
+            <select name="est_duration" id="est_duration" required>
+                <option value="" disabled selected>Estimated Duration in Hours</option>
+                <% hours.forEach(function(hours) { %>
+                    <option value="<%= hours %>"><%= hours %></option>
+                <% }) %>
+            </select>
+            <br><br>
+            <label for="num_machines">Number of Available Machines:</label>
+            <input type="number" name="num_machines" id="num_machines" value="1" min="0" max="100" />
+            <br><br>
+            <label for="num_sergers">Number of Available Serger:</label>
+            <input type="number" name="num_sergers" id="num_sergers" value="1" min="0" max="100" />
+            <br><br>
+            <label for="jen_story">Would you like Jen to share her story?</label>
+                <input type="checkbox" id="jen_story" name="jen_story"> <!-- if the character is a jedi-->
+                <br><br>
+            <button type="submit">Save</button>
+        </fieldset>
+    </form>
+</body>
+</html>
