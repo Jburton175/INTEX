@@ -39,12 +39,12 @@
             cursor: not-allowed;
         }
         button[type="submit"] {
-            background-color: lightslategray; /* Lighter gray color for the delete button */
+            background-color: lightslategray; /* darker gray color for the delete button */
             color: black;
             transition: background-color 0.3s ease;
         }
         button[type="submit"]:hover {
-            background-color: lightgray; /* Darker shade of gray on hover */
+            background-color: lightgray; /* lighter shade of gray on hover */
         }
     </style>
     
@@ -97,7 +97,6 @@
                     <tr>
                         <th>Date of Event</th>
                         <th>Duration of Event</th>
-                        <th>Event Status</th>
                         <th>Event Type</th>
                         <th>Event Location</th>
                         <th>Estimated Participants</th>
@@ -110,11 +109,13 @@
                     <% for (let iCount = 0; iCount < vol_events.length; iCount++) { %>
                         <tr>
                             <td><%= new Date(vol_events[iCount].event_datetime).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %></td>
-                            <td><%= vol_events[iCount].event_duration %></td>
-                            <td><%= vol_events[iCount].event_status_name %></td>
+                            <td><%= vol_events[iCount].event_duration %></td> 
                             <td><%= vol_events[iCount].event_type_name %></td>
                             <td>
-                                <%= vol_events[iCount].event_street_1 %> <%= vol_events[iCount].event_street_2 %>, 
+                                <%= vol_events[iCount].event_street_1 %>
+                                <% if (vol_events[iCount].event_street_2) { %> 
+                                    <%= " " + vol_events[iCount].event_street_2 %>
+                                <% } %>,
                                 <%= vol_events[iCount].event_city %>, <%= vol_events[iCount].event_state %>, 
                                 <%= vol_events[iCount].event_zip %>
                             </td>
