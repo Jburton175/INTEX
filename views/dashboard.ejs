@@ -45,13 +45,63 @@
     </div>
 
     <div class="main-content">
-        <h1>Welcome to the Dashboard</h1>
-        <p><strong>Debug Info:</strong> Your role is: <%= volunteer.role_name %></p>
+        <!-- <h1>Welcome to the Dashboard</h1>
+        <p><strong>Debug Info:</strong> Your role is: <%= volunteer.role_name %></p> -->
 
         <% if (volunteer.role_name === 'admin') { %>
             <p>This is the admin dashboard.</p>
         <% } else { %>
-            <p>This is the general user dashboard.</p>
+            <table style="width: 100%; background-color: antiquewhite; border: 1px solid black">
+                <thead style="background-color: cornflowerblue; color:white;">
+                    <tr>
+                        <th style="text-align: left;">Date of Event:</th>
+                        <th style="text-align: left;">Supervisor Name:</th>
+                        <th style="text-align: left;">Event Status:</th>
+                        <th style="text-align: left;">Event Type:</th>
+                        <th style="text-align: left;">Event Location:</th>
+                        <th style="text-align: left;">Location Type:</th>
+                        <th style="text-align: left;"># of Particpants</th>
+                        <th style="text-align: left;">Duration of Event</th>
+                        <th style="text-align: left;"># of Vests Distributed</th>
+                        <th style="text-align: left;"># of Volunteers Present</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody style="font-family: Arial, Helvetica, sans-serif; font-size: 9pt;">
+                    <% for (let iCount = 0; iCount < vol_events.length; iCount++) { %>
+                        <tr>
+                            <td><%= vol_events[iCount].event_datetime %></td>
+                            <td><%= vol_events[iCount].vol_first_name %> <%= vol_events[iCount].vol_last_name %></td>
+                            <td><%= vol_events[iCount].event_status_name %></td>
+                            <td><%= vol_events[iCount].event_type_name %></td>
+                            <td><%= vol_events[iCount].event_street_1 %> <%= vol_events[iCount].event_street_2 %>, <%= vol_events[iCount].event_city %>, <%= vol_events[iCount].event_state %>, <%= vol_events[iCount].event_zip %></td>
+                            <td><%= vol_events[iCount].location_type_name %></td>
+                            <td><%= vol_events[iCount].participants %></td>
+                            <td><%= vol_events[iCount].event_duration %></td>
+                            <td><%= vol_events[iCount].distributed_products %></td>
+                            <td><%= vol_events[iCount].volunteers_present %></td>
+                            <td style="text-align: center;">
+                                <% if (vol_events[iCount].volunteers_signed_up >= vol_events[iCount].volunteers_needed) { %>
+                                    <button disabled>Sign Up (Full)</button>
+                                <% } else { %>
+                                    <form action="/signupEvent/<%= vol_events[iCount].event_id %>" method="POST">
+                                        <button type="submit">Sign Up</button>
+                                    </form>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+    
+            </table>
+            <br>
+            <form action="/createEvent" method="GET">
+                <button type="submit">Add an Event</button>
+            </form>
+            <br><br>
+            <form action="/" method="GET">
+                <button type="submit">Home</button>
+            </form>
         <% } %>
     </div>
 </body>

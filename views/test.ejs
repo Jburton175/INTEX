@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Page</title>
+</head>
+<body>
+  <h1>States List</h1>
+  <ul>
+    <% if (states && states.length > 0) { %>
+      <% states.forEach(function(state) { %>
+        <li><%= state %></li>
+      <% }) %>
+    <% } else { %>
+      <li>No states available</li>
+    <% } %>
+  </ul>
+</body>
+</html>
