@@ -253,6 +253,14 @@ app.post('/createRequest', (req, res) => {
 
 // render the addVolunteer page
 app.get('/addVolunteer', (req, res) => {
+  const states = [
+    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+];
+  console.log('States:', states);
   knex('sewing_proficiency')
       .select('level_id', 'level') // Query sewing_proficiency
       .then(proficiency => {
@@ -263,23 +271,39 @@ app.get('/addVolunteer', (req, res) => {
                       .select('vol_source', 'source_type') // Query vol_source
                       .then(source => {
                           // Render the EJS template with all data
-                          res.render('addVolunteer', { proficiency, role, source });
+                          console.log('Rendering with data:', { proficiency, role, source, states });  // Log the data to check what's being passed
+                          res.render('addVolunteer', { proficiency, role, source, states });
                       })
                       .catch(error => {
                           console.error('Error fetching sources: ', error);
-                          res.status(500).send('Internal Server Error');
+                          res.status(500).send('Internal Server Error 1');
                       });
               })
               .catch(error => {
                   console.error('Error fetching roles: ', error);
-                  res.status(500).send('Internal Server Error');
+                  res.status(500).send('Internal Server Error 2');
               });
       })
       .catch(error => {
           console.error('Error fetching proficiency: ', error);
-          res.status(500).send('Internal Server Error');
+          res.status(500).send('Internal Server Error 3');
       });
 });
+
+
+//testing a few things in this route
+app.get('/test', (req, res) => {
+  const states = [
+    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+  ];
+
+  res.render('test', { states });
+});
+
 
 app.post('/addVolunteer', (req, res) => {
     const firstname = req.body.firstName || '';  // Access form data sent via POST
