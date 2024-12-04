@@ -20,7 +20,7 @@ app.use(session({
     secret: 'intex2346235346', // Replace with a strong secret key
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: True } // Use `true` for HTTPS
+    cookie: { secure: true } // Use `true` for HTTPS
 }));
 
 const knex = require("knex")({
@@ -253,14 +253,6 @@ app.post('/createRequest', (req, res) => {
 
 // render the addVolunteer page
 app.get('/addVolunteer', (req, res) => {
-  const states = [
-    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
-    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
-    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
-];
-
   knex('sewing_proficiency')
       .select('level_id', 'level') // Query sewing_proficiency
       .then(proficiency => {
@@ -271,7 +263,7 @@ app.get('/addVolunteer', (req, res) => {
                       .select('vol_source', 'source_type') // Query vol_source
                       .then(source => {
                           // Render the EJS template with all data
-                          res.render('addVolunteer', { proficiency, role, source, states });
+                          res.render('addVolunteer', { proficiency, role, source });
                       })
                       .catch(error => {
                           console.error('Error fetching sources: ', error);
