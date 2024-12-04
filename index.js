@@ -214,7 +214,7 @@ app.get('/manageRequests', (req, res) => {
             "request_status.request_status_id",
             "request_status.request_status_name",
             "event_type.event_type_name")
-            .where('requests.request_status_id' == 1)
+            .where('requests.request_status_id', 1)
             .then(requests => { // selects all the info from the requests table and passes it to display characters ejs
         res.render("manageRequests", {myrequests : requests});
     }).catch( err => {
