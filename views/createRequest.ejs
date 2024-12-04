@@ -13,28 +13,28 @@
             <!-- NAME AUTO FILLING TXT FIELDS WITH EXISTING NAME -->
             <input type="hidden" id="request_id" name="request_id">
             <label for="organization_name">Organization Name:</label>
-            <input type="text" id="organization_name" name="organization_name">
+            <input type="text" id="organization_name" name="organization_name" required>
             <br><br>
             <label for="contact_first_name">First Name:</label>
-            <input type="text" id="contact_first_name" name="contact_first_name">
+            <input type="text" id="contact_first_name" name="contact_first_name" required>
             <br><br>
             <label for="contact_last_name">Last Name:</label>
-            <input type="text" id="contact_last_name" name="contact_last_name">
+            <input type="text" id="contact_last_name" name="contact_last_name" required>
             <br><br>
             <label for="contact_phone">Phone Number:</label>
-            <input type="text" id="contact_phone" name="contact_phone">
+            <input type="text" id="contact_phone" name="contact_phone" required>
             <br><br>
             <label for="contact_email">Email:</label>
-            <input type="text" id="contact_email" name="contact_email">
+            <input type="text" id="contact_email" name="contact_email" required>
             <br><br>
             <label for="req_street_1">Street Address 1:</label>
-            <input type="text" id="req_street_1" name="req_street_1">
+            <input type="text" id="req_street_1" name="req_street_1" required>
             <br><br>
             <label for="req_street_2">Street Address 2:</label>
             <input type="text" id="req_street_2" name="req_street_2">
             <br><br>
             <label for="req_city">City:</label>
-            <input type="text" id="req_city" name="req_city">
+            <input type="text" id="req_city" name="req_city" required>
             <br><br>
             <label for="req_state">State:</label>
             <select name="req_state" id="req_state" required>
@@ -45,22 +45,22 @@
             </select>
             <br><br>
             <label for="req_zip">Zip:</label>
-            <input type="text" id="req_zip" name="req_zip">
+            <input type="text" id="req_zip" name="req_zip" required>
             <br><br>
             <label for="est_attendees">Estimated # of Atendees:</label>
-            <input type="text" id="est_attendees" name="est_attendees">
+            <input type="number" id="est_attendees" name="est_attendees" value="0" min="0" max="100">
             <br><br>
             <label for="basic_sewers"># of Basic Sewers:</label>
-            <input type="text" id="basic_sewers" name="basic_sewers">
+            <input type="number" id="basic_sewers" name="basic_sewers" value="0" min="0" max="100">
             <br><br>
             <label for="advanced_sewers"># of Advanced Sewers:</label>
-            <input type="text" id="advanced_sewers" name="advanced_sewers">
+            <input type="number" id="advanced_sewers" name="advanced_sewers" value="0" min="0" max="100">
             <br><br>
             <label for="proposed_datetime">Date for Event:</label>
             <input type="date" id="proposed_datetime" name="proposed_datetime" required>
             <br><br>
             <label for="alt_datetime">Alternate Date for Event:</label>
-            <input type="date" id="alt_datetime" name="alt_datetime" required>
+            <input type="date" id="alt_datetime" name="alt_datetime">
             <br><br>
             <select name="est_duration" id="est_duration" required>
                 <option value="" disabled selected>Estimated Duration in Hours</option>
@@ -70,10 +70,10 @@
             </select>
             <br><br>
             <label for="num_machines">Number of Available Machines:</label>
-            <input type="number" name="num_machines" id="num_machines" value="1" min="0" max="100" />
+            <input type="number" name="num_machines" id="num_machines" value="0" min="0" max="100" />
             <br><br>
             <label for="num_sergers">Number of Available Serger:</label>
-            <input type="number" name="num_sergers" id="num_sergers" value="1" min="0" max="100" />
+            <input type="number" name="num_sergers" id="num_sergers" value="0" min="0" max="100" />
             <br><br>
             <label for="jen_story">Would you like Jen to share her story?</label>
                 <input type="checkbox" id="jen_story" name="jen_story"> <!-- if the character is a jedi-->
