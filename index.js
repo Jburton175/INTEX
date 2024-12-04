@@ -140,6 +140,7 @@ app.get('/manageRequests', (req, res) => {
             "requests.req_zip",
             "request_status.request_status_id",
             "request_status.request_status_name")
+            .where('request_status' == 1)
             .then(requests => { // selects all the info from the requests table and passes it to display characters ejs
         res.render("manageRequests", {myrequests : requests});
     }).catch( err => {
@@ -249,6 +250,23 @@ app.post('/createRequest', (req, res) => {
         console.log(err);
         res.status(500).json({err});
     });
+});
+
+app.post('/denyRequest/:request_id', (req, res) => {
+    const reqstatus = 3
+    // Update the character in the database
+    knex('requests')
+      .where('request_id', parseInt(req.params.request_id))
+      .update({
+        request_status_id: reqstatus 
+      })
+      .then(myrequests => {
+        res.redirect('/manageRequests'); // Redirect to the list of requests
+      })
+      .catch(error => {
+        console.error('Error updating character:', error);
+        res.status(500).send('Internal Server Error');
+      });
 });
 
 // render the addVolunteer page
