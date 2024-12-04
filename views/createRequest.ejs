@@ -11,7 +11,6 @@
         <fieldset style="width: 0px">
             <legend>Request an Event:</legend>
             <br>
-            <!-- NAME AUTO FILLING TXT FIELDS WITH EXISTING NAME -->
             <input type="hidden" id="request_id" name="request_id">
             <label for="organization_name">Organization Name:</label>
             <input type="text" id="organization_name" name="organization_name" required>
@@ -48,14 +47,22 @@
             <label for="req_zip">Zip:</label>
             <input type="text" id="req_zip" name="req_zip" required>
             <br><br>
+            <label for="req_type_id">Type of Event:</label>
+            <select name="req_type_id" id="req_type_id" required>
+                <option value="" disabled selected>Select an Event Activity</option>
+                <% eventTypes.forEach(type => { %>
+                    <option value="<%= type.event_type_id %>"><%= type.event_type_name %></option>
+                <% }) %>
+            </select>
+            <br><br>
             <label for="est_attendees">Estimated # of Atendees:</label>
-            <input type="number" id="est_attendees" name="est_attendees" value="0" min="0" max="500">
+            <input type="number" id="est_attendees" name="est_attendees" value="0" min="0" max="100">
             <br><br>
             <label for="basic_sewers"># of Basic Sewers:</label>
-            <input type="number" id="basic_sewers" name="basic_sewers" value="0" min="0" max="500">
+            <input type="number" id="basic_sewers" name="basic_sewers" value="0" min="0" max="100">
             <br><br>
             <label for="advanced_sewers"># of Advanced Sewers:</label>
-            <input type="number" id="advanced_sewers" name="advanced_sewers" value="0" min="0" max="500">
+            <input type="number" id="advanced_sewers" name="advanced_sewers" value="0" min="0" max="100">
             <br><br>
             <label for="proposed_datetime">Date for Event:</label>
             <input type="date" id="proposed_datetime" name="proposed_datetime" required>
@@ -73,7 +80,7 @@
             <label for="num_machines">Number of Available Machines:</label>
             <input type="number" name="num_machines" id="num_machines" value="0" min="0" max="100" />
             <br><br>
-            <label for="num_sergers">Number of Available Serger:</label>
+            <label for="num_sergers">Number of Available Sergers:</label>
             <input type="number" name="num_sergers" id="num_sergers" value="0" min="0" max="100" />
             <br><br>
             <label for="jen_story">Would you like Jen to share her story?</label>

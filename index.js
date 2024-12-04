@@ -86,7 +86,30 @@ app.get('/dashboard', (req, res) => {
     console.log('Session on /dashboard:', req.session); // Debug session
     if (req.session.volunteer) {
         console.log('Logged-in role:', req.session.volunteer.role_name);
-        res.render("dashboard", { volunteer: req.session.volunteer });
+        if(req.session.volunteer.role_name === "Admin"){
+            knex("events")
+            .select('events.*', knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
+            .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')
+            .groupBy('events.event_id')  // Group by event_id to count volunteers per event
+            .orderBy("event_datetime", "desc")
+            .then(vol_events => {
+                res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
+            });
+        } else {
+            knex("events")
+            .leftJoin("event_volunteers as ev_signed_up", function() {
+                this.on("ev_signed_up.event_id", "=", "events.event_id")
+                    .andOn("ev_signed_up.vol_id", "=", req.session.volunteer.vol_id);
+            })
+            .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')  // Use alias for counting volunteers
+            .select('events.*', knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
+            .groupBy('events.event_id')  // Group by event_id to count volunteers per event
+            .orderBy("event_datetime", "desc")
+            .then(vol_events => {
+                res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
+            });
+        }
+        
     } else {
         console.log('No session found. Redirecting to login.');
         res.redirect('/login');
@@ -115,7 +138,9 @@ app.get('/login', (req, res) => {
 // app.use(express.static('public'));
 
 app.get('/manageRequests', (req, res) => {
-    knex("requests").join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
+    knex("requests")
+    .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
+    .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
     .select("requests.request_id",
             "requests.request_datetime",
             "requests.organization_name",
@@ -138,8 +163,11 @@ app.get('/manageRequests', (req, res) => {
             "requests.req_city",
             "requests.req_state",
             "requests.req_zip",
+            "requests.req_type_id",
             "request_status.request_status_id",
-            "request_status.request_status_name")
+            "request_status.request_status_name",
+            "event_type.event_type_name")
+            .where('request_status' == 1)
             .then(requests => { // selects all the info from the requests table and passes it to display characters ejs
         res.render("manageRequests", {myrequests : requests});
     }).catch( err => {
@@ -149,32 +177,11 @@ app.get('/manageRequests', (req, res) => {
   });
 
   app.get('/createRequest', (req, res) => {
-    knex("requests").join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
-    .select("requests.request_id",
-            "requests.request_datetime",
-            "requests.organization_name",
-            "requests.contact_phone",
-            "requests.est_attendees",
-            "requests.basic_sewers",
-            "requests.advanced_sewers",
-            "requests.proposed_datetime",
-            "requests.alt_datetime",
-            "requests.est_duration",
-            "requests.contact_first_name",
-            "requests.contact_last_name",
-            "requests.num_machines",
-            "requests.num_sergers",
-            "requests.contact_email",
-            "requests.jen_story",
-            "requests.request_status_id as request_status",
-            "requests.req_street_1",
-            "requests.req_street_2",
-            "requests.req_city",
-            "requests.req_state",
-            "requests.req_zip",
-            "request_status.request_status_id",
-            "request_status.request_status_name")
-            .then(requests => { // selects all the info from the requests table and passes it to display characters ejs
+    knex("event_type")
+    .select("event_type_id",
+            "event_type_name"
+    )
+            .then(eventTypes => { // selects all the info from the requests table and passes it to display characters ejs
 
         const states = [
             "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
@@ -192,7 +199,7 @@ app.get('/manageRequests', (req, res) => {
         }
 }
 
-        res.render("createRequest", {myrequests : requests, states, hours});
+        res.render("createRequest", {eventTypes, states, hours});
     }).catch( err => {
         console.log(err);
         res.status(500).json({err});
@@ -221,6 +228,7 @@ app.post('/createRequest', (req, res) => {
     const req_city = req.body.req_city;
     const req_state = req.body.req_state;
     const req_zip = req.body.req_zip;
+    const req_type_id = req.body.req_type_id;
 
     knex('requests').insert({
         contact_first_name: contact_first_name,
@@ -242,13 +250,31 @@ app.post('/createRequest', (req, res) => {
         req_street_2: req_street_2,
         req_city: req_city,
         req_state: req_state,
-        req_zip: req_zip
+        req_zip: req_zip,
+        req_type_id: req_type_id
     }).then(myrequests => {
         res.redirect("/");
     }).catch( err => {
         console.log(err);
         res.status(500).json({err});
     });
+});
+
+app.post('/denyRequest/:request_id', (req, res) => {
+    const reqstatus = 3
+    // Update the character in the database
+    knex('requests')
+      .where('request_id', parseInt(req.params.request_id))
+      .update({
+        request_status_id: reqstatus 
+      })
+      .then(myrequests => {
+        res.redirect('/manageRequests'); // Redirect to the list of requests
+      })
+      .catch(error => {
+        console.error('Error updating character:', error);
+        res.status(500).send('Internal Server Error');
+      });
 });
 
 // render the addVolunteer page
