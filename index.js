@@ -141,7 +141,7 @@ app.get('/createRequest', (req, res) => {
             "requests.jen_story",
             "requests.request_status_id as request_status",
             "requests.req_street_1",
-            "requests.req_street2",
+            "requests.req_street_2",
             "requests.req_city",
             "requests.req_state",
             "requests.req_zip",
