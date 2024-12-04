@@ -50,7 +50,7 @@
 
         /* Button Styles */
         button {
-            background-color: #4CAF50;  /* Softer green */
+            background-color: #559d58;  /* Softer green */
             color: white;
             padding: 8px 16px;
             border: none;
@@ -121,8 +121,11 @@
                         <td><%= row.vol_source_type%></td>
                         <td><%= row.vol_role%></td>
                         <td style="text-align: center;">
-                            <form action="/editVolunteer/<%= row.task_id %>" method="GET" style="display: inline;">
+                            <form action="/editVolunteer/<%= row.vol_id %>" method="GET" style="display: inline;">
                                 <button type="submit">Edit</button>
+                            </form>
+                            <form action="/deleteVolunteer/<%= row.vol_id %>" method="POST" style="display: inline;">
+                                <button type="submit">Delete</button>
                             </form>
                         </td>
                     </tr>

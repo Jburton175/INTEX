@@ -216,5 +216,21 @@ app.get('/manageUsers', (req, res) => {
   });
 });
 
+// route to delete volunteer
+app.post('/deleteVolunteer/:id', (req, res) => {
+  const id = req.params.id;
+
+  knex('volunteers')
+      .where ('vol_id', id)
+      .del()
+      .then(() => {
+          res.redirect('/manageUsers');
+      })
+      .catch(error => {
+          console.error('Error deleting volunteer:', error);
+          res.status(500).send('Internal Server Error');
+      });
+});
+
 // port number, (parameters) => what you want it to do.
 app.listen(PORT, () => console.log('Server started on port ' + PORT));
