@@ -620,7 +620,24 @@ app.get('/manageEvents', (req, res) => {
         console.error('Error querying database: ', error);
         res.status(500).send('Internal Server Error');
     });
-  });
+});
+
+app.post('/cancelEvent/:event_id', (req, res) => {
+    const evtstatus = 3
+    // Update the character in the database
+    knex('events')
+      .where('event_id', parseInt(req.params.event_id))
+      .update({
+        event_status_id: evtstatus 
+      })
+      .then(events => {
+        res.redirect('/manageEvents'); // Redirect to the list of requests
+      })
+      .catch(error => {
+        console.error('Error updating character:', error);
+        res.status(500).send('Internal Server Error');
+      });
+});
 
 // route to delete volunteer
 app.post('/deleteVolunteer/:id', (req, res) => {
