@@ -25,7 +25,7 @@
                     <th style="text-align: left;"># of Collars Produced</th>
                     <th style="text-align: left;"># of Vests Produced</th>
                     <th style="text-align: left;"># of Vests Distributed</th>
-                    <th style="text-align: left;"># of Volunteers Present</th>
+                    <th style="text-align: left;"># of Volunteers Needed</th>
                     <th></th>
                 </tr>
             </thead>
@@ -46,7 +46,7 @@
                         <td><%= events[iCount].vests %></td>
                         <td><%= events[iCount].completed_products %></td>
                         <td><%= events[iCount].distributed_products %></td>
-                        <td><%= events[iCount].volunteers_present %></td>
+                        <td><%= events[iCount].volunteers_needed %></td>
                         <td style="text-align: center;">
                             <form action="/editEvent/<%= events[iCount].event_id %>" method="GET">
                                 <button type="submit">Edit</button>
