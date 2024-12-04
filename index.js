@@ -97,17 +97,21 @@ app.get('/dashboard', (req, res) => {
             });
         } else {
             knex("events")
-            .leftJoin("event_volunteers as ev_signed_up", function() {
-                this.on("ev_signed_up.event_id", "=", "events.event_id")
-                    .andOn("ev_signed_up.vol_id", "=", req.session.volunteer.vol_id);
-            })
-            .leftJoin('event_volunteers as ev', 'ev.event_id', '=', 'events.event_id')  // Use alias for counting volunteers
-            .select('events.*', "ev_signed_up.vol_id", knex.raw('COUNT(ev.vol_id) as volunteers_signed_up'))
-            .groupBy("events.event_id", "ev_signed_up.vol_id")  // Group by event_id to count volunteers per event
-            .orderBy("event_datetime", "desc")
-            .then(vol_events => {
-                res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
-            });
+                .leftJoin("event_volunteers as ev_signed_up", function () {
+                    this.on("ev_signed_up.event_id", "=", "events.event_id")
+                        .andOn("ev_signed_up.vol_id", "=", req.session.volunteer.vol_id);
+                })
+                .leftJoin("event_volunteers as ev", "ev.event_id", "=", "events.event_id") // Count volunteers
+                .select(
+                    "events.*",
+                    "ev_signed_up.vol_id as signed_up_vol_id", // Alias this for clarity
+                    knex.raw("COUNT(ev.vol_id) as volunteers_signed_up")
+                )
+                .groupBy("events.event_id", "ev_signed_up.vol_id")
+                .orderBy("event_datetime", "desc")
+                .then((vol_events) => {
+                    res.render("dashboard", { volunteer: req.session.volunteer, vol_events });
+                });
         }
         
     } else {
@@ -134,31 +138,27 @@ app.post('/signupEvent/:event_id', (req, res) => {
     const eventId = req.params.event_id;
     const volunteerId = req.session.volunteer.vol_id;
 
-    // Check if the volunteer is already signed up
     knex('event_volunteers')
         .where({ event_id: eventId, vol_id: volunteerId })
         .first()
-        .then(existingSignup => {
+        .then((existingSignup) => {
             if (existingSignup) {
-                return res.status(400).send('You are already signed up for this event.');
+                console.log("You are already signed up for this event.");
+                return res.redirect('/dashboard');
             }
 
-            // Proceed with signing up
-            knex('event_volunteers')
+            return knex('event_volunteers')
                 .insert({ event_id: eventId, vol_id: volunteerId })
                 .then(() => {
-                    res.redirect('/dashboard'); // Redirect to dashboard after signing up
-                })
-                .catch(error => {
-                    console.error('Error signing up:', error);
-                    res.status(500).send('An error occurred during sign up.');
+                    res.redirect('/dashboard');
                 });
         })
-        .catch(error => {
-            console.error('Error checking signup:', error);
-            res.status(500).send('An error occurred.');
+        .catch((error) => {
+            console.error('Error signing up:', error);
+            res.status(500).send('An error occurred during sign up.');
         });
 });
+
 
 
 
