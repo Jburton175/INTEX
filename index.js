@@ -385,7 +385,7 @@ app.get('/addVolunteer', (req, res) => {
               .select('role_id', 'role_name') // Query roles
               .then(role => {
                   knex('vol_source')
-                      .select('vol_source', 'source_type') // Query vol_source
+                      .select('source_id', 'source_type') // Query vol_source
                       .then(source => {
                           // Render the EJS template with all data
                           res.render('addVolunteer', { proficiency, role, source });
@@ -678,6 +678,151 @@ app.post('/deleteVolunteer/:id', (req, res) => {
             res.status(500).send('Internal Server Error');
         });
   });
+
+
+
+// render the createEvent page
+app.get('/createEvent/:id', (req, res) => {
+  let id = req.params.id
+  
+  // querying data for the chosen request that will become an event
+  knex('requests')
+  .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
+  .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
+  .where('request_id', id)
+  .first()
+  .then(request => {
+      if (!request) {
+          return res.status(404).send('Request not found');
+      }
+
+      knex('volunteers')
+      .select('vol_first_name', 'vol_last_name', 'vol_id')
+      .where('role_id', 1)
+      .then(admins => {
+          if (admins.length === 0) {
+              return res.status(404).send('Administrators not found');
+          }
+
+          knex('event_type')
+          .select('event_type_id', 'event_type_name')
+          .then(types => {
+              if (types.length === 0) {
+                  return res.status(404).send('Event types not found');
+              }
+
+              knex('location_type')
+              .select('location_type_id', 'location_type_name')
+              .then(locations => {
+                  if (locations.length === 0) {
+                      return res.status(404).send('Location types not found');
+                  }
+
+                  const states = [
+                      "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+                      "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+                      "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+                      "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+                      "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+                  ];
+      
+                  const hours = [];
+                  for (let i = 1; i <= 12; i++) {
+                      hours.push(i); // Add whole hours
+                      if (i < 12) {
+                      hours.push(i + 0.5); // Add half hour increments
+                  }}
+      
+                  res.render("createEvent", {request, admins, types, locations, states, hours});
+              })
+
+          })
+          .catch(error => {
+              console.error('Error fetching event types: ', error);
+              res.status(500).send('Internal Server Error');
+          });
+      })
+      .catch(error => {
+          console.error('Error fetching administrators: ', error);
+          res.status(500).send('Internal Server Error');
+      });
+  })
+  .catch(error => {
+      console.error('Error fetching request information: ', error);
+      res.status(500).send('Internal Server Error');
+  });
+  // make sure you update event status to approved
+
+})
+  
+// post to create an event
+app.post('/createEvent/:request_id', (req, res) => {
+  const request_id = req.params.request_id;
+
+  const event_datetime = req.body.event_datetime;  
+  const supervisor_id = req.body.supervisor_id;
+  const event_status_id = 1;  
+  const event_type_id = req.body.event_type_id;  
+  const event_street_1 = req.body.event_street_1;  
+  const event_street_2 = req.body.event_street_2 || '';  
+  const event_city = req.body.event_city;  
+  const event_state = req.body.event_state;  
+  const event_zip = req.body.event_zip;  
+  const location_type_id = req.body.location_type_id;  
+  //const participants = req.body.participants;  
+  //const event_duration = req.body.event_duration;  
+  //const pockets = req.body.pockets;
+  //const collars = req.body.collars;
+  //const envelopes = req.body.envelopes;
+  //const vests = req.body.vests;
+  //const completed_products = req.body.completed_products;
+  //const distributed_products =req.body.distributed_products;
+  const volunteers_needed = req.body.volunteers_needed;
+  const organization_name = req.body.organization_name;
+  
+  console.log('Request body:', req.body);
+  if (!supervisor_id || isNaN(parseInt(supervisor_id))) {
+      return res.status(400).send('Invalid supervisor_id: Please select a valid supervisor.');
+  }
+
+  knex('events')
+      .insert({
+          request_id: request_id,  // Access form data sent via POST
+          supervisor_id: supervisor_id,  
+          event_status_id : event_status_id,
+          event_datetime: event_datetime,  
+          event_type_id: event_type_id,  
+          event_status_id: event_status_id,  
+          event_street_1: event_street_1,  
+          event_street_2: event_street_2,  
+          event_city: event_city,  
+          event_state: event_state,  
+          event_zip: event_zip,  
+          location_type_id: location_type_id,  
+          //participants: participants,  
+          //event_duration: event_duration,  
+          //pockets: pockets,
+          //collars: collars,
+          //envelopes: envelopes,
+          //vests: vests,
+          //completed_products: completed_products,
+          //distributed_products:distributed_products,
+          volunteers_needed: volunteers_needed,
+          organization_name: organization_name
+      })
+      .then(() => {
+          console.log('Form submitted successfully!');
+          console.log('Request body:', req.body);
+          res.redirect('/manageRequests'); 
+      })
+
+      .catch(error => {
+          console.error('Error adding a volunteer:', error);
+          console.log('Request body:', req.body);
+          res.status(500).send('Internal Server Error while posting');
+
+      });
+});
   
 
 // port number, (parameters) => what you want it to do.
