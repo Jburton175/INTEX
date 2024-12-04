@@ -20,7 +20,7 @@ app.use(session({
     secret: 'intex2346235346', // Replace with a strong secret key
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false } // Use `true` for HTTPS
+    cookie: { secure: True } // Use `true` for HTTPS
 }));
 
 const knex = require("knex")({
@@ -92,11 +92,6 @@ app.get('/dashboard', (req, res) => {
         res.redirect('/login');
     }
 });
-
-
-
-
-
 
 
 
