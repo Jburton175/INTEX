@@ -4,23 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+
+    <link rel="stylesheet" href="/chatstyles.css">
+    
 </head>
 <body>
-    <h1>Welcome to the Dashboard</h1>
-    <p><strong>Debug Info:</strong> Your role is: <%= volunteer.role_name %></p>
+    <div class="navbar">
+        <ul>
+            <% if (volunteer.role_name.toLowerCase() === 'admin') { %>
+                <header>
+                    <nav class="navbar">
+                        <div class="logo">
+                            <a href="#">Turtle Shelter<br>Project</a>
+                            <!-- <img class='' src="/images\Original-Logo.png" alt="Turtle Shelter Project Logo" width=""> -->
+                        </div>
+                        <ul class="nav-links">
+                            <li><a href="/createRequest">Request an Event</a></li>
+                            <li><a href="/manageUsers">View Volunteers</a></li>
+                            <li><a href="/manageEvents">Manage Events</a></li>
+                            <li><a href="/manageRequests">Manage Requests</a></li>
+                        </ul>
+                    </nav>
+                </header>
+            <% } else { %>
+                
+                <header>
+                    <nav class="navbar">
+                        <div class="logo">
+                            <a href="#">Turtle Shelter<br>Project</a>
+                            <!-- <img class='' src="/images\Original-Logo.png" alt="Turtle Shelter Project Logo" width=""> -->
+                        </div>
+                        <ul class="nav-links">
+                            <li><a href="/createRequest">Request an Event</a></li>
+                        </ul>
+                    </nav>
+                </header>
+            <% } %>
+            
+        </ul>
+    </div>
 
-    <% if (volunteer.role_name === 'admin') { %>
-        <p>This is the admin dashboard.</p>
-        <button>Manage Users</button>
-        <button>View Reports</button>
-    <% } else if (volunteer.role_name === 'manager') { %>
-        <p>This is the manager dashboard.</p>
-        <button>Assign Tasks</button>
-        <button>View Team Performance</button>
-    <% } else { %>
-        <p>This is the general user dashboard.</p>
-        <button>View My Tasks</button>
-        <button>Submit Feedback</button>
-    <% } %>
+    <div class="main-content">
+        <h1>Welcome to the Dashboard</h1>
+        <p><strong>Debug Info:</strong> Your role is: <%= volunteer.role_name %></p>
+
+        <% if (volunteer.role_name === 'admin') { %>
+            <p>This is the admin dashboard.</p>
+        <% } else { %>
+            <p>This is the general user dashboard.</p>
+        <% } %>
+    </div>
 </body>
 </html>
