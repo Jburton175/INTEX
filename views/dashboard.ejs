@@ -6,6 +6,21 @@
     <title>Dashboard</title>
 </head>
 <body>
-    <p>This is our future Admin dashboard</p>
+    <h1>Welcome to the Dashboard</h1>
+    <p><strong>Debug Info:</strong> Your role is: <%= volunteer.role_name %></p>
+
+    <% if (volunteer.role_name === 'admin') { %>
+        <p>This is the admin dashboard.</p>
+        <button>Manage Users</button>
+        <button>View Reports</button>
+    <% } else if (volunteer.role_name === 'manager') { %>
+        <p>This is the manager dashboard.</p>
+        <button>Assign Tasks</button>
+        <button>View Team Performance</button>
+    <% } else { %>
+        <p>This is the general user dashboard.</p>
+        <button>View My Tasks</button>
+        <button>Submit Feedback</button>
+    <% } %>
 </body>
 </html>
