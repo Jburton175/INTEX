@@ -243,10 +243,35 @@ app.post('/createRequest', (req, res) => {
     });
 });
 
+// render the addVolunteer page
 app.get('/addVolunteer', (req, res) => {
-    res.render('addVolunteer');
-  
-  });
+  knex('sewing_proficiency')
+      .select('level_id', 'level') // Query sewing_proficiency
+      .then(proficiency => {
+          knex('roles')
+              .select('role_id', 'role_name') // Query roles
+              .then(role => {
+                  knex('vol_source')
+                      .select('vol_source', 'source_type') // Query vol_source
+                      .then(source => {
+                          // Render the EJS template with all data
+                          res.render('addVolunteer', { proficiency, role, source });
+                      })
+                      .catch(error => {
+                          console.error('Error fetching sources: ', error);
+                          res.status(500).send('Internal Server Error');
+                      });
+              })
+              .catch(error => {
+                  console.error('Error fetching roles: ', error);
+                  res.status(500).send('Internal Server Error');
+              });
+      })
+      .catch(error => {
+          console.error('Error fetching proficiency: ', error);
+          res.status(500).send('Internal Server Error');
+      });
+});
 
 app.post('/addVolunteer', (req, res) => {
     const firstname = req.body.firstName || '';  // Access form data sent via POST

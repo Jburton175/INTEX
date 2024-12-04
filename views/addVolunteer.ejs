@@ -62,33 +62,30 @@
 
     <div>
       <label for="source">How did you hear about us?</label>
-      <select id="source" name="source" required>
-        <option value="1">Friends/Family</option>
-        <option value="2">Social Media</option>
-        <option value="3">Advertisement</option>
-        <option value="4">Website</option>
-        <option value="5">Poster</option>
-        <option value="6">Other</option>
+      <select name="source" id="source">
+        <% source.forEach(item => { %>
+            <option value="<%= item.vol_source %>"><%= item.source_type %></option>
+        <% }) %>
+    </select>    
+    </div>
+
+    <div>
+      <label for="role" hidden>Role:</label>
+      <select name="role" id="role" hidden>
+          <% role.forEach(item => { %>
+              <option value="<%= item.role_id %>"><%= item.role_name %></option>
+          <% }) %>
       </select>
     </div>
 
     <div>
-        <label for="role" hidden>Role:</label>
-        <select id="role" name="role" hidden>
-          <option value="1">Admin</option>
-          <option value="2">Member</option>
-        </select>
-      </div>
-
-    <div>
-        <label for="sewLevel">Sewing Level:</label>
-        <select id="sewLevel" name="sewLevel">
-          <option value="1">No Experience</option>
-          <option value="2">Beginner</option>
-          <option value="3">Intermediate</option>
-          <option value="4">Experienced</option>
-        </select>
-      </div>
+      <label for="sewLevel">Sewing Level:</label>
+      <select name="sewLevel" id="sewLevel">
+          <% proficiency.forEach(item => { %>
+              <option value="<%= item.level_id %>"><%= item.level %></option>
+          <% }) %>
+      </select>
+    </div>
 
     <div>
       <label for="hours">Hours per month you are willing to serve:</label>
