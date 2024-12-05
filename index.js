@@ -766,76 +766,86 @@ app.get('/createEvent/:id', (req, res) => {
   });
   // make sure you update event status to approved
 
-})
+});
   
 // post to create an event
 app.post('/createEvent/:request_id', (req, res) => {
-  const request_id = req.params.request_id;
+    const request_id = req.params.request_id;
 
-  const event_datetime = req.body.event_datetime;  
-  const supervisor_id = req.body.supervisor_id;
-  const event_status_id = 1;  
-  const event_type_id = req.body.event_type_id;  
-  const event_street_1 = req.body.event_street_1;  
-  const event_street_2 = req.body.event_street_2 || '';  
-  const event_city = req.body.event_city;  
-  const event_state = req.body.event_state;  
-  const event_zip = req.body.event_zip;  
-  const location_type_id = req.body.location_type_id;  
-  //const participants = req.body.participants;  
-  //const event_duration = req.body.event_duration;  
-  //const pockets = req.body.pockets;
-  //const collars = req.body.collars;
-  //const envelopes = req.body.envelopes;
-  //const vests = req.body.vests;
-  //const completed_products = req.body.completed_products;
-  //const distributed_products =req.body.distributed_products;
-  const volunteers_needed = req.body.volunteers_needed;
-  const organization_name = req.body.organization_name;
+    const event_datetime = req.body.event_datetime;  
+    const supervisor_id = req.body.supervisor_id;
+    const event_status_id = 1;  
+    const event_type_id = req.body.event_type_id;  
+    const event_street_1 = req.body.event_street_1;  
+    const event_street_2 = req.body.event_street_2 || '';  
+    const event_city = req.body.event_city;  
+    const event_state = req.body.event_state;  
+    const event_zip = req.body.event_zip;  
+    const location_type_id = req.body.location_type_id;  
+    //const participants = req.body.participants;  
+    //const event_duration = req.body.event_duration;  
+    //const pockets = req.body.pockets;
+    //const collars = req.body.collars;
+    //const envelopes = req.body.envelopes;
+    //const vests = req.body.vests;
+    //const completed_products = req.body.completed_products;
+    //const distributed_products =req.body.distributed_products;
+    const volunteers_needed = req.body.volunteers_needed;
+    const organization_name = req.body.organization_name;
+    
+    console.log('Request body:', req.body);
+    if (!supervisor_id || isNaN(parseInt(supervisor_id))) {
+        return res.status(400).send('Invalid supervisor_id: Please select a valid supervisor.');
+    }
   
-  console.log('Request body:', req.body);
-  if (!supervisor_id || isNaN(parseInt(supervisor_id))) {
-      return res.status(400).send('Invalid supervisor_id: Please select a valid supervisor.');
-  }
+    knex('requests')
+        .where('request_id', request_id)
+        .update({
+            request_status_id : 2
+        })
+        .then(() => {
+            console.log('request status updated to approved')
+        })
 
-  knex('events')
-      .insert({
-          request_id: request_id,  // Access form data sent via POST
-          supervisor_id: supervisor_id,  
-          event_status_id : event_status_id,
-          event_datetime: event_datetime,  
-          event_type_id: event_type_id,  
-          event_status_id: event_status_id,  
-          event_street_1: event_street_1,  
-          event_street_2: event_street_2,  
-          event_city: event_city,  
-          event_state: event_state,  
-          event_zip: event_zip,  
-          location_type_id: location_type_id,  
-          //participants: participants,  
-          //event_duration: event_duration,  
-          //pockets: pockets,
-          //collars: collars,
-          //envelopes: envelopes,
-          //vests: vests,
-          //completed_products: completed_products,
-          //distributed_products:distributed_products,
-          volunteers_needed: volunteers_needed,
-          organization_name: organization_name
-      })
-      .then(() => {
-          console.log('Form submitted successfully!');
-          console.log('Request body:', req.body);
-          res.redirect('/manageRequests'); 
-      })
 
-      .catch(error => {
-          console.error('Error adding a volunteer:', error);
-          console.log('Request body:', req.body);
-          res.status(500).send('Internal Server Error while posting');
+    knex('events')
+        .insert({
+            request_id: request_id,  // Access form data sent via POST
+            supervisor_id: supervisor_id,  
+            event_status_id : event_status_id,
+            event_datetime: event_datetime,  
+            event_type_id: event_type_id,  
+            event_status_id: event_status_id,  
+            event_street_1: event_street_1,  
+            event_street_2: event_street_2,  
+            event_city: event_city,  
+            event_state: event_state,  
+            event_zip: event_zip,  
+            location_type_id: location_type_id,  
+            //participants: participants,  
+            //event_duration: event_duration,  
+            //pockets: pockets,
+            //collars: collars,
+            //envelopes: envelopes,
+            //vests: vests,
+            //completed_products: completed_products,
+            //distributed_products:distributed_products,
+            volunteers_needed: volunteers_needed,
+            organization_name: organization_name
+        })
+        .then(() => {
+            console.log('Form submitted successfully!');
+            console.log('Request body:', req.body);
+            res.redirect('/manageRequests'); 
+        })
+  
+        .catch(error => {
+            console.error('Error adding a volunteer:', error);
+            console.log('Request body:', req.body);
+            res.status(500).send('Internal Server Error while posting');
 
-      });
-});
+        });
+  });
 
 // render the complete event page
 app.get('/completeEvent/:id', (req, res) => {
