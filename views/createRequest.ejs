@@ -107,7 +107,7 @@
     
         <div class="form-group">
             <label for="est_attendees">Estimated # of Attendees:</label>
-            <input type="number" id="est_attendees" name="est_attendees" value="0" min="0" max="100">
+            <input type="number" id="est_attendees" name="est_attendees" value="0" min="0" max="1000">
         </div>
     
         <div class="form-group">
@@ -121,7 +121,7 @@
         </div>
     
         <div class="form-group">
-            <label for="proposed_datetime">Date for Event:</label>
+            <label for="proposed_datetime">Preferred Date for Event:</label>
             <input type="datetime-local" id="proposed_datetime" name="proposed_datetime" required>
         </div>
     
@@ -131,13 +131,15 @@
         </div>
     
         <div class="form-group">
+            <label for="est_duration">Estimated Duration</label>
             <select name="est_duration" id="est_duration" required>
-                <option value="" disabled selected>Estimated Duration in Hours</option>
+                <option value="" disabled selected>Choose duration</option>
                 <% hours.forEach(function(hours) { %>
-                    <option value="<%= hours %>"><%= hours %></option>
+                    <option value="<%= hours %>"><%= hours %> hours</option>
                 <% }) %>
             </select>
         </div>
+
     
         <div class="form-group">
             <label for="num_machines">Number of Available Machines:</label>

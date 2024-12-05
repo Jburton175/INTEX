@@ -340,7 +340,7 @@ app.post('/createRequest', (req, res) => {
     const num_machines = req.body.num_machines;
     const num_sergers = req.body.num_sergers;
     const contact_email = req.body.contact_email;
-    const jen_story = req.body.jen_story === 'true';
+    const jen_story = req.body.jen_story;
     const request_status_id = 1;
     const req_street_1 = req.body.req_street_1;
     const req_street_2 = req.body.req_street_2;
@@ -348,6 +348,7 @@ app.post('/createRequest', (req, res) => {
     const req_state = req.body.req_state;
     const req_zip = req.body.req_zip;
     const req_type_id = req.body.req_type_id;
+    const location_type_id = req.body.location_type_id;
 
     knex('requests').insert({
         contact_first_name: contact_first_name,
@@ -370,7 +371,8 @@ app.post('/createRequest', (req, res) => {
         req_city: req_city,
         req_state: req_state,
         req_zip: req_zip,
-        req_type_id: req_type_id
+        req_type_id: req_type_id,
+        location_type_id: location_type_id
     }).then(myrequests => {
         res.redirect("/");
     }).catch( err => {
