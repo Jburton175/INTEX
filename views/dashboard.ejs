@@ -14,7 +14,6 @@
         <ul>
             <% if (volunteer.role_name.toLowerCase() === 'admin') { %>
                 <header>
-                    <!-- <nav class="navbar"> -->
                         <div class="logo">
                             <a href="/">Turtle Shelter Project</a>
                             
@@ -25,22 +24,18 @@
                             <li><a href="/manageRequests">Manage Requests</a></li>
                             <li><a href="/logout">Logout</a></li>
                         </ul>
-                    <!-- </nav> -->
                 </header>
             <% } else { %>
                 
                 <header>
-                    <nav class="navbar">
                         <div class="logo">
                             <a href="#">Turtle Shelter Project</a>
-                            <!-- <img class='' src="/images\Original-Logo.png" alt="Turtle Shelter Project Logo" width=""> -->
                         </div>
                         <ul class="nav-links">
                             <li><a href="/createRequest">Request an Event</a></li>
                             <li><a href="/logout">Logout</a></li>
                         </ul>
-                    </nav>
-                </header>
+                 </header>
             <% } %>
             
         </ul>
@@ -64,6 +59,7 @@
                         <th>Volunteers Needed</th>
                         <th>Volunteers Attending</th>
                         <th>Action</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>

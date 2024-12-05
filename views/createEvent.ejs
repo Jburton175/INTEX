@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Create Event</title>
+    <link rel="stylesheet" href="/chatstyles.css">
 </head>
 <body>
     <form action="/createEvent/<%= request.request_id %>" method="POST">
-        <fieldset style="width: 600px">
-            <legend>Approve an Event:</legend>
+            <h2>Approve an Event:</h2>
             <br>
 
             <!-- contact info, autofills, no changes -->
@@ -170,5 +170,197 @@
             <button type="submit">Create Event</button>
         </fieldset>
     </form>
+
+
+
+<div class="form-container">
+  <form action="/createEvent/<%= request.request_id %>" method="POST">
+      <h2>Approve an Event:</h2>
+
+      <!-- Contact Info -->
+      <div class="form-group">
+          <label for="contact_first_name"><strong>Request Contact:</strong></label><br>
+          <label><%= request.contact_first_name %> <%= request.contact_last_name %></label><br>
+          <label><%= request.contact_email %></label><br>
+          <label><%= request.contact_phone %></label>
+      </div>
+
+      <!-- Event Info -->
+      <div class="form-group">
+          <label for="org_info"><strong>Event Info</strong></label><br><br>
+      </div>
+
+      <!-- Organization Name -->
+      <div class="form-group">
+          <label for="organization_name">Organization Name:</label>
+          <input type="text" id="organization_name" name="organization_name" required value="<%= request.organization_name %>">
+      </div>
+
+      <!-- Event Address Info -->
+      <div class="form-group">
+          <label for="event_street_1">Street Address 1:</label>
+          <input type="text" id="event_street_1" name="event_street_1" required value="<%= request.req_street_1 %>">
+      </div>
+      
+      <div class="form-group">
+          <label for="event_street_2">Street Address 2:</label>
+          <input type="text" id="event_street_2" name="event_street_2" value="<%= request.req_street_2 %>">
+      </div>
+      
+      <div class="form-group">
+          <label for="event_city">City:</label>
+          <input type="text" id="event_city" name="event_city" required value="<%= request.req_city %>">
+      </div>
+      
+      <div class="form-group">
+          <label for="event_state">State:</label>
+          <select name="event_state" id="event_state" required>
+              <option value="" disabled selected>Select a state</option>
+              <% states.forEach(function(state) { %>
+                  <option value="<%= request.req_state %>" <%= state === request.req_state ? 'selected' : '' %>>
+                      <%= state %></option>
+              <% }) %>
+          </select>
+      </div>
+      
+      <div class="form-group">
+          <label for="event_zip">Zip:</label>
+          <input type="text" id="event_zip" name="event_zip" required value="<%= request.req_zip %>">
+      </div>
+
+      <!-- Estimated Duration -->
+      <div class="form-group">
+          <label for="event_duration">Estimated Duration:</label>
+          <label name="event_duration" id="event_duration"><%=request.est_duration%> hours</label>
+      </div>
+
+      <!-- Predicted Participants -->
+      <div class="form-group">
+          <label for="participants">Predicted Participants:</label>
+          <label for="predicted_participants"><%= request.est_attendees %></label>
+      </div>
+
+      <!-- Number of Basic Sewers -->
+      <div class="form-group">
+          <label for="basic_sewers">Number of Basic Sewers: <%= request.basic_sewers %></label>
+      </div>
+
+      <!-- Number of Advanced Sewers -->
+      <div class="form-group">
+          <label for="advanced_sewers">Number of Advanced Sewers: <%= request.advanced_sewers %></label>
+      </div>
+
+      <!-- Number of Machines -->
+      <div class="form-group">
+          <label for="num_machines">Available Machines: <%= request.num_machines %></label>
+      </div>
+
+      <!-- Number of Sergers -->
+      <div class="form-group">
+          <label for="num_sergers">Available Sergers: <%= request.num_sergers %></label>
+      </div>
+
+      <!-- Jen Story -->
+      <div class="form-group">
+          <label for="jen_story">Jen Story: </label>
+          <span><%= request.jen_story ? "Yes" : "No" %></span>
+      </div>
+
+      <!-- Proposed Dates/Times -->
+      <div class="form-group">
+          <label for="times"><strong>Proposed Dates/Times:</strong></label><br><br>
+      </div>
+
+      <div class="form-group">
+          <label id="proposed_datetime" name="proposed_datetime">
+              <% 
+              const proposedDateFormatted = new Intl.DateTimeFormat('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
+              }).format(new Date(request.proposed_datetime)); 
+              %>
+              <span>Requested Date: <%= proposedDateFormatted %></span>
+          </label>
+      </div>
+
+      <!-- Alternate Date -->
+      <div class="form-group">
+          <label id="proposed_datetime" name="proposed_datetime">
+              <% 
+              const altTimeFormatted = new Intl.DateTimeFormat('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
+              }).format(new Date(request.alt_datetime)); 
+              %>
+              <span>Alternate Date: <%= altTimeFormatted %></span>
+          </label>  
+      </div>
+
+      <!-- Admin Information to Create Event -->
+      <div class="form-group">
+          <label for="create_event"><strong>Please fill in the following information to approve and create the event:</strong></label><br><br>
+      </div>
+
+      <!-- Event Date and Time -->
+      <div class="form-group">
+          <label for="event_datetime">Event Date and Time:</label>
+          <input type="datetime-local" id="event_datetime" name="event_datetime" required>
+      </div>
+
+      <!-- Event Supervisor -->
+      <div class="form-group">
+          <label for="supervisor_id">Event Supervisor:</label>
+          <select name="supervisor_id" id="supervisor_id" required>
+              <option value="" disabled selected>Select a Supervisor</option>
+              <% admins.forEach(admin => { %>
+                  <option value="<%= admin.vol_id %>"><%= admin.vol_first_name %> <%= admin.vol_last_name %></option>
+              <% }) %>
+          </select>
+      </div>
+
+      <!-- Event Type -->
+      <div class="form-group">
+          <label for="event_type_id">Event Type:</label>
+          <select name="event_type_id" id="event_type_id">
+              <% types.forEach(type => { %>
+                  <option value="<%= type.event_type_id %>" <%= request.req_type_id === type.event_type_id ? 'selected' : '' %>>
+                      <%= type.event_type_name %>
+                  </option>
+              <% }) %>
+          </select>
+      </div>
+
+      <!-- Location Type -->
+      <div class="form-group">
+          <label for="location_type_id">Location Type:</label>
+          <select name="location_type_id" id="location_type_id" required>
+              <option value="" disabled selected>Choose</option>
+              <% locations.forEach(location => { %>
+                  <option value="<%= location.location_type_id %>"><%= location.location_type_name %></option>
+              <% }) %>
+          </select>
+      </div>
+
+      <!-- Volunteers Needed -->
+      <div class="form-group">
+          <label for="volunteers_needed">Volunteers Needed: </label>
+          <input type="number" id="volunteers_needed" name="volunteers_needed" required min="1" max="75" value="<%= request.est_attendees / 10 %>">
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-group">
+          <button type="submit" class="cta-button">Create Event</button>
+      </div>
+  </form>
+</div>
+
 </body>
 </html>

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/chatstyles.css">
 </head>
 <body>
-    <header></header>
+    <header>
         <nav class="navbar">
             <div class="logo">
                 <a href="/">Turtle Shelter Project</a>
@@ -25,23 +25,23 @@
             <caption><b>Events</b></caption>
             <thead>
                 <tr>
-                    <th style="text-align: left;">Date of Event:</th>
-                    <th style="text-align: left;">Supervisor Name:</th>
-                    <th style="text-align: left;">Event Status:</th>
-                    <th style="text-align: left;">Event Type:</th>
-                    <th style="text-align: left;">Event Location:</th>
-                    <th style="text-align: left;">Location Type:</th>
-                    <th style="text-align: left;"># of Particpants</th>
-                    <th style="text-align: left;">Duration of Event</th>
-                    <th style="text-align: left;"># of Pockets Produced</th>
-                    <th style="text-align: left;"># of Collars Produced</th>
-                    <th style="text-align: left;"># of Collars Produced</th>
-                    <th style="text-align: left;"># of Collars Produced</th>
-                    <th style="text-align: left;"># of Vests Produced</th>
-                    <th style="text-align: left;"># of Vests Distributed</th>
-                    <th style="text-align: left;"># of Volunteers Needed</th>
-                    <th style="text-align: left;">Edit</th>
-                    <th style="text-align: left;">Delete</th>
+                    <th >Date of Event:</th>
+                    <th >Supervisor Name:</th>
+                    <th >Event Status:</th>
+                    <th >Event Type:</th>
+                    <th >Event Location:</th>
+                    <th >Location Type:</th>
+                    <th ># of Particpants</th>
+                    <th >Duration of Event</th>
+                    <th ># of Pockets Produced</th>
+                    <th ># of Collars Produced</th>
+                    <th ># of Collars Produced</th>
+                    <th ># of Collars Produced</th>
+                    <th ># of Vests Produced</th>
+                    <th ># of Vests Distributed</th>
+                    <th ># of Volunteers Needed</th>
+                    <th >Complete</th>
+                    <th >Cancel</th>
                 
                 </tr>
             </thead>
@@ -66,7 +66,7 @@
                         <td>
                             <div class="action-button">
                                 <form action="/editEvent/<%= events[iCount].event_id %>" method="GET">
-                                    <button type="submit">Edit</button>
+                                    <button type="submit">Complete</button>
                                 </form>
                             </div>
                         </td>

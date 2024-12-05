@@ -30,5 +30,39 @@
             
     </div>
     
+
+
+    <div class="form-container">
+        <form action="/login" method="post">
+            <!-- Title -->
+            <div class="form-group">
+                <h2>Login</h2>
+                <img class="responsive-img" src="https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1532816947856-MIMDFIUYZHABRDQ4TWZC/Original+logo+low+resolution.png?format=1000w" alt="Turtle Shelter Project Logo">
+            </div>
+    
+            <!-- Username Field -->
+            <div class="form-group">
+                <label for="username" class="form-label">Email:</label>
+                <input type="text" id="username" name="username" placeholder="Enter your email" required>
+            </div>
+    
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+    
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button class="login-button" type="submit">Submit</button>
+            </div>
+    
+            <!-- Become a Volunteer Button -->
+            <div class="form-group">
+                <button class="login-button" onclick="window.location.href='/addVolunteer'">Become a Volunteer</button>
+            </div>
+        </form>
+    </div>
+    
 </body>
 </html>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mark as Complete</title>
+    <link rel="stylesheet" href="/chatstyles.css">
 </head>
 <body>
     <form action="/completeEvent/<%=event.event_id%>" method="POST">
@@ -114,6 +115,135 @@
            
         </fieldset>
     </form>
+
+    
+    <div class="form-container">
+        <form action="/completeEvent/<%=event.event_id%>" method="POST">
+    
+            <!-- Event Info Section -->
+            <div class="form-group">
+                <label for="event_info"><strong>Event Info</strong></label><br><br>
+            </div>
+    
+            <!-- Organization Name -->
+            <div class="form-group">
+                <label for="organization_name">Organization Name:</label>
+                <label for="organization_name"><%= event.organization_name %></label>
+            </div>
+    
+            <!-- Event Contact Info -->
+            <div class="form-group">
+                <label for="event_contact_info">Event Contact: <%= event.contact_first_name %> <%= event.contact_last_name %> (<%= event.contact_email %>, <%= event.contact_phone %>)</label>
+            </div>
+    
+            <!-- Event Date and Time -->
+            <div class="form-group">
+                <label for="event_datetime">Event Date and Time:</label>
+                <% 
+                    const event_datetime = new Intl.DateTimeFormat('en-US', {
+                        month: '2-digit',
+                        day: '2-digit',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    }).format(new Date(event.event_datetime)); 
+                %>
+                <span><%= event_datetime %></span>
+            </div>
+    
+            <!-- Event Supervisor -->
+            <div class="form-group">
+                <label for="supervisor_id">Event Supervisor: <%= event.vol_first_name %> <%= event.vol_last_name %></label>
+            </div>
+    
+            <!-- Event Type -->
+            <div class="form-group">
+                <label for="event_type_id">Event Type: <%= event.event_type_name %></label>
+            </div>
+    
+            <!-- Location Type -->
+            <div class="form-group">
+                <label for="location_type_id">Location Type: <%= event.location_type_name %></label>
+            </div>
+    
+            <!-- Volunteers Needed -->
+            <div class="form-group">
+                <label for="volunteers_needed">Volunteers Needed: <%= event.est_attendees / 10 %></label>
+            </div>
+    
+            <!-- Section to Complete After Event -->
+            <div class="form-group">
+                <label for="after_event_info"><strong>Details needed to mark event as complete:</strong></label>
+            </div>
+    
+            <!-- Number of Participants -->
+            <div class="form-group">
+                <label for="participants">How many people came?</label>
+                <input type="number" id="participants" name="participants" min="0">
+            </div>
+    
+            <!-- Completed Items Section -->
+            <div class="form-group">
+                <label for="Items Completed">How many of the following items were completed?</label><br><br>
+    
+                <!-- Pockets -->
+                <div class="form-group">
+                    <label for="pockets" style="margin-left: 40px;">Pockets: </label>
+                    <input type="number" id="pockets" name="pockets" min="0">
+                </div>
+    
+                <!-- Collars -->
+                <div class="form-group">
+                    <label for="collars" style="margin-left: 40px;">Collars: </label>
+                    <input type="number" id="collars" name="collars" min="0">
+                </div>
+    
+                <!-- Envelopes -->
+                <div class="form-group">
+                    <label for="envelopes" style="margin-left: 40px;">Envelopes: </label>
+                    <input type="number" id="envelopes" name="envelopes" min="0">
+                </div>
+    
+                <!-- Vests -->
+                <div class="form-group">
+                    <label for="vests" style="margin-left: 40px;">Vests: </label>
+                    <input type="number" id="vests" name="vests" min="0">
+                </div>
+    
+                <!-- Completed Products -->
+                <div class="form-group">
+                    <label for="completed_products" style="margin-left: 40px;">Completed Products: </label>
+                    <input type="number" id="completed_products" name="completed_products" min="0">
+                </div>
+            </div>
+    
+            <!-- Distributed Products -->
+            <div class="form-group">
+                <label for="distributed_products">How many items were distributed? </label>
+                <input type="number" id="distributed_products" name="distributed_products" min="0">
+            </div>
+    
+            <!-- Event Duration -->
+            <div class="form-group">
+                <label for="event_duration">How long did the event last?</label>
+                <select name="event_duration" id="event_duration" required>
+                    <% hours.forEach(function(hour) { %>
+                        <option value="<%= hour %>" <%= hour === event.est_duration ? 'selected' : '' %>>
+                            <%= hour %> hours
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+    
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit" class="cta-button">Mark Complete</button>
+            </div>
+    
+        </form>
+    </div>
+    
 
 </body>
 </html>
