@@ -398,11 +398,11 @@ form input {
 
 
 form button {
-    width: 40%;
+    width: 100%;
     padding: 10px;
     background-color: #28a745;
     color: white;
-    border: none;
+    /* border:#333 solid 10px; */
     border-radius: 4px;
     cursor: pointer;
     font-size: larger;

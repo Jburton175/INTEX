@@ -7,6 +7,21 @@
     <link rel="stylesheet" href="/chatstyles.css">
 </head>
 <body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/">Turtle Shelter Project</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/manageUsers">Manage Volunteers</a></li>
+                <li><a href="/manageEvents">Manage Events</a></li>
+                <li><a href="/manageRequests">Manage Requests</a></li>
+                <li><a href="/logout">Logout</a></li>
+                
+            </ul>
+        </nav>
+      </header>
+    
     <form action="/completeEvent/<%=event.event_id%>" method="POST">
         <fieldset style="width: 600px">
 

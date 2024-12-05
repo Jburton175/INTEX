@@ -7,173 +7,20 @@
     <link rel="stylesheet" href="/chatstyles.css">
 </head>
 <body>
-    <form action="/createEvent/<%= request.request_id %>" method="POST">
-            <h2>Approve an Event:</h2>
-            <br>
-
-            <!-- contact info, autofills, no changes -->
-            <label for="contact_first_name"><strong>Request Contact:</strong></label><br>
-            <label><%= request.contact_first_name %> <%= request.contact_last_name %></label><br>
-            <label><%= request.contact_email %></label><br>
-            <label><%= request.contact_phone %></label>
-            <br><br>
+  <header>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/">Turtle Shelter Project</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/manageUsers">Manage Volunteers</a></li>
+            <li><a href="/manageEvents">Manage Events</a></li>
+            <li><a href="/manageRequests">Manage Requests</a></li>
+            <li><a href="/logout">Logout</a></li>
             
-
-            <!-- organization info -->
-            <label for="org_info"><strong>Event Info</strong></label><br><br>
-
-            <!-- organization name is autofilled but can be changed -->
-            <label for="organization_name">Organization Name:</label>
-            <input type="text" id="organization_name" name="organization_name" required value="<%= request.organization_name %>">
-            <br><br>
-            
-            <!-- event address info, autofill, allows changes -->
-            <label for="event_street_1">Street Address 1:</label>
-            <input type="text" id="event_street_1" name="event_street_1" required value="<%= request.req_street_1 %>">
-            <br><br>
-            
-            <label for="event_street_2">Street Address 2:</label>
-            <input type="text" id="event_street_2" name="event_street_2" value="<%= request.req_street_2 %>">
-            <br><br>
-            
-            <label for="event_city">City:</label>
-            <input type="text" id="event_city" name="event_city" required value="<%= request.req_city %>">
-            <br><br>
-            
-            <label for="event_state">State:</label>
-            <select name="event_state" id="event_state" required>
-                <option value="" disabled selected>Select a state</option>
-                <% states.forEach(function(state) { %>
-                    <option value="<%= request.req_state %>" <%= state === request.req_state ? 'selected' : '' %>>
-                        <%= state %></option>
-                <% }) %>
-            </select>
-            <br><br>
-            
-            <label for="event_zip">Zip:</label>
-            <input type="text" id="event_zip" name="event_zip" required value="<%= request.req_zip %>">
-            <br><br>
-            
-
-            <!-- est duration, autofill, allow changes -->
-            <label for="event_duration">Estimated Duration:</label>
-            <label name="event_duration" id="event_duration"><%=request.est_duration%> hours</label>
-            <br><br>
-            
-            <!-- estimated atendees, autofill, no changes -->
-            <label for="participants">Predicted Participants:</label>
-            <label for="predicted_participants"><%= request.est_attendees %></label>
-            <br><br>
-            
-            <!-- basic sewers, autofill, no changes -->
-            <label for="basic_sewers">Number of Basic Sewers: <%= request.basic_sewers %></label>
-            <br><br>
-            
-            <!-- advanced sewers, autofill, no changes -->
-            <label for="advanced_sewers">Number of Advanced Sewers: <%= request.advanced_sewers %></label>
-            <br><br>
-
-            <!-- num machine, autofill, no changes -->
-            <label for="num_machines">Available Machines: <%= request.num_machines %></label>
-            <br><br>
-            
-            <!-- num sergers, autofill, no changes -->
-            <label for="num_sergers">Available Sergers: <%= request.num_sergers %></label>
-            <br><br>
-            
-            <!-- jen story, autofill, no changes -->
-            <label for="jen_story">Jen Story: </label>
-            <span><%= request.jen_story ? "Yes" : "No" %></span>
-            <br><br>
-    
-           <!-- proposed datetime, autofill, no changes -->
-           <br><label for="times"><strong>Proposed Dates/Times:</strong></label><br><br>
-
-            <label id="proposed_datetime" name="proposed_datetime"><% 
-                const proposal = new Intl.DateTimeFormat('en-US', {
-                month: '2-digit',
-                day: '2-digit',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-                }).format(new Date(request.proposed_datetime)); 
-            %>
-            <span>Requested Date: <%= proposal %></span></label>
-            <br><br>
-
-            <!-- alt datetime, autofill, no changes -->
-            <label id="proposed_datetime" name="proposed_datetime"><% 
-                const alternate = new Intl.DateTimeFormat('en-US', {
-                month: '2-digit',
-                day: '2-digit',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-                }).format(new Date(request.alt_datetime)); 
-            %>
-            <span>Alternate Date: <%= alternate %></span></label>  
-            <br><br>
-
-            <!-- info to be filled in by admin to create event -->
-            <br>
-            <label for="create_event"><strong>Please fill in the following information to approve and create the event:</strong></label><br><br>
-
-
-            <!-- admin choses date and time for the event-->
-            <label for="event_datetime">Event Date and Time:</label>
-            <input type="datetime-local" id="event_datetime" name="event_datetime" required>
-            <br><br>
-
-
-            <!-- Dropdown to choose supervisor -->
-            <label for="supervisor_id">Event Supervisor:</label>
-            <select name="supervisor_id" id="supervisor_id" required>
-                <option value="" disabled selected>Select a Supervisor</option>
-                <% admins.forEach(admin => { %>
-                    <option value="<%= admin.vol_id %>"><%= admin.vol_first_name %> <%= admin.vol_last_name %></option>
-                <% }) %>
-            </select>
-            
-             <br><br>
-
-            <!-- Dropdown for event type: autofills, can be changed-->
-            <label for="event_type_id">Event Type:</label>
-            <select name="event_type_id" id="event_type_id">
-                <% types.forEach(type => { %>
-                    <option value="<%= type.event_type_id %>" <%= request.req_type_id === type.event_type_id ? 'selected' : '' %>>
-                        <%= type.event_type_name %>
-                    </option>
-                <% }) %>
-            </select>
-            <br><br>
-
-            <!-- Dropdown for location type: autofills, can be changed -->
-            <label for="location_type_id">Location Type:</label>
-            <select name="location_type_id" id="location_type_id">
-                <% locations.forEach(type => { %>
-                    <option value="<%= type.location_type_id %>" <%= request.location_type_id === type.location_type_id ? 'selected' : '' %>>
-                        <%= type.location_type_name %>
-                    </option>
-                <% }) %>
-            </select>
-            <br><br>
-
-            <!-- Count of volunteers needed -->
-            <label for="volunteers_needed">Volunteers Needed: </label>
-            <input type="number" id="volunteers_needed" name="volunteers_needed" required min="1" max="75" value="<%= request.est_attendees / 10 %>">
-            <br><br>
-
-            
-            
-            <!-- submit button -->
-            <button type="submit">Create Event</button>
-        </fieldset>
-    </form>
-
-
-
+        </ul>
+    </nav>
+  </header>
 <div class="form-container">
   <form action="/createEvent/<%= request.request_id %>" method="POST">
       <h2>Approve an Event:</h2>
@@ -359,7 +206,8 @@
 
       <!-- Submit Button -->
       <div class="form-group">
-          <button type="submit" class="cta-button">Create Event</button>
+          <button type="submit">Create Event</button>
+          <button onclick="window.location.href='/ManageEvents'">View all Events</button>
       </div>
   </form>
 </div>
