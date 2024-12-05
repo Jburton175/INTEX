@@ -51,6 +51,11 @@ body {
                             
                         </div>
                         <ul class="nav-links">
+                            <% if (volunteer.role_name.toLowerCase() === 'admin') { %>
+                                <li><a href="/dashboard">Dashboard</a></li>
+                                <% } else { %>
+                                <li><a href="/dashboard">Event Sign Up</a></li>    
+                                    <% } %>
                             <li><a href="/manageUsers">Manage Volunteers</a></li>
                             <li><a href="/manageEvents">Manage Events</a></li>
                             <li><a href="/manageRequests">Manage Requests</a></li>
