@@ -240,36 +240,45 @@ app.get('/manageRequests', (req, res) => {
     knex("requests")
     .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
     .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
-    .select("requests.request_id",
-            "requests.request_datetime",
-            "requests.organization_name",
-            "requests.contact_phone",
-            "requests.est_attendees",
-            "requests.basic_sewers",
-            "requests.advanced_sewers",
-            "requests.proposed_datetime",
-            "requests.alt_datetime",
-            "requests.est_duration",
-            "requests.contact_first_name",
-            "requests.contact_last_name",
-            "requests.num_machines",
-            "requests.num_sergers",
-            "requests.contact_email",
-            "requests.jen_story",
-            "requests.request_status_id as request_status",
-            "requests.req_street_1",
-            "requests.req_street_2",
-            "requests.req_city",
-            "requests.req_state",
-            "requests.req_zip",
-            "requests.req_type_id",
-            "request_status.request_status_id",
-            "request_status.request_status_name",
-            "event_type.event_type_name")
-            .where('requests.request_status_id', 1)
-            .then(requests => { // selects all the info from the requests table and passes it to display characters ejs
+    .join('location_type', 'requests.location_type_id', '=', 'location_type.location_type_id')
+    .select(
+        "requests.request_id",
+        "requests.request_datetime",
+        "requests.organization_name",
+        "requests.contact_phone",
+        "requests.est_attendees",
+        "requests.basic_sewers",
+        "requests.advanced_sewers",
+        "requests.proposed_datetime",
+        "requests.alt_datetime",
+        "requests.est_duration",
+        "requests.contact_first_name",
+        "requests.contact_last_name",
+        "requests.num_machines",
+        "requests.num_sergers",
+        "requests.contact_email",
+        "requests.jen_story",
+        "requests.request_status_id as request_status",
+        "requests.req_street_1",
+        "requests.req_street_2",
+        "requests.req_city",
+        "requests.req_state",
+        "requests.req_zip",
+        "requests.req_type_id",
+        "requests.notes",
+        "requests.location_type_id",
+        "request_status.request_status_id",
+        "request_status.request_status_name",
+        "event_type.event_type_name",
+        "location_type.location_type_id",
+        "location_type.location_type_name"
+        )
+    .where('requests.request_status_id', 1)
+    .then(requests => { // selects all the info from the requests table and passes it to display characters ejs
         res.render("manageRequests", {myrequests : requests});
-    }).catch( err => {
+        console.log(requests)
+    })
+    .catch( err => {
         console.log(err);
         res.status(500).json({err});
     });
