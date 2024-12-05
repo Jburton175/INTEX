@@ -42,6 +42,8 @@
                     <th style="text-align: left;">Proposed Date and Time</th>
                     <th style="text-align: left;">Alternate Date and Time</th>
                     <th style="text-align: left;">Estimated Duration</th>
+                    <th style="text-align: left;">Location Type</th>
+                    <th style="text-align: left;">Notes</th>
                     <th style="text-align: left;">Request Status</th>
                     <th>Accept</th>
                     <th>Delete</th>
@@ -66,6 +68,8 @@
                         <td><%= myrequests[iCount].proposed_datetime %></td>
                         <td><%= myrequests[iCount].alt_datetime %></td>
                         <td><%= myrequests[iCount].est_duration %></td>
+                        <td><%= myrequests[iCount].location_type_name %></td>
+                        <td><%= myrequests[iCount].notes %></td>
                         <td><%= myrequests[iCount].request_status_name %></td>
                         <td style="text-align: center;">
                             <form action="/createEvent/<%= myrequests[iCount].request_id %>" method="GET">
