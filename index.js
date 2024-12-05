@@ -51,6 +51,12 @@ app.use((req, res, next) => {
         return res.redirect('/login');
     }
 
+    if (req.session.volunteer.role_name !== "Admin") {
+        console.log('Access denied. Redirecting to dashboard.');
+        return res.redirect('/dashboard');
+    }
+    
+
     next(); // Allow access if logged in
 });
 
