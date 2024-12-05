@@ -271,7 +271,7 @@ app.get('/manageRequests', (req, res) => {
         "requests.req_state",
         "requests.req_zip",
         "requests.req_type_id",
-        "requests.notes",
+        "requests.req_notes",
         "requests.location_type_id",
         "request_status.request_status_id",
         "request_status.request_status_name",
@@ -355,7 +355,7 @@ app.post('/createRequest', (req, res) => {
     const req_zip = req.body.req_zip;
     const req_type_id = req.body.req_type_id;
     const location_type_id = req.body.location_type_id;
-    const notes = req.body.notes;
+    const req_notes = req.body.req_notes;
 
     knex('requests').insert({
         contact_first_name: contact_first_name,
@@ -815,7 +815,7 @@ app.post('/createEvent/:request_id', (req, res) => {
     //const distributed_products =req.body.distributed_products;
     const volunteers_needed = req.body.volunteers_needed;
     const organization_name = req.body.organization_name;
-    const notes = req.body.notes;
+    const event_notes = req.body.event_notes;
     
     console.log('Request body:', req.body);
     if (!supervisor_id || isNaN(parseInt(supervisor_id))) {
