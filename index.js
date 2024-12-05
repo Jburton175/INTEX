@@ -28,8 +28,8 @@ const knex = require("knex")({
     connection: {
         host: process.env.RDS_HOSTNAME || "localhost",
         user: process.env.RDS_USERNAME || "postgres",
-        password: process.env.RDS_PASSWORD || "admin",
-        database: process.env.RDS_DB_NAME || "TurtleShelter",
+        password: process.env.RDS_PASSWORD || "leomessi",
+        database: process.env.RDS_DB_NAME || "intex_local",
         port: process.env.RDS_PORT || 5432,
         ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false
     }
@@ -51,10 +51,11 @@ app.use((req, res, next) => {
         return res.redirect('/login');
     }
 
-    if (req.session.volunteer.role_name !== "Admin") {
+    if (req.session.volunteer.role_name !== "Admin" && req.path !== '/dashboard') {
         console.log('Access denied. Redirecting to dashboard.');
         return res.redirect('/dashboard');
     }
+    
     
 
     next(); // Allow access if logged in
