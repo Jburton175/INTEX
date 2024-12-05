@@ -97,15 +97,20 @@
                         <td><%= events[iCount].vol_first_name %> <%= events[iCount].vol_last_name %></td>
                         <td><%= events[iCount].event_status_name %></td>
                         <td><%= events[iCount].event_type_name %></td>
-                        <td>
-                            <form class='action-button' action="/completeEvent/<%= events[iCount].event_id %>" method="GET">
+                        <td style='text-align: center;' >
+                            <!-- <form class='action-button' action="/completeEvent/<%= events[iCount].event_id %>" method="GET" style="display: inline;">
                                 <button type="submit">Complete</button>
-                            </form>
+                            </form> -->
+
+                            <button onclick="window.location.href='/completeEvent/<%= events[iCount].event_id %>';">2Complete</button>
+                            
                         </td>
-                        <td>
-                            <form class='action-button' action="/cancelEvent/<%= events[iCount].event_id %>" method="POST">
+                        <td style='text-align: center;'>
+                            <!-- <form class='action-button' action="/cancelEvent/<%= events[iCount].event_id %>" method="POST" style="display: inline;">
                                 <button type="submit" onclick="return confirm('Are you sure you want to cancel this event?');">Cancel</button>
-                            </form>
+                            </form> -->
+
+                            <button onclick="window.location.href='/cancelEvent/<%= events[iCount].event_id %>';">2Cancel</button>
                         </td>
                         <td>
                             <button onclick="showModal('<%= events[iCount].event_id %>')">View Details</button>
