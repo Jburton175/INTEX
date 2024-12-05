@@ -20,62 +20,66 @@
             </ul>
         </nav>
     </header>
-    
-    <table>
-        <caption><b>All Volunteers </b></caption>
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Sewing Level</th>
-                <th>Hours/Month</th>
-                <th>Source</th>
-                <th>Role</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% if (volunteers.length > 0) { %>
-                <% volunteers.forEach(row => { %>
-                    <tr>
-                        <td><%= row.vol_first_name %></td>
-                        <td><%= row.vol_last_name %></td>
-                        <td><%= row.vol_email %></td>
-                        <td><%= row.vol_phone %></td>
-                        <td><%= row.vol_city %></td>
-                        <td><%= row.vol_state %></td>
-                        <td><%= row.vol_sewing_level%></td>
-                        <td><%= row.vol_hours_per_month %></td>
-                        <td><%= row.vol_source_type%></td>
-                        <td><%= row.vol_role%></td>
-                        <td  style="text-align: center;">
-                            <form class='action-button' action="/editVolunteer/<%= row.vol_id %>" method="GET" style="display: inline;">
-                                <button type="submit">Edit</button>
-                            </form>
-                        </td>
-                        <td>
-                            <form class='action-button' action="/deleteVolunteer/<%= row.vol_id %>" method="POST" style="display: inline;">
-                                <button type="submit" onclick="return confirm('Are you sure you want to delete this task?');">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                <% }); %>
-            <% } else { %>
+    <div class="main-content">
+        <table>
+            <caption><b>All Volunteers </b></caption>
+            <thead>
                 <tr>
-                    <td colspan="9">No volunteers found.</td>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Sewing Level</th>
+                    <th>Hours/Month</th>
+                    <th>Source</th>
+                    <th>Role</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
-            <% } %>
-        </tbody>
-    </table>
-    <div class="center-button"> 
-        <form action="/addVolunteer" method="GET" >
-            <button type="submit">Add Volunteer</button>
-        </form>
+            </thead>
+            <tbody>
+                <% if (volunteers.length > 0) { %>
+                    <% volunteers.forEach(row => { %>
+                        <tr>
+                            <td><%= row.vol_first_name %></td>
+                            <td><%= row.vol_last_name %></td>
+                            <td><%= row.vol_email %></td>
+                            <td><%= row.vol_phone %></td>
+                            <td><%= row.vol_city %></td>
+                            <td><%= row.vol_state %></td>
+                            <td><%= row.vol_sewing_level%></td>
+                            <td><%= row.vol_hours_per_month %></td>
+                            <td><%= row.vol_source_type%></td>
+                            <td><%= row.vol_role%></td>
+                            <td  style="text-align: center;">
+                                <form class='action-button' action="/editVolunteer/<%= row.vol_id %>" method="GET" style="display: inline;">
+                                    <button type="submit">Edit</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form class='action-button' action="/deleteVolunteer/<%= row.vol_id %>" method="POST" style="display: inline;">
+                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this task?');">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="9">No volunteers found.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <div class="center-button"> 
+            <form action="/addVolunteer" method="GET" >
+                <button type="submit">Add Volunteer</button>
+            </form>
+            <form action="/dashboard" method="GET">
+                <button type="submit">Back to Dashboard</button>
+            </form>
+        </div>
     </div>
 
     <footer id='footer' class="footer">
