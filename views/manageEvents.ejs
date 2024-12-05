@@ -5,6 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Events</title>
     <link rel="stylesheet" href="/chatstyles.css">
+    <style>
+        /* Modal popup styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%; /* Could be more or less, depending on screen size */
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -17,7 +54,6 @@
                 <li><a href="/manageEvents">Manage Events</a></li>
                 <li><a href="/manageRequests">Manage Requests</a></li>
                 <li><a href="/logout">Logout</a></li>
-                
             </ul>
         </nav>
     </header>
@@ -26,69 +62,68 @@
             <caption><b>Events</b></caption>
             <thead>
                 <tr>
-                    <th >Date of Event:</th>
-                    <th >Organziation Name:</th>
-                    <th >Supervisor Name:</th>
-                    <th >Event Status:</th>
-                    <th >Event Type:</th>
-                    <th >Event Location:</th>
-                    <th >Location Type:</th>
-                    <th ># of Particpants</th>
-                    <th >Duration of Event</th>
-                    <th ># of Pockets Produced</th>
-                    <th ># of Collars Produced</th>
-                    <th ># of Envelopes Produced</th>
-                    <th ># of Vests Produced</th>
-                    <th ># of Completed Vests</th>
-                    <th ># of Vests Distributed</th>
-                    <th ># of Volunteers Needed</th>
-                    <th >Complete</th>
-                    <th >Cancel</th>
-                
+                    <th>Date of Event</th>
+                    <th>Organization Name</th>
+                    <th>Supervisor Name</th>
+                    <th>Event Status</th>
+                    <th>Event Type</th>
+                    <!-- 
+                    <th>Event Location</th>
+                    <th>Location Type</th>
+                    <th># of Participants</th>
+                    <th>Duration of Event</th>
+                    -->
+                    <th>Complete</th>
+                    <th>Cancel</th>
+                    <th>View Details</th>
                 </tr>
             </thead>
             <tbody>
                 <% for (let iCount = 0; iCount < events.length; iCount++) { %>
                     <tr>
-                        <td><%= events[iCount].event_datetime %></td>
+                        <td>
+                            <% const datetime = new Intl.DateTimeFormat('en-US', {
+                            month: '2-digit',
+                            day: '2-digit',
+                            year: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                            }).format(new Date(events[iCount].event_datetime)); 
+                            %>
+                            <span><%= datetime %></span>
+                        </td>
                         <td><%= events[iCount].organization_name %></td>
                         <td><%= events[iCount].vol_first_name %> <%= events[iCount].vol_last_name %></td>
                         <td><%= events[iCount].event_status_name %></td>
                         <td><%= events[iCount].event_type_name %></td>
-                        <td><%= events[iCount].event_street_1 %> <%= events[iCount].event_street_2 %>, <%= events[iCount].event_city %>, <%= events[iCount].event_state %>, <%= events[iCount].event_zip %></td>
-                        <td><%= events[iCount].location_type_name %></td>
-                        <td><%= events[iCount].participants %></td>
-                        <td><%= events[iCount].event_duration %></td>
-                        <td><%= events[iCount].pockets %></td>
-                        <td><%= events[iCount].collars %></td>
-                        <td><%= events[iCount].envelopes %></td>
-                        <td><%= events[iCount].vests %></td>
-                        <td><%= events[iCount].completed_products %></td>
-                        <td><%= events[iCount].distributed_products %></td>
-                        <td><%= events[iCount].volunteers_needed %></td>
                         <td>
-                            <div class="action-button">
-                                <form action="/completeEvent/<%= events[iCount].event_id %>" method="GET">
-                                    <button type="submit">Complete</button>
-                                </form>
-                            </div>
+                            <form action="/completeEvent/<%= events[iCount].event_id %>" method="GET">
+                                <button type="submit">Complete</button>
+                            </form>
                         </td>
                         <td>
-                            <div class="action-button">
-                                <form action="/cancelEvent/<%= events[iCount].event_id %>" method="POST">
-                                    <button type="submit" onclick="return confirm('Are you sure you want to cancel this event?');">Cancel Event</button>
-                                </form>
-                            </div>
+                            <form action="/cancelEvent/<%= events[iCount].event_id %>" method="POST">
+                                <button type="submit" onclick="return confirm('Are you sure you want to cancel this event?');">Cancel</button>
+                            </form>
+                        </td>
+                        <td>
+                            <button onclick="showModal('<%= events[iCount].event_id %>')">View Details</button>
                         </td>
                     </tr>
                 <% } %>
             </tbody>
-
         </table>
-        <div class='center-button'>
-            <form  action="/dashboard" method="GET">
-                <button type="submit">Back to Dashboard</button>
-            </form>
+    </div>
+
+    <!-- Modal Popup -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Event Details</h2>
+            <div id="modal-body">
+                <!-- Event details will be dynamically loaded here -->
+            </div>
         </div>
     </div>
 
@@ -98,6 +133,72 @@
             <a href="tel:(801) 872-3190">(801) 872-3190</a>
         </p>
     </footer>
+
+    <script>
+        function showModal(eventId) {
+            const modal = document.getElementById('eventModal');
+            const modalBody = document.getElementById('modal-body');
+            modal.style.display = 'block';
+
+            
+                        
+
+            // Fetch event details from the backend
+            fetch(`/eventDetails/${eventId}`)
+                .then(response => response.json())
+                .then(data => {
+                    modalBody.innerHTML = `
+                        <p><strong>Event Date:</strong> ${data.event_datetime}</p>
+                        <p><strong>Organization:</strong> ${data.organization_name}</p>
+                        <p><strong>Supervisor:</strong> ${data.vol_first_name} ${data.vol_last_name}</p>
+                        <p><strong>Event Type:</strong> ${data.event_type_name}</p>
+                        <p><strong>Location:</strong> ${data.event_street_1}, ${data.event_city}, ${data.event_state}, ${data.event_zip}</p>
+                        <p><strong>Location Type:</strong> ${data.location_type_name}</p>
+                        <p><strong>Participants:</strong> ${data.participants}</p>
+                        <p><strong>Volunteers Needed:</strong> ${data.volunteers_needed}</p>
+                        <p><strong>Duration:</strong> ${data.event_duration} hours</p>
+                        <p><strong>Jen Story:</strong> ${data.jen_story}</p>
+                        <p><strong>Event Notes:</strong> ${data.event_notes}</p>
+
+                        <br><p><strong>Status:</strong> ${data.event_status_name}</p><br>
+
+                        <p><strong>Items Completed:</strong></p>
+                        <p><strong>Pockets:</strong> ${data.pockets}</p>
+                        <p><strong>Collars:</strong> ${data.collars}</p>
+                        <p><strong>Envelopes:</strong> ${data.envelopes}</p>
+                        <p><strong>Body:</strong> ${data.vests}</p>
+                        <p><strong>Complete Vests:</strong> ${data.completed_products}</p>
+                        <p><strong>Vests Distributed:</strong> ${data.distributed_products}</p>
+
+                        <p><strong>Percentage of Attendance:</strong> ${data.vests}</p>
+                        <p><strong>Body:</strong> ${data.vests}</p>
+
+                        <br><p><strong>Request Information:</strong></p>
+                        <p><strong>Contact:</strong> ${data.contact_first_name} ${data.contact_last_name}</p>
+                        <p><strong>Email:</strong> ${data.contact_email}</p>
+                        <p><strong>Phone:</strong> ${data.contact_phone}</p>
+                        <p><strong>Basic Sewers:</strong> ${data.basic_sewers}</p>
+                        <p><strong>Advanced Sewers:</strong> ${data.advanced_sewers}</p>
+                        <p><strong>Machines Available:</strong> ${data.num_machines}</p>
+                        <p><strong>Sergers Available:</strong> ${data.num_sergers}</p>
+                        <br><p><strong>Request Notes:</strong> ${data.req_notes}</p>
+
+                        
+                    `;
+                });
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('eventModal');
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('eventModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
-
