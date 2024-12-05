@@ -65,7 +65,7 @@ app.use((req, res, next) => {
         return res.redirect('/login');
     }
 
-    if (req.session.volunteer.role_name !== "Admin" && req.path !== '/dashboard') {
+    if (req.session.volunteer.role_name !== "Admin" && req.path !== '/dashboard' && req.path !== '/logout') {
         console.log('Access denied. Redirecting to dashboard.');
         return res.redirect('/');
     }
@@ -116,7 +116,7 @@ app.get('/logout', (req, res) => {
         }
 
         // Redirect to the login page after logging out
-        res.redirect('/login');
+        res.redirect('/');
     });
 });
 
