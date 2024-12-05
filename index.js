@@ -116,7 +116,7 @@ app.get('/logout', (req, res) => {
         }
 
         // Redirect to the login page after logging out
-        res.redirect('/login');
+        res.redirect('/');
     });
 });
 
