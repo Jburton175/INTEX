@@ -7,35 +7,69 @@
     <link rel="stylesheet" href="/chatstyles.css">
 </head>
 <body>
-    <form action="/createRequest" method="POST">
-        <fieldset style="width: 0px">
-            <legend>Request an Event:</legend>
-            <br>
+    <header></header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/">Turtle Shelter Project</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#donate">Donate</a></li>
+                <li><a href="/addVolunteer">Volunteer</a></li>
+                <li><a href="/login">Sign In</a></li>
+                <li><a href="/createRequest">Request an Event</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="form-container" id="volunteer">
+        <form action="/createRequest" method="POST">
+        <h2>Request an Event:</h2>
+        <img class='responsive-img' src="https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1532816947856-MIMDFIUYZHABRDQ4TWZC/Original+logo+low+resolution.png?format=1000w" alt="Turtle Shelter Project Logo">
+        <div class="form-group">
             <input type="hidden" id="request_id" name="request_id">
+        </div>
+    
+        <div class="form-group">
             <label for="organization_name">Organization Name:</label>
             <input type="text" id="organization_name" name="organization_name" required>
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="contact_first_name">First Name:</label>
             <input type="text" id="contact_first_name" name="contact_first_name" required>
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="contact_last_name">Last Name:</label>
             <input type="text" id="contact_last_name" name="contact_last_name" required>
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="contact_phone">Phone Number:</label>
             <input type="text" id="contact_phone" name="contact_phone" required>
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="contact_email">Email:</label>
             <input type="text" id="contact_email" name="contact_email" required>
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="req_street_1">Street Address 1:</label>
             <input type="text" id="req_street_1" name="req_street_1" required>
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="req_street_2">Street Address 2:</label>
             <input type="text" id="req_street_2" name="req_street_2">
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="req_city">City:</label>
             <input type="text" id="req_city" name="req_city" required>
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="req_state">State:</label>
             <select name="req_state" id="req_state" required>
                 <option value="" disabled selected>Select a state</option>
@@ -43,10 +77,14 @@
                     <option value="<%= state %>"><%= state %></option>
                 <% }) %>
             </select>
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="req_zip">Zip:</label>
             <input type="text" id="req_zip" name="req_zip" required>
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="req_type_id">Type of Event:</label>
             <select name="req_type_id" id="req_type_id" required>
                 <option value="" disabled selected>Select an Event Activity</option>
@@ -54,41 +92,67 @@
                     <option value="<%= type.event_type_id %>"><%= type.event_type_name %></option>
                 <% }) %>
             </select>
-            <br><br>
-            <label for="est_attendees">Estimated # of Atendees:</label>
+        </div>
+    
+        <div class="form-group">
+            <label for="est_attendees">Estimated # of Attendees:</label>
             <input type="number" id="est_attendees" name="est_attendees" value="0" min="0" max="100">
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="basic_sewers"># of Basic Sewers:</label>
             <input type="number" id="basic_sewers" name="basic_sewers" value="0" min="0" max="100">
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="advanced_sewers"># of Advanced Sewers:</label>
             <input type="number" id="advanced_sewers" name="advanced_sewers" value="0" min="0" max="100">
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="proposed_datetime">Date for Event:</label>
             <input type="datetime-local" id="proposed_datetime" name="proposed_datetime" required>
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="alt_datetime">Alternate Date for Event:</label>
             <input type="datetime-local" id="alt_datetime" name="alt_datetime">
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <select name="est_duration" id="est_duration" required>
                 <option value="" disabled selected>Estimated Duration in Hours</option>
                 <% hours.forEach(function(hours) { %>
                     <option value="<%= hours %>"><%= hours %></option>
                 <% }) %>
             </select>
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="num_machines">Number of Available Machines:</label>
             <input type="number" name="num_machines" id="num_machines" value="0" min="0" max="100" />
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="num_sergers">Number of Available Sergers:</label>
             <input type="number" name="num_sergers" id="num_sergers" value="0" min="0" max="100" />
-            <br><br>
+        </div>
+    
+        <div class="form-group">
             <label for="jen_story">Would you like Jen to share her story?</label>
-                <input type="checkbox" id="jen_story" name="jen_story"> <!-- if the character is a jedi-->
-                <br><br>
-            <button type="submit">Save</button>
-        </fieldset>
+            <input type="checkbox" id="jen_story" name="jen_story">
+        </div>
+    
+        <div class="form-group">
+            <button class='cta-button' type="submit">Save</button>
+        </div>
     </form>
-    <img class=responsive-img src="https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1627863598267-P2A08OTOD3MKAIBTX0SN/20200218_111850.jpg?format=2500w" alt="Event">
+</section>
+<footer id='footer' class="footer">
+    <p>&copy; 2024 Turtle Shelter Project | All rights reserved | 
+        <a href="mailto:turtleshelterproject@gmailcom">turtleshelterproject@gmail.com</a> |
+        <a href="tel:(801) 872-3190">(801) 872-3190</a>
+    </p>
+</footer>
 </body>
 </html>

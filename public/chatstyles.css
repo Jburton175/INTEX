@@ -223,21 +223,6 @@ body {
     height: 150px;
 }
 
-.contact button {
-    background-color: #007bff;
-    color: white;
-    padding: 1rem 2rem;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.contact button:hover {
-    background-color: #0056b3;
-}
-
 /* Footer */
 /* Basic Footer Styling */
 #footer {
@@ -245,6 +230,9 @@ body {
     color: #fff;
     padding: 20px;
     text-align: center;
+    position: relative;
+    bottom: 0;
+    width: 100%;
 }
 
 #footer h2 {
@@ -289,6 +277,31 @@ body {
     font-size: 18px;
 }
 
+.sub-footer {
+    background-color: #8a8a8a;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+#sub-footer a:hover {
+    text-decoration: underline;
+}
+
+#sub-footer .social-media ul li{
+    list-style: none;
+    padding: 0;
+    display: inline-block;
+    margin: 0 10px;
+}
+
+#sub-footer a {
+    color: #fff;
+    text-decoration: none;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -385,3 +398,91 @@ img {
     max-width: 100%;   /* Optional: Keeps the image responsive */
     height: auto;     /* Maintains the aspect ratio of the image */
 }
+
+/* Table Styles */
+table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    border: 2px solid rgb(255, 255, 255); /* Makes borders more visible */
+}
+
+th {
+    background-color: #4a90e2;  /* Subtle blue */
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Button Styles */
+button {
+    background-color: #559d58;  /* Softer green */
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;  /* Slightly darker green */
+}
+
+/* Center Aligning Add Volunteer Button */
+.center-button {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-button {
+    background-color: #24a361;
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 3px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #218838
+}
+
+/* Form Styling for Action Buttons */
+form {
+    display: inline-block;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+}
+
+
+/* login styles */
+
+
