@@ -90,7 +90,7 @@
            <br><label for="times"><strong>Proposed Dates/Times:</strong></label><br><br>
 
             <label id="proposed_datetime" name="proposed_datetime"><% 
-                const proposedDateFormatted = new Intl.DateTimeFormat('en-US', {
+                const proposal = new Intl.DateTimeFormat('en-US', {
                 month: '2-digit',
                 day: '2-digit',
                 year: 'numeric',
@@ -99,12 +99,12 @@
                 hour12: true
                 }).format(new Date(request.proposed_datetime)); 
             %>
-            <span>Requested Date: <%= proposedDateFormatted %></span></label>
+            <span>Requested Date: <%= proposal %></span></label>
             <br><br>
 
             <!-- alt datetime, autofill, no changes -->
             <label id="proposed_datetime" name="proposed_datetime"><% 
-                const altTimeFormatted = new Intl.DateTimeFormat('en-US', {
+                const alternate = new Intl.DateTimeFormat('en-US', {
                 month: '2-digit',
                 day: '2-digit',
                 year: 'numeric',
@@ -113,7 +113,7 @@
                 hour12: true
                 }).format(new Date(request.alt_datetime)); 
             %>
-            <span>Alternate Date: <%= altTimeFormatted %></span></label>  
+            <span>Alternate Date: <%= alternate %></span></label>  
             <br><br>
 
             <!-- info to be filled in by admin to create event -->
