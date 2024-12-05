@@ -340,7 +340,7 @@ app.post('/createRequest', (req, res) => {
     const num_machines = req.body.num_machines;
     const num_sergers = req.body.num_sergers;
     const contact_email = req.body.contact_email;
-    const jen_story = req.body.jen_story === 'true';
+    const jen_story = req.body.jen_story === 'on' ? true : false;
     const request_status_id = 1;
     const req_street_1 = req.body.req_street_1;
     const req_street_2 = req.body.req_street_2;
