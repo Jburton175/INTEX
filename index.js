@@ -825,6 +825,99 @@ app.post('/createEvent/:request_id', (req, res) => {
 
       });
 });
+
+// render the complete event page
+app.get('/completeEvent/:id', (req, res) => {
+    let id = req.params.id
+
+    knex('events')
+    .join('requests', 'events.request_id', '=', 'requests.request_id')
+    .join('volunteers', 'events.supervisor_id', '=', 'volunteers.vol_id')
+    .join('event_status', 'events.event_status_id', '=', 'event_status.status_id')
+    .join('event_type', 'events.event_type_id', '=', 'event_type.event_type_id')
+    .join('location_type', 'events.location_type_id', '=', 'location_type.location_type_id')
+    .where('events.event_id', id)
+    .first()
+    .then(event => {
+        if (!event) {
+            return res.status(404).send('Event not found');
+        }
+        const states = [
+            "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+            "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+            "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+            "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+            "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+        ];
+
+        const hours = [];
+            for (let i = 1; i <= 12; i++) {
+                hours.push(i); // Add whole hours
+                if (i < 12) {
+                hours.push(i + 0.5); // Add half hour increments
+            }}
+        
+
+        res.render('completeEvent', {event, states, hours})
+    })
+
+
+})
+
+// post to mark event as completed and update stats fields
+app.post('/completeEvent/:id', (req, res) => {
+    const id = req.params.id;
+
+    //const event_datetime = req.body.event_datetime;  
+    //const supervisor_id = req.body.supervisor_id;
+    //const event_status_id = 1;  
+    //const event_type_id = req.body.event_type_id;  
+    //const event_street_1 = req.body.event_street_1;  
+    //const event_street_2 = req.body.event_street_2 || '';  
+    //const event_city = req.body.event_city;  
+    //const event_state = req.body.event_state;  
+    //const event_zip = req.body.event_zip;  
+    //const location_type_id = req.body.location_type_id;  
+    const participants = req.body.participants;  
+    const event_duration = req.body.event_duration;  
+    const pockets = req.body.pockets;
+    const collars = req.body.collars;
+    const envelopes = req.body.envelopes;
+    const vests = req.body.vests;
+    const completed_products = req.body.completed_products;
+    const distributed_products = req.body.distributed_products;
+    const event_status_id = 2;
+    //const volunteers_needed = req.body.volunteers_needed;
+    //const organization_name = req.body.organization_name;
+    
+    console.log('Request body:', req.body);
+  
+    knex('events')
+        .where('event_id', id)
+        .update({
+            participants : participants,
+            event_duration : event_duration,
+            pockets : pockets,
+            collars : collars,
+            envelopes : envelopes,
+            vests : vests,
+            completed_products : completed_products,
+            distributed_products : distributed_products,
+            event_status_id : event_status_id
+        })
+        .then(() => {
+            console.log('Form submitted successfully!');
+            console.log('event updated and marked as completed')
+            console.log('Request body:', req.body);
+            res.redirect('/manageEvents'); 
+        })
+        .catch(error => {
+            console.error('Error updating event:', error);
+            console.log('Request body:', req.body);
+            res.status(500).send('Internal Server Error While Updating Event');
+        });
+  });
+    
   
 
 // port number, (parameters) => what you want it to do.

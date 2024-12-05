@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark as Complete</title>
+</head>
+<body>
+    <form action="/completeEvent/<%=event.event_id%>" method="POST">
+        <fieldset style="width: 600px">
+
+            <!-- organization info -->
+            <label for="event_info"><strong>Event Info</strong></label><br><br>
+
+            <!-- organization name is autofilled but can be changed -->
+            <label for="organization_name">Organization Name:</label>
+            <label for="organization_name"><%= event.organization_name %></label>
+            <br><br>
+
+            <!-- contact info, autofills, no changes -->
+            <label for="event_contact_info">Event Contact: <%= event.contact_first_name %> <%= event.contact_last_name %> (<%= event.contact_email %>, <%= event.contact_phone %>)</label>
+            <br><br>
+
+           <!-- admin choses date and time for the event-->
+           <label for="event_datetime">Event Date and Time: <% 
+                const event_datetime = new Intl.DateTimeFormat('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+                }).format(new Date(event.event_datetime)); 
+            %>
+            <span> <%= event_datetime %></span></label>
+
+            </label>
+           <br><br>
+
+           <!-- Dropdown to choose supervisor -->
+           <label for="supervisor_id">Event Supervisor: <%= event.vol_first_name%> <%= event.vol_last_name%></label>
+           
+           
+            <br><br>
+
+           <!-- Dropdown for event type: autofills, can be changed-->
+           <label for="event_type_id">Event Type: <%= event.event_type_name %></label>
+           
+           <br><br>
+
+           <!-- Dropdown for location type -->
+           <label for="location_type_id">Location Type: <%= event.location_type_name%></label>
+           
+           <br><br>
+
+           <!-- Count of volunteers needed -->
+           <label for="volunteers_needed">Volunteers Needed: <%= event.est_attendees / 10 %></label>
+           <br><br>
+
+           <!-- section to be completed after the event: -->
+           <br><label for="after_event_info"><strong>Details needed to mark event as complete:</strong></label><br>
+           <br>
+
+           <!-- total atendees -->
+           <label for="participants">How many people came?</label>
+           <input type="number" id="participants" name="participants" min="0">
+           <br><br>
+
+           <!-- Completed goods (pockets, collars, envelopes, vests, completed products)-->
+           <label for="Items Completed">How many of the following items were completed?</label>
+           <br><br>
+
+           <label for="pockets" style="margin-left: 40px;">Pockets: </label>
+           <input type="number" id="pockets" name="pockets" min="0">
+           <br><br>
+
+           <label for="collars" style="margin-left: 40px;">Collars: </label>
+           <input type="number" id="collars" name="collars" min="0">
+           <br><br>
+
+           <label for="envelopes" style="margin-left: 40px;">Envelopes: </label>
+           <input type="number" id="envelopes" name="envelopes" min="0">
+           <br><br>
+
+           <label for="vests" style="margin-left: 40px;">Vests: </label>
+           <input type="number" id="vests" name="vests" min="0">
+           <br><br>
+
+           <label for="completed_products" style="margin-left: 40px;">Completed Products: </label>
+           <input type="number" id="completed_products" name="completed_products" min="0">
+           <br><br><br>
+
+           <!-- Vests distributed, if any -->
+           <label for="distributed_products">How many items were distributed? </label>
+           <input type="number" id="distributed_products" name="distributed_products" min="0">
+           <br><br>
+           
+            
+            <!-- est duration, autofill, allow changes -->
+
+            <label for="event_duration">How long did the event last?</label>
+            <select name="event_duration" id="event_duration" required>
+                <% hours.forEach(function(hour) { %>
+                    <option value="<%= hour %>" <%= hour === event.est_duration ? 'selected' : '' %>>
+                        <%= hour %> hours
+                    </option>
+                <% }) %>
+            </select>
+            <br><br>
+
+
+            <!-- submit button -->
+            <button type="submit">Mark Complete</button>
+           
+        </fieldset>
+    </form>
+
+</body>
+</html>
