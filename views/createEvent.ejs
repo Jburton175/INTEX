@@ -26,6 +26,7 @@
       <h2>Approve an Event:</h2>
 
       <!-- Contact Info -->
+      <br>
       <div class="form-group">
           <label for="contact_first_name"><strong>Request Contact:</strong></label><br>
           <label><%= request.contact_first_name %> <%= request.contact_last_name %></label><br>
@@ -34,8 +35,9 @@
       </div>
 
       <!-- Event Info -->
+        <br>
       <div class="form-group">
-          <label for="org_info"><strong>Event Info</strong></label><br><br>
+          <label for="org_info"><strong>Event Info</strong></label><br>
       </div>
 
       <!-- Organization Name -->
@@ -77,6 +79,7 @@
       </div>
 
       <!-- Estimated Duration -->
+       <br>
       <div class="form-group">
           <label for="event_duration">Estimated Duration:</label>
           <label name="event_duration" id="event_duration"><%=request.est_duration%> hours</label>
@@ -115,8 +118,9 @@
       </div>
 
       <!-- Proposed Dates/Times -->
+       <br>
       <div class="form-group">
-          <label for="times"><strong>Proposed Dates/Times:</strong></label><br><br>
+          <label for="times"><strong>Proposed Dates/Times:</strong></label><br>
       </div>
 
       <div class="form-group">
@@ -153,8 +157,9 @@
       </div>
 
       <!-- Admin Information to Create Event -->
+       <br>
       <div class="form-group">
-          <label for="create_event"><strong>Please fill in the following information to approve and create the event:</strong></label><br><br>
+          <label for="create_event"><strong>Please fill in the following information to approve and create the event:</strong></label><br>
       </div>
 
       <!-- Event Date and Time -->
@@ -204,10 +209,12 @@
           <input type="number" id="volunteers_needed" name="volunteers_needed" required min="1" max="75" value="<%= request.est_attendees / 10 %>">
       </div>
 
+
       <!-- Submit Button -->
+       <br>
       <div class="form-group">
-          <button type="submit">Create Event</button>
-          <button onclick="window.location.href='/ManageEvents'">View all Events</button>
+          <button type="submit">Create Event</button><br>
+          <button onclick="window.location.href='/manageRequests'">Cancel and Return to Requests</button>
       </div>
   </form>
 </div>
