@@ -50,7 +50,7 @@ app.get('/login', (req, res) => {
 
 
 // Excluded routes that don't require login
-const excludedRoutes = ['/', '/login', '/requestEvent', '/addVolunteer','/createRequest'];
+const excludedRoutes = ['/', '/login', '/requestEvent', '/addVolunteer','/createRequest', '/logout'];
 
 // Middleware to enforce login check
 app.use((req, res, next) => {
@@ -65,7 +65,7 @@ app.use((req, res, next) => {
         return res.redirect('/login');
     }
 
-    if (req.session.volunteer.role_name !== "Admin" && req.path !== '/dashboard' && req.path !== '/logout') {
+    if (req.session.volunteer.role_name !== "Admin" && req.path !== '/dashboard') {
         console.log('Access denied. Redirecting to dashboard.');
         return res.redirect('/');
     }
