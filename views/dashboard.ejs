@@ -6,7 +6,39 @@
     <title>Dashboard</title>
 
     <link rel="stylesheet" href="/chatstyles.css">
+<style>
+/* Ensure the body and navbar remain unaffected */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* Stacks the navbar and main content */
+}
 
+/* Navbar remains as is */
+.navbar {
+    flex: 0 0 auto; /* Prevent shrinking */
+    width: 100%;    /* Full width */
+}
+
+/* Centering just the dashboards */
+.dashboard-container {
+    flex: 1; /* Allows it to take up remaining space */
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;    /* Centers vertically */
+    flex-direction: column; /* Optional: Stacks multiple dashboards */
+    padding: 2rem; /* Optional: Adds breathing space */
+    width: 100%;    /* Full width for responsiveness */
+    margin: auto;   /* Ensures proper alignment */
+}
+
+
+
+</style>
     
 </head>
 <body>
@@ -46,8 +78,88 @@
         <p><strong>Debug Info:</strong> Your role is: <%= volunteer.role_name %></p> -->
 
         <% if (volunteer.role_name.toLowerCase() === 'admin') { %>
-            <p>This is the admin dashboard.</p>
-        <% } else { %>
+            <div class="dashboard-container" id="viz1733430860835" style="position: relative;">
+                <noscript>
+                    <a href="#">
+                        <img alt="Management Dashboard" src="https://public.tableau.com/static/images/Tu/TurtleShelterProject_17334307953790/ManagementDashboard/1_rss.png" style="border: none" />
+                    </a>
+                </noscript>
+                <object class="tableauViz" style="display:none;">
+                    <param name="host_url" value="https://public.tableau.com/" />
+                    <param name="embed_code_version" value="3" />
+                    <param name="path" value="views/TurtleShelterProject_17334307953790/ManagementDashboard?:language=en-US&amp;:embed=true&amp;publish=yes&amp;:sid=&amp;:redirect=auth" />
+                    <param name="toolbar" value="yes" />
+                    <param name="static_image" value="https://public.tableau.com/static/images/Tu/TurtleShelterProject_17334307953790/ManagementDashboard/1.png" />
+                    <param name="animate_transition" value="yes" />
+                    <param name="display_static_image" value="yes" />
+                    <param name="display_spinner" value="yes" />
+                    <param name="display_overlay" value="yes" />
+                    <param name="display_count" value="yes" />
+                    <param name="language" value="en-US" />
+                    <param name="filter" value="publish=yes" />
+                </object>
+            </div>
+            
+            <script type="text/javascript">
+                var divElement = document.getElementById('viz1733430860835');
+                var vizElement = divElement.getElementsByTagName('object')[0];
+                if (divElement.offsetWidth > 800) {
+                    vizElement.style.width = '1000px';
+                    vizElement.style.height = '827px';
+                } else if (divElement.offsetWidth > 500) {
+                    vizElement.style.width = '1000px';
+                    vizElement.style.height = '827px';
+                } else {
+                    vizElement.style.width = '100%';
+                    vizElement.style.height = '977px';
+                }
+                var scriptElement = document.createElement('script');
+                scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+                vizElement.parentNode.insertBefore(scriptElement, vizElement);
+            </script>
+            
+            <div class="dashboard-container" id="viz1733430934864" style="position: relative;">
+                <noscript>
+                    <a href="#">
+                        <img alt="Product Dashboard" src="https://public.tableau.com/static/images/Tu/TurtleShelterProjectProducts/ProductDashboard/1_rss.png" style="border: none" />
+                    </a>
+                </noscript>
+                <object class="tableauViz" style="display:none;">
+                    <param name="host_url" value="https://public.tableau.com/" />
+                    <param name="embed_code_version" value="3" />
+                    <param name="site_root" value="" />
+                    <param name="name" value="TurtleShelterProjectProducts/ProductDashboard" />
+                    <param name="tabs" value="no" />
+                    <param name="toolbar" value="yes" />
+                    <param name="static_image" value="https://public.tableau.com/static/images/Tu/TurtleShelterProjectProducts/ProductDashboard/1.png" />
+                    <param name="animate_transition" value="yes" />
+                    <param name="display_static_image" value="yes" />
+                    <param name="display_spinner" value="yes" />
+                    <param name="display_overlay" value="yes" />
+                    <param name="display_count" value="yes" />
+                    <param name="language" value="en-US" />
+                    <param name="filter" value="publish=yes" />
+                </object>
+            </div>
+            
+            <script type="text/javascript">
+                var divElement = document.getElementById('viz1733430934864');
+                var vizElement = divElement.getElementsByTagName('object')[0];
+                if (divElement.offsetWidth > 800) {
+                    vizElement.style.width = '1000px';
+                    vizElement.style.height = '827px';
+                } else if (divElement.offsetWidth > 500) {
+                    vizElement.style.width = '1000px';
+                    vizElement.style.height = '827px';
+                } else {
+                    vizElement.style.width = '100%';
+                    vizElement.style.height = '977px';
+                }
+                var scriptElement = document.createElement('script');
+                scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+                vizElement.parentNode.insertBefore(scriptElement, vizElement);
+            </script>
+                    <% } else { %>
             <table>
                 <thead>
                     <tr>
