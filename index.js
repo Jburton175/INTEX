@@ -349,6 +349,7 @@ app.post('/createRequest', (req, res) => {
     const req_zip = req.body.req_zip;
     const req_type_id = req.body.req_type_id;
     const location_type_id = req.body.location_type_id;
+    const notes = req.body.notes;
 
     knex('requests').insert({
         contact_first_name: contact_first_name,
@@ -372,14 +373,17 @@ app.post('/createRequest', (req, res) => {
         req_state: req_state,
         req_zip: req_zip,
         req_type_id: req_type_id,
-        location_type_id: location_type_id
+        location_type_id: location_type_id,
+        notes: notes
     }).then(myrequests => {
         res.redirect("/");
+        console.log(req.body)
     }).catch( err => {
         console.log(err);
         res.status(500).json({err});
     });
 });
+
 
 app.post('/denyRequest/:request_id', (req, res) => {
     const reqstatus = 3

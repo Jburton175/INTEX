@@ -22,7 +22,7 @@
     </header>
 
     <section class="form-container" id="volunteer">
-        <form action="/createRequest" method="POST">
+        <form action="/createRequest" method="POST" onsubmit="return alert('Request submitted successfully');">
         <h2>Enter your details to request an event</h2>
         <img class='responsive-img' src="https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1532816947856-MIMDFIUYZHABRDQ4TWZC/Original+logo+low+resolution.png?format=1000w" alt="Turtle Shelter Project Logo">
         
@@ -154,6 +154,11 @@
         <div class="form-group">
             <label for="jen_story">Would you like Jen to share her story?</label>
             <input type="checkbox" id="jen_story" name="jen_story">
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Add any notes, questions, or requests:</label><br>
+            <input type="text" id="notes" name="notes">
         </div>
     
         <div class="form-group">
