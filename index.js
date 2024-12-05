@@ -51,6 +51,12 @@ app.use((req, res, next) => {
         return res.redirect('/login');
     }
 
+    if (req.session.volunteer.role_name !== "Admin") {
+        console.log('Access denied. Redirecting to dashboard.');
+        return res.redirect('/dashboard');
+    }
+    
+
     next(); // Allow access if logged in
 });
 
@@ -349,6 +355,7 @@ app.post('/createRequest', (req, res) => {
     const req_zip = req.body.req_zip;
     const req_type_id = req.body.req_type_id;
     const location_type_id = req.body.location_type_id;
+    const notes = req.body.notes;
 
     knex('requests').insert({
         contact_first_name: contact_first_name,
@@ -372,14 +379,17 @@ app.post('/createRequest', (req, res) => {
         req_state: req_state,
         req_zip: req_zip,
         req_type_id: req_type_id,
-        location_type_id: location_type_id
+        location_type_id: location_type_id,
+        notes: notes
     }).then(myrequests => {
         res.redirect("/");
+        console.log(req.body)
     }).catch( err => {
         console.log(err);
         res.status(500).json({err});
     });
 });
+
 
 app.post('/denyRequest/:request_id', (req, res) => {
     const reqstatus = 3
@@ -805,6 +815,7 @@ app.post('/createEvent/:request_id', (req, res) => {
     //const distributed_products =req.body.distributed_products;
     const volunteers_needed = req.body.volunteers_needed;
     const organization_name = req.body.organization_name;
+    const notes = req.body.notes;
     
     console.log('Request body:', req.body);
     if (!supervisor_id || isNaN(parseInt(supervisor_id))) {
@@ -844,7 +855,8 @@ app.post('/createEvent/:request_id', (req, res) => {
             //completed_products: completed_products,
             //distributed_products:distributed_products,
             volunteers_needed: volunteers_needed,
-            organization_name: organization_name
+            organization_name: organization_name,
+            notes: notes
         })
         .then(() => {
             console.log('Form submitted successfully!');
@@ -859,6 +871,8 @@ app.post('/createEvent/:request_id', (req, res) => {
 
         });
   });
+
+
 
 // render the complete event page
 app.get('/completeEvent/:id', (req, res) => {

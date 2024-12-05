@@ -3,169 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Request</title>
+    <title>Create Event</title>
     <link rel="stylesheet" href="/chatstyles.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="logo">
-                <a href="/">Turtle Shelter Project</a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="#donate">Donate</a></li>
-                <li><a href="/addVolunteer">Volunteer</a></li>
-                <li><a href="/login">Sign In</a></li>
-                <li><a href="/createRequest">Request an Event</a></li>
-            </ul>
-        </nav>
-    </header>
+  <header>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/">Turtle Shelter Project</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/manageUsers">Manage Volunteers</a></li>
+            <li><a href="/manageEvents">Manage Events</a></li>
+            <li><a href="/manageRequests">Manage Requests</a></li>
+            <li><a href="/logout">Logout</a></li>
+            
+        </ul>
+    </nav>
+  </header>
+<div class="form-container">
+  <form action="/createEvent/<%= request.request_id %>" method="POST" onsubmit="return alert('Event created successfully')">
+      <h2>Approve an Event:</h2>
 
-    <section class="form-container" id="volunteer">
-        <form action="/createRequest" method="POST">
-        <h2>Enter your details to request an event</h2>
-        <img class='responsive-img' src="https://images.squarespace-cdn.com/content/v1/5b5a266fcef372310148d6d6/1532816947856-MIMDFIUYZHABRDQ4TWZC/Original+logo+low+resolution.png?format=1000w" alt="Turtle Shelter Project Logo">
-        
-        <div class="form-group">
-            <input type="hidden" id="request_id" name="request_id">
-        </div>
-    
-        <div class="form-group">
-            <label for="organization_name">Organization Name:</label>
-            <input type="text" id="organization_name" name="organization_name" required>
-        </div>
-    
-        <div class="form-group">
-            <label for="contact_first_name">First Name:</label>
-            <input type="text" id="contact_first_name" name="contact_first_name" required>
-        </div>
-    
-        <div class="form-group">
-            <label for="contact_last_name">Last Name:</label>
-            <input type="text" id="contact_last_name" name="contact_last_name" required>
-        </div>
-    
-        <div class="form-group">
-            <label for="contact_phone">Phone Number:</label>
-            <input type="text" id="contact_phone" name="contact_phone" required>
-        </div>
-    
-        <div class="form-group">
-            <label for="contact_email">Email:</label>
-            <input type="text" id="contact_email" name="contact_email" required>
-        </div>
-    
-        <div class="form-group">
-            <label for="req_street_1">Street Address 1:</label>
-            <input type="text" id="req_street_1" name="req_street_1" required>
-        </div>
-    
-        <div class="form-group">
-            <label for="req_street_2">Street Address 2:</label>
-            <input type="text" id="req_street_2" name="req_street_2">
-        </div>
-    
-        <div class="form-group">
-            <label for="req_city">City:</label>
-            <input type="text" id="req_city" name="req_city" required>
-        </div>
-    
-        <div class="form-group">
-            <label for="req_state">State:</label>
-            <select name="req_state" id="req_state" required>
-                <option value="" disabled selected>Select a state</option>
-                <% states.forEach(function(state) { %>
-                    <option value="<%= state %>"><%= state %></option>
-                <% }) %>
-            </select>
-        </div>
-    
-        <div class="form-group">
-            <label for="req_zip">Zip:</label>
-            <input type="text" id="req_zip" name="req_zip" required>
-        </div>
-    
-        <div class="form-group">
-            <label for="req_type_id">Type of Event:</label>
-            <select name="req_type_id" id="req_type_id" required>
-                <option value="" disabled selected>Select an Event Activity</option>
-                <% eventTypes.forEach(type => { %>
-                    <option value="<%= type.event_type_id %>"><%= type.event_type_name %></option>
-                <% }) %>
-            </select>
-        </div>
+      <!-- Contact Info -->
+      <div class="form-group">
+          <label for="contact_first_name"><strong>Request Contact:</strong></label><br>
+          <label><%= request.contact_first_name %> <%= request.contact_last_name %></label><br>
+          <label><%= request.contact_email %></label><br>
+          <label><%= request.contact_phone %></label>
+      </div>
 
-        <div class="form-group">
-            <label for="location_type_id">Type of Location:</label>
-            <select name="location_type_id" id="location_type_id" required>
-                <option value="" disabled selected>Select an Location Type</option>
-                <% locations.forEach(type => { %>
-                    <option value="<%= type.location_type_id %>"><%= type.location_type_name %></option>
-                <% }) %>
-            </select>
-        </div>
-    
-        <div class="form-group">
-            <label for="est_attendees">Estimated # of Attendees:</label>
-            <input type="number" id="est_attendees" name="est_attendees" value="0" min="0" max="1000">
-        </div>
-    
-        <div class="form-group">
-            <label for="basic_sewers"># of Basic Sewers:</label>
-            <input type="number" id="basic_sewers" name="basic_sewers" value="0" min="0" max="100">
-        </div>
-    
-        <div class="form-group">
-            <label for="advanced_sewers"># of Advanced Sewers:</label>
-            <input type="number" id="advanced_sewers" name="advanced_sewers" value="0" min="0" max="100">
-        </div>
-    
-        <div class="form-group">
-            <label for="proposed_datetime">Preferred Date for Event:</label>
-            <input type="datetime-local" id="proposed_datetime" name="proposed_datetime" required>
-        </div>
-    
-        <div class="form-group">
-            <label for="alt_datetime">Alternate Date for Event:</label>
-            <input type="datetime-local" id="alt_datetime" name="alt_datetime">
-        </div>
-    
-        <div class="form-group">
-            <label for="est_duration">Estimated Duration</label>
-            <select name="est_duration" id="est_duration" required>
-                <option value="" disabled selected>Choose duration</option>
-                <% hours.forEach(function(hours) { %>
-                    <option value="<%= hours %>"><%= hours %> hours</option>
-                <% }) %>
-            </select>
-        </div>
+      <!-- Event Info -->
+      <div class="form-group">
+          <label for="org_info"><strong>Event Info</strong></label><br><br>
+      </div>
 
-    
-        <div class="form-group">
-            <label for="num_machines">Number of Available Machines:</label>
-            <input type="number" name="num_machines" id="num_machines" value="0" min="0" max="100" />
-        </div>
-    
-        <div class="form-group">
-            <label for="num_sergers">Number of Available Sergers:</label>
-            <input type="number" name="num_sergers" id="num_sergers" value="0" min="0" max="100" />
-        </div>
-    
-        <div class="form-group">
-            <label for="jen_story">Would you like Jen to share her story?</label>
-            <input type="checkbox" id="jen_story" name="jen_story">
-        </div>
-    
-        <div class="form-group">
-            <button class='cta-button' type="submit">Save</button>
-        </div>
-    </form>
-</section>
-<footer id='footer' class="footer">
-    <p>&copy; 2024 Turtle Shelter Project | All rights reserved | 
-        <a href="mailto:turtleshelterproject@gmailcom">turtleshelterproject@gmail.com</a> |
-        <a href="tel:(801) 872-3190">(801) 872-3190</a>
-    </p>
-</footer>
+      <!-- Organization Name -->
+      <div class="form-group">
+          <label for="organization_name">Organization Name:</label>
+          <input type="text" id="organization_name" name="organization_name" required value="<%= request.organization_name %>">
+      </div>
+
+      <!-- Event Address Info -->
+      <div class="form-group">
+          <label for="event_street_1">Street Address 1:</label>
+          <input type="text" id="event_street_1" name="event_street_1" required value="<%= request.req_street_1 %>">
+      </div>
+      
+      <div class="form-group">
+          <label for="event_street_2">Street Address 2:</label>
+          <input type="text" id="event_street_2" name="event_street_2" value="<%= request.req_street_2 %>">
+      </div>
+      
+      <div class="form-group">
+          <label for="event_city">City:</label>
+          <input type="text" id="event_city" name="event_city" required value="<%= request.req_city %>">
+      </div>
+      
+      <div class="form-group">
+          <label for="event_state">State:</label>
+          <select name="event_state" id="event_state" required>
+              <option value="" disabled selected>Select a state</option>
+              <% states.forEach(function(state) { %>
+                  <option value="<%= request.req_state %>" <%= state === request.req_state ? 'selected' : '' %>>
+                      <%= state %></option>
+              <% }) %>
+          </select>
+      </div>
+      
+      <div class="form-group">
+          <label for="event_zip">Zip:</label>
+          <input type="text" id="event_zip" name="event_zip" required value="<%= request.req_zip %>">
+      </div>
+
+      <!-- Estimated Duration -->
+      <div class="form-group">
+          <label for="event_duration">Estimated Duration:</label>
+          <label name="event_duration" id="event_duration"><%=request.est_duration%> hours</label>
+      </div>
+
+      <!-- Predicted Participants -->
+      <div class="form-group">
+          <label for="participants">Predicted Participants:</label>
+          <label for="predicted_participants"><%= request.est_attendees %></label>
+      </div>
+
+      <!-- Number of Basic Sewers -->
+      <div class="form-group">
+          <label for="basic_sewers">Number of Basic Sewers: <%= request.basic_sewers %></label>
+      </div>
+
+      <!-- Number of Advanced Sewers -->
+      <div class="form-group">
+          <label for="advanced_sewers">Number of Advanced Sewers: <%= request.advanced_sewers %></label>
+      </div>
+
+      <!-- Number of Machines -->
+      <div class="form-group">
+          <label for="num_machines">Available Machines: <%= request.num_machines %></label>
+      </div>
+
+      <!-- Number of Sergers -->
+      <div class="form-group">
+          <label for="num_sergers">Available Sergers: <%= request.num_sergers %></label>
+      </div>
+
+      <!-- Jen Story -->
+      <div class="form-group">
+          <label for="jen_story">Jen Story: </label>
+          <span><%= request.jen_story ? "Yes" : "No" %></span>
+      </div>
+
+      <!-- notes from request form -->
+       <div class="form-group">
+            <label for="request_notes">Notes (from request): <%=request.notes%></label>
+       </div>
+
+      <!-- Proposed Dates/Times -->
+      <div class="form-group">
+          <label for="times"><strong>Proposed Dates/Times:</strong></label><br><br>
+      </div>
+
+      <div class="form-group">
+          <label id="proposed_datetime" name="proposed_datetime">
+              <% 
+              const proposedDateFormatted = new Intl.DateTimeFormat('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
+              }).format(new Date(request.proposed_datetime)); 
+              %>
+              <span>Requested Date: <%= proposedDateFormatted %></span>
+          </label>
+      </div>
+
+      <!-- Alternate Date -->
+      <div class="form-group">
+          <label id="proposed_datetime" name="proposed_datetime">
+              <% 
+              const altTimeFormatted = new Intl.DateTimeFormat('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
+              }).format(new Date(request.alt_datetime)); 
+              %>
+              <span>Alternate Date: <%= altTimeFormatted %></span>
+          </label>  
+      </div>
+
+      <!-- Admin Information to Create Event -->
+      <div class="form-group">
+          <label for="create_event"><strong>Please fill in the following information to approve and create the event:</strong></label><br><br>
+      </div>
+
+      <!-- Event Date and Time -->
+      <div class="form-group">
+          <label for="event_datetime">Event Date and Time:</label>
+          <input type="datetime-local" id="event_datetime" name="event_datetime" required>
+      </div>
+
+      <!-- Event Supervisor -->
+      <div class="form-group">
+          <label for="supervisor_id">Event Supervisor:</label>
+          <select name="supervisor_id" id="supervisor_id" required>
+              <option value="" disabled selected>Select a Supervisor</option>
+              <% admins.forEach(admin => { %>
+                  <option value="<%= admin.vol_id %>"><%= admin.vol_first_name %> <%= admin.vol_last_name %></option>
+              <% }) %>
+          </select>
+      </div>
+
+      <!-- Event Type -->
+      <div class="form-group">
+          <label for="event_type_id">Event Type:</label>
+          <select name="event_type_id" id="event_type_id">
+              <% types.forEach(type => { %>
+                  <option value="<%= type.event_type_id %>" <%= request.req_type_id === type.event_type_id ? 'selected' : '' %>>
+                      <%= type.event_type_name %>
+                  </option>
+              <% }) %>
+          </select>
+      </div>
+
+      <!-- Location Type -->
+      <div class="form-group">
+        <label for="location_type_id">Location Type:</label>
+        <select name="location_type_id" id="location_type_id">
+            <% locations.forEach(type => { %>
+                <option value="<%= type.location_type_id %>" <%= request.location_type_id === type.location_type_id ? 'selected' : '' %>>
+                    <%= type.location_type_name %>
+                </option>
+            <% }) %>
+        </select>
+      </div>
+
+      <!-- Volunteers Needed -->
+      <div class="form-group">
+          <label for="volunteers_needed">Volunteers Needed: </label>
+          <input type="number" id="volunteers_needed" name="volunteers_needed" required min="1" max="75" value="<%= request.est_attendees / 10 %>">
+      </div>
+
+      <!-- notes about event (for admin use)-->
+      <div class="form-group">
+            <label for="notes">Notes:</label>
+            <input type="text" name="notes" id="notes">
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-group">
+          <button type="submit">Create Event</button>
+          <button onclick="window.location.href='/ManageEvents'">View all Events</button>
+      </div>
+  </form>
+</div>
+
 </body>
 </html>
