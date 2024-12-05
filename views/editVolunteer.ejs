@@ -4,12 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Information Form</title>
-  <link rel="stylesheet" href="styles.css"> <!-- You can link to a CSS file if you need styling -->
+  <link rel="stylesheet" href="/chatstyles.css"> <!-- You can link to a CSS file if you need styling -->
 </head>
 <body>
-  <h1>Volunteer Registration Form</h1>
-  <br><br><br><br><br>
+  <header></header>
+  <nav class="navbar">
+      <div class="logo">
+          <a href="/">Turtle Shelter Project</a>
+      </div>
+      <ul class="nav-links">
+          <li><a href="#donate">Donate</a></li>
+          <li><a href="/addVolunteer">Volunteer</a></li>
+          <li><a href="/login">Sign In</a></li>
+          <li><a href="/createRequest">Request an Event</a></li>
+      </ul>
+  </nav>
+</header>
+<div class="form-container"> 
   <form action="/editVolunteer/<%= volunteer.vol_id %>" method="POST">
+    <h1>Edit Volunteer</h1>
     <div>
       <label for="firstName">First Name:</label>
       <input type="text" id="firstName" name="firstName" required value="<%= volunteer.vol_first_name %>">
@@ -99,7 +112,14 @@
     <div>
       <button type="submit">Submit</button>
     </div>
+  </div>
   </form>
-
+  
+  <footer id='footer' class="footer">
+    <p>&copy; 2024 Turtle Shelter Project | All rights reserved | 
+        <a href="mailto:turtleshelterproject@gmailcom">turtleshelterproject@gmail.com</a> |
+        <a href="tel:(801) 872-3190">(801) 872-3190</a>
+    </p>
+</footer>
 </body>
 </html>

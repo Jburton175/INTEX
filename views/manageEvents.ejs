@@ -22,7 +22,6 @@
         </nav>
     </header>
     <label><b>Events:</b></label>
-        <br><br>
         <table>
             <thead>
                 <tr>
@@ -41,10 +40,12 @@
                     <th style="text-align: left;"># of Vests Produced</th>
                     <th style="text-align: left;"># of Vests Distributed</th>
                     <th style="text-align: left;"># of Volunteers Needed</th>
-                    <th></th>
+                    <th style="text-align: left;">Edit</th>
+                    <th style="text-align: left;">Delete</th>
+                
                 </tr>
             </thead>
-            <tbody style="font-family: Arial, Helvetica, sans-serif; font-size: 9pt;">
+            <tbody>
                 <% for (let iCount = 0; iCount < events.length; iCount++) { %>
                     <tr>
                         <td><%= events[iCount].event_datetime %></td>
@@ -62,15 +63,19 @@
                         <td><%= events[iCount].completed_products %></td>
                         <td><%= events[iCount].distributed_products %></td>
                         <td><%= events[iCount].volunteers_needed %></td>
-                        <td style="text-align: center;">
-                            <form action="/editEvent/<%= events[iCount].event_id %>" method="GET">
-                                <button type="submit">Edit</button>
-                            </form>
+                        <td>
+                            <div class="action-button">
+                                <form action="/editEvent/<%= events[iCount].event_id %>" method="GET">
+                                    <button type="submit">Edit</button>
+                                </form>
+                            </div>
                         </td>
-                        <td style="text-align: center;">
-                            <form action="/cancelEvent/<%= events[iCount].event_id %>" method="POST">
-                                <button type="submit" onclick="return confirm('Are you sure you want to cancel this event?');">Cancel Event</button>
-                            </form>
+                        <td>
+                            <div class="action-button">
+                                <form action="/cancelEvent/<%= events[iCount].event_id %>" method="POST">
+                                    <button type="submit" onclick="return confirm('Are you sure you want to cancel this event?');">Cancel Event</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 <% } %>
@@ -85,6 +90,13 @@
         <form action="/" method="GET">
             <button type="submit">Home</button>
         </form>
+
+    <footer id='footer' class="footer">
+        <p>&copy; 2024 Turtle Shelter Project | All rights reserved | 
+            <a href="mailto:turtleshelterproject@gmailcom">turtleshelterproject@gmail.com</a> |
+            <a href="tel:(801) 872-3190">(801) 872-3190</a>
+        </p>
+    </footer>
 </body>
 </html>
 
