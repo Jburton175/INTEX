@@ -673,6 +673,8 @@ app.get('/manageEvents', (req, res) => {
         "location_type.location_type_name"
     )
     .whereNot('events.event_status_id', 3) // Exclude rows where event_status_id = cancelled
+    .orderBy('events.event_status_id')
+    .orderBy('events.event_datetime', 'asc')
     .then(events => {
         res.render('manageEvents', { events });
     })
@@ -967,6 +969,91 @@ app.post('/completeEvent/:id', (req, res) => {
             res.status(500).send('Internal Server Error While Updating Event');
         });
   });
+
+
+
+// route for event details modal
+app.get('/eventDetails/:id', (req, res) => {
+    const eventId = req.params.id;
+
+    // Query the database to fetch the event details
+    knex('events')
+    .join('volunteers', 'events.supervisor_id', '=', 'volunteers.vol_id')
+    .join('event_status', 'events.event_status_id', '=', 'event_status.status_id')
+    .join('event_type', 'events.event_type_id', '=', 'event_type.event_type_id')
+    .join('location_type', 'events.location_type_id', '=', 'location_type.location_type_id')
+    .join('requests', 'events.request_id', '=', 'requests.request_id')
+    .select(
+        "events.event_id", // ghost
+        "events.request_id", // ghost
+        "events.event_datetime",
+        "events.organization_name",
+        "events.supervisor_id", // name of supervisor, from volunteers
+        "events.event_status_id", // from event_status table we need the name
+        "events.event_type_id", // from the table we need the type name
+        "events.event_street_1",
+        "events.event_street_2",
+        "events.event_city",
+        "events.event_state",
+        "events.event_zip",
+        "events.location_type_id", // get the location type
+        "events.participants",
+        "events.event_duration",
+        "events.pockets",
+        "events.collars",
+        "events.envelopes",
+        "events.vests",
+        "events.completed_products",
+        "events.distributed_products",
+        "events.volunteers_needed",
+        "events.event_notes",
+        "volunteers.vol_first_name",
+        "volunteers.vol_last_name",
+        "event_status.event_status_name",
+        "event_type.event_type_name",
+        "location_type.location_type_name",
+        "requests.jen_story",
+        "requests.contact_first_name", 
+        "requests.contact_last_name", 
+        "requests.contact_email", 
+        "requests.contact_phone", 
+        "requests.basic_sewers", 
+        "requests.advanced_sewers", 
+        "requests.num_machines", 
+        "requests.num_sergers", 
+        "requests.req_notes"
+    )
+        .where('events.event_id', eventId)
+        .first() // Retrieve a single row
+        .then(event => {
+            if (!event) {
+                return res.status(404).send({ error: 'Event not found' });
+            }
+
+            // Format the datetime field
+            const formattedDate = new Intl.DateTimeFormat('en-US', {
+                month: 'long',
+                day: '2-digit',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            }).format(new Date(event.event_datetime));
+
+            // Replace the original datetime with formatted date
+            event.event_datetime = formattedDate;
+
+            res.json(event); // Send the formatted event
+        })
+        .catch(error => {
+            console.error('Error fetching event details:', error);
+            res.status(500).send({ error: 'Internal server error' });
+        });
+});
+
+
+
+
 
 // port number, (parameters) => what you want it to do.
 app.listen(PORT, () => console.log('Server started on port ' + PORT));
