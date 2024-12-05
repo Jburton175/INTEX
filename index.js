@@ -809,6 +809,7 @@ app.post('/createEvent/:request_id', (req, res) => {
     //const distributed_products =req.body.distributed_products;
     const volunteers_needed = req.body.volunteers_needed;
     const organization_name = req.body.organization_name;
+    const notes = req.body.notes;
     
     console.log('Request body:', req.body);
     if (!supervisor_id || isNaN(parseInt(supervisor_id))) {
@@ -848,7 +849,8 @@ app.post('/createEvent/:request_id', (req, res) => {
             //completed_products: completed_products,
             //distributed_products:distributed_products,
             volunteers_needed: volunteers_needed,
-            organization_name: organization_name
+            organization_name: organization_name,
+            notes: notes
         })
         .then(() => {
             console.log('Form submitted successfully!');
@@ -863,6 +865,8 @@ app.post('/createEvent/:request_id', (req, res) => {
 
         });
   });
+
+
 
 // render the complete event page
 app.get('/completeEvent/:id', (req, res) => {
