@@ -286,29 +286,40 @@ app.get('/manageRequests', (req, res) => {
 
   app.get('/createRequest', (req, res) => {
     knex("event_type")
-    .select("event_type_id",
-            "event_type_name"
+    .select(
+        "event_type_id",
+        "event_type_name"
     )
-            .then(eventTypes => { // selects all the info from the requests table and passes it to display characters ejs
+    .then(eventTypes => { // selects all the info from the requests table and passes it to display characters ejs
 
-        const states = [
-            "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
-            "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-            "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
-            "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-            "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
-        ];
+        knex("location_type")
+        .select(
+            "location_type_id",
+            "location_type_name"
+        )
+        .then(locations => {
+            
+            const states = [
+                "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+                "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+                "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+                "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+                "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+            ];
+    
+            const hours = [];
+            for (let i = 1; i <= 12; i++) {
+                hours.push(i); // Add whole hours
+                if (i < 12) {
+                hours.push(i + 0.5); // Add half hour increments
+            }}
+    
+            res.render("createRequest", {eventTypes, locations, states, hours});
+        
 
-        const hours = [];
-        for (let i = 1; i <= 12; i++) {
-            hours.push(i); // Add whole hours
-            if (i < 12) {
-            hours.push(i + 0.5); // Add half hour increments
-        }
-}
-
-        res.render("createRequest", {eventTypes, states, hours});
-    }).catch( err => {
+        })
+    })
+    .catch( err => {
         console.log(err);
         res.status(500).json({err});
     });
