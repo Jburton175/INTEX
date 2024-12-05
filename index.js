@@ -50,7 +50,7 @@ app.get('/login', (req, res) => {
 
 
 // Excluded routes that don't require login
-const excludedRoutes = ['/', '/login', '/requestEvent', '/addVolunteer','/createRequest'];
+const excludedRoutes = ['/', '/login', '/requestEvent', '/addVolunteer','/createRequest', '/logout'];
 
 // Middleware to enforce login check
 app.use((req, res, next) => {
@@ -106,7 +106,7 @@ app.post('/login', (req, res) => {
 // Logout route
 app.get('/logout', (req, res) => {
     // Clear the volunteer object from the session explicitly
-    volunteer = null;
+    req.session.volunteer = null;  // or you can use delete req.session.volunteer;
 
     // Destroy the session
     req.session.destroy(err => {
@@ -116,9 +116,10 @@ app.get('/logout', (req, res) => {
         }
 
         // Redirect to the login page after logging out
-        res.redirect('/login');
+        res.redirect('/');
     });
 });
+
 
 
 // Dashboard route (protected)

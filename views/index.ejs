@@ -22,19 +22,19 @@
             <ul class="nav-links">
                 <li><a href="#donate">Donate</a></li>
                 <li><a href="/createRequest">Request an Event</a></li>
-                <% if (!volunteer) { %>
+                <% if (!volunteer || volunteer === null) { %>
                     <li><a href="/addVolunteer">Volunteer</a></li>
                     <li><a href="/login">Sign In</a></li>
                 <% } else { %>
-                    <% if (volunteer.role_name.toLowerCase() === 'admin') { %>
-                    <li><a href="/dashboard">Dashboard</a></li>
+                    <% if (volunteer.role_name && volunteer.role_name.toLowerCase() === 'admin') { %>
+                        <li><a href="/dashboard">Dashboard</a></li>
                     <% } else { %>
-                    <li><a href="/dashboard">Event Sign Up</a></li>    
-                        <% } %>
+                        <li><a href="/dashboard">Event Sign Up</a></li>    
+                    <% } %>
                     <li><a href="/logout">Logout</a></li>
                 <% } %>
-                
-            </ul>        
+            </ul>
+                   
         </nav>
     </header>
     <div class="main-content">
