@@ -26,6 +26,7 @@
             <thead>
                 <tr>
                     <th >Date of Event:</th>
+                    <th >Organziation Name:</th>
                     <th >Supervisor Name:</th>
                     <th >Event Status:</th>
                     <th >Event Type:</th>
@@ -49,6 +50,7 @@
                 <% for (let iCount = 0; iCount < events.length; iCount++) { %>
                     <tr>
                         <td><%= events[iCount].event_datetime %></td>
+                        <td><%= events[iCount].organization_name %></td>
                         <td><%= events[iCount].vol_first_name %> <%= events[iCount].vol_last_name %></td>
                         <td><%= events[iCount].event_status_name %></td>
                         <td><%= events[iCount].event_type_name %></td>

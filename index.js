@@ -624,6 +624,7 @@ app.get('/manageEvents', (req, res) => {
         "events.event_id", // ghost
 	    "events.request_id", // ghost
 	    "events.event_datetime",
+        "events.organization_name",
 	    "events.supervisor_id", // name of supervisor, from volunteers
 	    "events.event_status_id", // from event_status table we need the name
 	    "events.event_type_id", // from the table we need the type name
@@ -647,7 +648,8 @@ app.get('/manageEvents', (req, res) => {
         "event_status.event_status_name",
         "event_type.event_type_name",
         "location_type.location_type_name"
-    ).whereNot('events.event_status_id', 3) // Exclude rows where event_status_id = cancelled
+    )
+    .whereNot('events.event_status_id', 3) // Exclude rows where event_status_id = cancelled
     .then(events => {
         res.render('manageEvents', { events });
     })
