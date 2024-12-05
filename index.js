@@ -610,7 +610,7 @@ app.get('/manageEvents', (req, res) => {
     .join('volunteers', 'events.supervisor_id', '=', 'volunteers.vol_id')
     .join('event_status', 'events.event_status_id', '=', 'event_status.status_id')
     .join('event_type', 'events.event_type_id', '=', 'event_type.event_type_id')
-    .join('location_type', 'events.location_type_id', '=', 'event_type.event_type_id')
+    .join('location_type', 'events.location_type_id', '=', 'location_type.location_type_id')
     .select(
         "events.event_id", // ghost
 	    "events.request_id", // ghost
