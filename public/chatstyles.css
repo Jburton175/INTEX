@@ -445,12 +445,13 @@ img {
 
 /* Table Styles */
 table {
-    width: 90%;
-    max-width: 100%;
+    width: 100%;
+    max-width: 95%;
     margin: 20px auto;
     border-collapse: collapse;
     background-color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    table-layout: fixed;
     
 }
 
@@ -458,8 +459,10 @@ th, td {
     padding: 8px;
     text-align: left;
     border-bottom: 1px solid #ddd;
-    white-space: wrap; /* Prevents text from wrapping, but allows scrolling */
+    white-space: wrap; /* Prevents text from wrapping within the cell, but allows scrolling */
     border: 2px solid rgb(255, 255, 255); /* Makes borders more visible */
+    overflow: hidden;    /* Ensures long content doesn’t overflow */
+    text-overflow:ellipsis; /* Adds ellipsis (...) for overflowed text */
 }
 
 caption {
