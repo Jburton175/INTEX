@@ -21,8 +21,8 @@
             </ul>
         </nav>
     </header>
-    <label><b>Events:</b></label>
         <table>
+            <caption><b>Events</b></caption>
             <thead>
                 <tr>
                     <th style="text-align: left;">Date of Event:</th>
@@ -82,14 +82,15 @@
             </tbody>
 
         </table>
-        <br>
-        <form action="/createEvent" method="GET">
+    <div class='center-button'>
+        <form  action="/createEvent" method="GET">
             <button type="submit">Add an Event</button>
         </form>
-        <br><br>
-        <form action="/" method="GET">
-            <button type="submit">Home</button>
+
+        <form  action="/dashboard" method="GET">
+            <button type="submit">Back to Dashboard</button>
         </form>
+    </div>
 
     <footer id='footer' class="footer">
         <p>&copy; 2024 Turtle Shelter Project | All rights reserved | 
