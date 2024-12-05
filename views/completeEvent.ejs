@@ -84,21 +84,24 @@
             </div>
 
             <!-- admin notes -->
+            <br>
             <div class="form-group">
-                <label for="event_notes">Admin Notes:  </label>
+                <label for="event_notes">Admin Notes:</label><br>
                 <textarea name="event_notes" id="event_notes" ><%= event.event_notes%></textarea>
             </div>
+            <br><br>
 
             <!-- Section to Complete After Event -->
             <div class="form-group">
                 <label for="after_event_info"><strong>Details needed to mark event as complete:</strong></label>
-            </div>
+            </div><br>
     
             <!-- Number of Participants -->
             <div class="form-group">
                 <label for="participants">How many people came?</label>
                 <input type="number" id="participants" name="participants" min="0">
             </div>
+            <br>
     
             <!-- Completed Items Section -->
             <div class="form-group">
@@ -106,31 +109,31 @@
     
                 <!-- Pockets -->
                 <div class="form-group">
-                    <label for="pockets" style="margin-left: 40px;">Pockets: </label>
+                    <label for="pockets">Pockets: </label>
                     <input type="number" id="pockets" name="pockets" min="0">
                 </div>
     
                 <!-- Collars -->
                 <div class="form-group">
-                    <label for="collars" style="margin-left: 40px;">Collars: </label>
+                    <label for="collars">Collars: </label>
                     <input type="number" id="collars" name="collars" min="0">
                 </div>
     
                 <!-- Envelopes -->
                 <div class="form-group">
-                    <label for="envelopes" style="margin-left: 40px;">Envelopes: </label>
+                    <label for="envelopes">Envelopes: </label>
                     <input type="number" id="envelopes" name="envelopes" min="0">
                 </div>
     
                 <!-- Vests -->
                 <div class="form-group">
-                    <label for="vests" style="margin-left: 40px;">Vests: </label>
+                    <label for="vests">Vests: </label>
                     <input type="number" id="vests" name="vests" min="0">
                 </div>
     
                 <!-- Completed Products -->
                 <div class="form-group">
-                    <label for="completed_products" style="margin-left: 40px;">Completed Products: </label>
+                    <label for="completed_products">Completed Products: </label>
                     <input type="number" id="completed_products" name="completed_products" min="0">
                 </div>
             </div>
@@ -154,6 +157,7 @@
             </div>
     
             <!-- Submit Button -->
+             <br>
             <div class="form-group">
                 <button type="submit" class="cta-button">Mark Complete</button>
             </div>
