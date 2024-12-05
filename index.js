@@ -935,6 +935,7 @@ app.post('/completeEvent/:id', (req, res) => {
     const completed_products = req.body.completed_products;
     const distributed_products = req.body.distributed_products;
     const event_status_id = 2;
+    const event_notes = req.body.event_notes;
     //const volunteers_needed = req.body.volunteers_needed;
     //const organization_name = req.body.organization_name;
     
@@ -951,7 +952,8 @@ app.post('/completeEvent/:id', (req, res) => {
             vests : vests,
             completed_products : completed_products,
             distributed_products : distributed_products,
-            event_status_id : event_status_id
+            event_status_id : event_status_id,
+            event_notes : event_notes
         })
         .then(() => {
             console.log('Form submitted successfully!');
@@ -965,8 +967,6 @@ app.post('/completeEvent/:id', (req, res) => {
             res.status(500).send('Internal Server Error While Updating Event');
         });
   });
-    
-  
 
 // port number, (parameters) => what you want it to do.
 app.listen(PORT, () => console.log('Server started on port ' + PORT));
