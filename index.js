@@ -1053,6 +1053,87 @@ app.get('/eventDetails/:id', (req, res) => {
 });
 
 
+// Route to get detailed request information for the modal
+app.get('/requestDetails/:id', (req, res) => {
+    const requestId = req.params.id;
+
+    knex('requests')
+        .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
+        .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
+        .join('location_type', 'requests.location_type_id', '=', 'location_type.location_type_id')
+        .select(
+            'requests.request_datetime',
+            'requests.organization_name',
+            'requests.contact_first_name',
+            'requests.contact_last_name',
+            'requests.contact_phone',
+            'requests.contact_email',
+            'requests.req_street_1',
+            'requests.req_street_2',
+            'requests.req_city',
+            'requests.req_state',
+            'requests.req_zip',
+            'event_type.event_type_name',
+            'requests.est_attendees',
+            'requests.basic_sewers',
+            'requests.advanced_sewers',
+            'requests.num_machines',
+            'requests.num_sergers',
+            'requests.jen_story',
+            'requests.proposed_datetime',
+            'requests.alt_datetime',
+            'requests.est_duration',
+            'location_type.location_type_name',
+            'requests.req_notes',
+            'request_status.request_status_name'
+        )
+        .where('requests.request_id', requestId)
+        .first()
+        .then(request => {
+            if (!request) {
+                return res.status(404).json({ error: 'Request not found' });
+            }
+
+            console.log('request: ', request)
+
+            // Format datetime fields for better readability
+            request.request_datetime = new Intl.DateTimeFormat('en-US', {
+                month: 'long',
+                day: '2-digit',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            }).format(new Date(request.request_datetime));
+
+            request.proposed_datetime = new Intl.DateTimeFormat('en-US', {
+                month: 'long',
+                day: '2-digit',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            }).format(new Date(request.proposed_datetime));
+
+            if (request.alt_datetime) {
+                request.alt_datetime = new Intl.DateTimeFormat('en-US', {
+                    month: 'long',
+                    day: '2-digit',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                }).format(new Date(request.alt_datetime));
+            }
+
+            res.json(request);
+        })
+        .catch(error => {
+            console.error('Error fetching request details:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
+
 
 
 
