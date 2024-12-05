@@ -387,7 +387,7 @@ app.post('/createRequest', (req, res) => {
         req_zip: req_zip,
         req_type_id: req_type_id,
         location_type_id: location_type_id,
-        notes: notes
+        req_notes: req_notes
     }).then(myrequests => {
         res.redirect("/");
         console.log(req.body)
