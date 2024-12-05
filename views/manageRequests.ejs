@@ -5,6 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Requests</title>
     <link rel="stylesheet" href="/chatstyles.css">
+    <style>
+        /* Modal popup styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%; /* Could be more or less, depending on screen size */
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,82 +50,159 @@
                 <a href="/">Turtle Shelter Project</a>
             </div>
             <ul class="nav-links">
-                <li><a href="/manageUsers">Manage Volunteers</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/manageUsers">View Volunteers</a></li>
                 <li><a href="/manageEvents">Manage Events</a></li>
                 <li><a href="/manageRequests">Manage Requests</a></li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
     </header>
-        <table>
-            <caption><b>Requests</b></caption>
-            <thead>
-                <tr>
-                    <th style="text-align: left;">Request Made:</th>
-                    <th style="text-align: left;">Organization Name:</th>
-                    <th style="text-align: left;">Contact Name:</th>
-                    <th style="text-align: left;">Contact Phone:</th>
-                    <th style="text-align: left;">Contact Email:</th>
-                    <th style="text-align: left;">Event Address:</th>
-                    <th style="text-align: left;">Event Activity:</th>
-                    <th style="text-align: left;">Estimated # of Attendees:</th>
-                    <th style="text-align: left;"># of Basic Sewers</th>
-                    <th style="text-align: left;"># of Advanced Sewers</th>
-                    <th style="text-align: left;"># of Machines</th>
-                    <th style="text-align: left;"># of Sergers</th>
-                    <th style="text-align: left;">Jen's Story</th>
-                    <th style="text-align: left;">Proposed Date and Time</th>
-                    <th style="text-align: left;">Alternate Date and Time</th>
-                    <th style="text-align: left;">Estimated Duration</th>
-                    <th style="text-align: left;">Request Status</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <% for (let iCount = 0; iCount < myrequests.length; iCount++) { %>
-                    <tr>
-                        <td><%= myrequests[iCount].request_datetime %></td>
-                        <td><%= myrequests[iCount].organization_name %></td>
-                        <td><%= myrequests[iCount].contact_first_name %> <%= myrequests[iCount].contact_last_name %></td>
-                        <td href="TEL:<%= myrequests[iCount].contact_phone %>"><%= myrequests[iCount].contact_phone %></td>
-                        <td><%= myrequests[iCount].contact_email %></td>
-                        <td><%= myrequests[iCount].req_street_1 %> <%= myrequests[iCount].req_street2 %>, <%= myrequests[iCount].req_city %>, <%= myrequests[iCount].req_state %>, <%= myrequests[iCount].req_zip %></td>
-                        <td><%= myrequests[iCount].event_type_name %></td>
-                        <td><%= myrequests[iCount].est_attendees %></td>
-                        <td><%= myrequests[iCount].basic_sewers %></td>
-                        <td><%= myrequests[iCount].advanced_sewers %></td>
-                        <td><%= myrequests[iCount].num_machines %></td>
-                        <td><%= myrequests[iCount].num_sergers %></td>
-                        <td><%= myrequests[iCount].jen_story %></td>
-                        <td><%= myrequests[iCount].proposed_datetime %></td>
-                        <td><%= myrequests[iCount].alt_datetime %></td>
-                        <td><%= myrequests[iCount].est_duration %></td>
-                        <td><%= myrequests[iCount].request_status_name %></td>
-                        <td style="text-align: center;">
-                            <form class='action-button' action="/createEvent/<%= myrequests[iCount].request_id %>" method="GET">
-                                <button type="submit">Approve</button>
-                            </form>
-                        </td>
-                        <td style="text-align: center;">
-                            <form class='action-button' action="/denyRequest/<%= myrequests[iCount].request_id %>" method="POST">
-                                <button type="submit" onclick="return confirm('Are you sure you want to deny this request?');">Deny</button>
-                            </form>
-                        </td>
-                    </tr>
-                <% } %>
-            </tbody>
 
-        </table>
-        <br>
-        <form class='center-button' action="/" method="GET">
-            <button type="submit">Home</button>
+    <table>
+        <caption><b>Requests:</b></caption><br>
+        <thead>
+            <tr>
+                <th>Organization Name:</th>
+                <th>Contact Name:</th>
+                <th>Contact Phone:</th>
+                <th>Contact Email:</th>
+                <th>Event Type:</th>
+                <th>Proposed Date and Time</th>
+                <th>Alternate Date and Time</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let iCount = 0; iCount < myrequests.length; iCount++) { %>
+                <tr>
+                    <td><%= myrequests[iCount].organization_name %></td>
+                    <td><%= myrequests[iCount].contact_first_name %> <%= myrequests[iCount].contact_last_name %></td>
+                    <td href="TEL:<%= myrequests[iCount].contact_phone %>"><%= myrequests[iCount].contact_phone %></td>
+                    <td><%= myrequests[iCount].contact_email %></td>
+                    <td><%= myrequests[iCount].event_type_name %></td>
+                    <td>
+                        <% const proposedDateFormatted = new Intl.DateTimeFormat('en-US', {
+                            month: '2-digit',
+                            day: '2-digit',
+                            year: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        }).format(new Date(myrequests[iCount].proposed_datetime)); %>
+                        <%= proposedDateFormatted %>
+                    </td>
+                    <td>
+                        <% const altDateFormatted = myrequests[iCount].alt_datetime 
+                            ? new Intl.DateTimeFormat('en-US', {
+                                month: '2-digit',
+                                day: '2-digit',
+                                year: 'numeric',
+                                hour: 'numeric',
+                                minute: '2-digit',
+                                hour12: true
+                            }).format(new Date(myrequests[iCount].alt_datetime))
+                            : 'N/A'; %>
+                        <%= altDateFormatted %>
+                    </td>
+                    <td style="text-align: center;">
+                        <form action="/createEvent/<%= myrequests[iCount].request_id %>" method="GET">
+                            <button type="submit">Approve</button>
+                        </form>
+                    </td>
+                    <td style="text-align: center;">
+                        <form action="/denyRequest/<%= myrequests[iCount].request_id %>" method="POST">
+                            <button type="submit" onclick="return confirm('Are you sure you want to deny this request?');">Deny</button>
+                        </form>
+                    </td>
+                    <td>
+                        <button onclick="showModal('<%= myrequests[iCount].request_id %>')">View Details</button>
+                    </td>
+                </tr>
+            <% } %>
+        </tbody>
+
+    </table>
+    
+    <!-- Modal Popup -->
+    <div id="requestModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Request Details</h2>
+            <div id="modal-body">
+                <!-- Request details will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="center-button">
+        <form action="/dashboard" method="GET">
+            <button type="submit">Back to Dashboard</button>
         </form>
+    </div>
+
     <footer id='footer' class="footer">
         <p>&copy; 2024 Turtle Shelter Project | All rights reserved | 
             <a href="mailto:turtleshelterproject@gmailcom">turtleshelterproject@gmail.com</a> |
             <a href="tel:(801) 872-3190">(801) 872-3190</a>
         </p>
     </footer>
+
+    <script>
+        function showModal(requestId) {
+            const modal = document.getElementById('requestModal');
+            const modalBody = document.getElementById('modal-body');
+            modal.style.display = 'block';
+
+            // Fetch request details from the backend
+            fetch(`/requestDetails/${requestId}`)
+                .then(response => response.json())
+                .then(data => {
+                    modalBody.innerHTML = `
+                        <p><strong>Organization:</strong> ${data.organization_name}</p>
+                        <p><strong>Contact:</strong> ${data.contact_first_name} ${data.contact_last_name}</p>
+                        <p><strong>Phone:</strong> ${data.contact_phone}</p>
+                        <p><strong>Email:</strong> ${data.contact_email}</p>
+                        <p><strong>Address:</strong> ${data.req_street_1} ${data.req_street_2 || ''}, ${data.req_city}, ${data.req_state} ${data.req_zip}</p>
+                        <p><strong>Event Type:</strong> ${data.event_type_name}</p>
+                        <p><strong>Location Type:</strong> ${data.location_type_name}</p>
+
+                        <br><p><strong>Proposed Date:</strong> ${data.proposed_datetime}</p>
+                        <p><strong>Alternate Date:</strong> ${data.alt_datetime || 'None'}</p>
+                        <p><strong>Estimated Duration:</strong> ${data.est_duration} hours</p>
+                        
+                        <br><p><strong>Estimated # of Participants:</strong> ${data.est_attendees}</p>
+                        <p><strong>Basic Sewers:</strong> ${data.basic_sewers}</p>
+                        <p><strong>Advanced Sewers:</strong> ${data.advanced_sewers}</p>
+                        <p><strong>Available Sewing Machines:</strong> ${data.num_machines}</p>
+                        <p><strong>Available Sergers:</strong> ${data.num_sergers}</p>
+                        <p><strong>Jen's Story:</strong> ${data.jen_story ? 'Yes' : 'No'}</p>
+            
+                        <br><p><strong>Notes:</strong> ${data.notes || 'None'}</p>
+                        <p><strong>Request Status:</strong> ${data.request_status_name}</p>
+                        <br><p>Request Submitted by ${data.contact_first_name} ${data.contact_last_name} on ${data.request_datetime}</p>
+
+                    `;
+                })
+                .catch(error => {
+                    modalBody.innerHTML = `<p>Error loading request details. Please try again later.</p>`;
+                    console.error('Error fetching request details:', error);
+                });
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('requestModal');
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('requestModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    </script>
 </body>
 </html>

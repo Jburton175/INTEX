@@ -28,15 +28,29 @@ const knex = require("knex")({
     connection: {
         host: process.env.RDS_HOSTNAME || "localhost",
         user: process.env.RDS_USERNAME || "postgres",
-        password: process.env.RDS_PASSWORD || "leomessi",
-        database: process.env.RDS_DB_NAME || "intex_local",
+        password: process.env.RDS_PASSWORD || "admin",
+        database: process.env.RDS_DB_NAME || "TurtleShelter",
         port: process.env.RDS_PORT || 5432,
         ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false
     }
 });
 
+
+// Define route for home page
+app.get('/', (req, res) => {
+    res.render('index', { volunteer: req.session.volunteer});
+
+});
+
+
+app.get('/login', (req, res) => {
+    res.render('login');
+
+});
+
+
 // Excluded routes that don't require login
-const excludedRoutes = ['/', '/login', '/requestEvent', '/addVolunteer','/createRequest'];
+const excludedRoutes = ['/', '/login', '/requestEvent', '/addVolunteer','/createRequest', '/logout'];
 
 // Middleware to enforce login check
 app.use((req, res, next) => {
@@ -91,6 +105,9 @@ app.post('/login', (req, res) => {
 
 // Logout route
 app.get('/logout', (req, res) => {
+    // Clear the volunteer object from the session explicitly
+    req.session.volunteer = null;  // or you can use delete req.session.volunteer;
+
     // Destroy the session
     req.session.destroy(err => {
         if (err) {
@@ -99,9 +116,10 @@ app.get('/logout', (req, res) => {
         }
 
         // Redirect to the login page after logging out
-        res.redirect('/login');
+        res.redirect('/');
     });
 });
+
 
 
 // Dashboard route (protected)
@@ -181,17 +199,6 @@ app.get('/dashboard', (req, res) => {
 
 
 
-// Define route for home page
-app.get('/', (req, res) => {
-  res.render('index');
-
-});
-
-
-app.get('/login', (req, res) => {
-  res.render('login');
-
-});
 
 app.post('/signupEvent/:event_id', (req, res) => {
     const eventId = req.params.event_id;
@@ -381,7 +388,7 @@ app.post('/createRequest', (req, res) => {
         req_zip: req_zip,
         req_type_id: req_type_id,
         location_type_id: location_type_id,
-        notes: notes
+        req_notes: req_notes
     }).then(myrequests => {
         res.redirect("/");
         console.log(req.body)
@@ -1052,6 +1059,87 @@ app.get('/eventDetails/:id', (req, res) => {
         });
 });
 
+
+// Route to get detailed request information for the modal
+app.get('/requestDetails/:id', (req, res) => {
+    const requestId = req.params.id;
+
+    knex('requests')
+        .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
+        .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
+        .join('location_type', 'requests.location_type_id', '=', 'location_type.location_type_id')
+        .select(
+            'requests.request_datetime',
+            'requests.organization_name',
+            'requests.contact_first_name',
+            'requests.contact_last_name',
+            'requests.contact_phone',
+            'requests.contact_email',
+            'requests.req_street_1',
+            'requests.req_street_2',
+            'requests.req_city',
+            'requests.req_state',
+            'requests.req_zip',
+            'event_type.event_type_name',
+            'requests.est_attendees',
+            'requests.basic_sewers',
+            'requests.advanced_sewers',
+            'requests.num_machines',
+            'requests.num_sergers',
+            'requests.jen_story',
+            'requests.proposed_datetime',
+            'requests.alt_datetime',
+            'requests.est_duration',
+            'location_type.location_type_name',
+            'requests.req_notes',
+            'request_status.request_status_name'
+        )
+        .where('requests.request_id', requestId)
+        .first()
+        .then(request => {
+            if (!request) {
+                return res.status(404).json({ error: 'Request not found' });
+            }
+
+            console.log('request: ', request)
+
+            // Format datetime fields for better readability
+            request.request_datetime = new Intl.DateTimeFormat('en-US', {
+                month: 'long',
+                day: '2-digit',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            }).format(new Date(request.request_datetime));
+
+            request.proposed_datetime = new Intl.DateTimeFormat('en-US', {
+                month: 'long',
+                day: '2-digit',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            }).format(new Date(request.proposed_datetime));
+
+            if (request.alt_datetime) {
+                request.alt_datetime = new Intl.DateTimeFormat('en-US', {
+                    month: 'long',
+                    day: '2-digit',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                }).format(new Date(request.alt_datetime));
+            }
+
+            res.json(request);
+        })
+        .catch(error => {
+            console.error('Error fetching request details:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
 
 
 
