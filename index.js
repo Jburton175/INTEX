@@ -35,6 +35,20 @@ const knex = require("knex")({
     }
 });
 
+
+// Define route for home page
+app.get('/', (req, res) => {
+    res.render('index', { volunteer: req.session.volunteer});
+
+});
+
+
+app.get('/login', (req, res) => {
+    res.render('login');
+
+});
+
+
 // Excluded routes that don't require login
 const excludedRoutes = ['/', '/login', '/requestEvent', '/addVolunteer','/createRequest'];
 
@@ -181,17 +195,6 @@ app.get('/dashboard', (req, res) => {
 
 
 
-// Define route for home page
-app.get('/', (req, res) => {
-  res.render('index');
-
-});
-
-
-app.get('/login', (req, res) => {
-  res.render('login');
-
-});
 
 app.post('/signupEvent/:event_id', (req, res) => {
     const eventId = req.params.event_id;
