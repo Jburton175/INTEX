@@ -7,9 +7,21 @@
     <link rel="stylesheet" href="/chatstyles.css">
 </head>
 <body>
-    <label><b>Requests:</b></label>
-        <br><br>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/">Turtle Shelter Project</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/manageUsers">Manage Volunteers</a></li>
+                <li><a href="/manageEvents">Manage Events</a></li>
+                <li><a href="/manageRequests">Manage Requests</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
         <table>
+            <caption><b>Requests</b></caption>
             <thead>
                 <tr>
                     <th style="text-align: left;">Request Made:</th>
@@ -54,12 +66,12 @@
                         <td><%= myrequests[iCount].est_duration %></td>
                         <td><%= myrequests[iCount].request_status_name %></td>
                         <td style="text-align: center;">
-                            <form action="/createEvent/<%= myrequests[iCount].request_id %>" method="GET">
+                            <form class='action-button' action="/createEvent/<%= myrequests[iCount].request_id %>" method="GET">
                                 <button type="submit">Approve</button>
                             </form>
                         </td>
                         <td style="text-align: center;">
-                            <form action="/denyRequest/<%= myrequests[iCount].request_id %>" method="POST">
+                            <form class='action-button' action="/denyRequest/<%= myrequests[iCount].request_id %>" method="POST">
                                 <button type="submit" onclick="return confirm('Are you sure you want to deny this request?');">Deny</button>
                             </form>
                         </td>
@@ -69,7 +81,7 @@
 
         </table>
         <br>
-        <form action="/" method="GET">
+        <form class='center-button' action="/" method="GET">
             <button type="submit">Home</button>
         </form>
     <footer id='footer' class="footer">
