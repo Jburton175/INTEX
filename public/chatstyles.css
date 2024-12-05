@@ -32,6 +32,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 1000;
+    border-bottom: 6px solid green;
 }
 
 .navbar .logo a {
@@ -66,7 +67,6 @@ body {
 .nav-links a:hover {
     background-color: #1c7e4b;
     border-radius: 3px;
-    font-size: 115%
 }
 
 /* Hero Section */
@@ -233,6 +233,7 @@ body {
     position: relative;
     bottom: 0;
     width: 100%;
+    border-top: 6px solid green;
 }
 
 #footer h2 {
@@ -352,7 +353,12 @@ form {
     overflow-y: auto;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
-    width: 300px;  /* Set a fixed width for the form */
+    width: 40%;  /* Set a fixed width for the form */
+}
+
+.form-group {
+    width:75%;
+    /* text-align: center; */
 }
 
 /* Additional styling for the form elements */
@@ -362,8 +368,8 @@ form h2 h1 {
 }
 
 form label {
-    display: block;
     margin: 10px 0 5px;
+    font-size: larger;
 }
 
 form input {
@@ -372,7 +378,9 @@ form input {
     margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    font-size: larger
 }
+
 
 form button {
     width: 100%;
@@ -422,8 +430,12 @@ th, td {
     border: 2px solid rgb(255, 255, 255); /* Makes borders more visible */
 }
 
+caption {
+    font-size: xx-large;
+}
+
 th {
-    background-color: #4a90e2;  /* Subtle blue */
+    background-color: rgb(94, 94, 94);  /* Subtle blue */
     color: white;
 }
 
@@ -437,7 +449,7 @@ tr:hover {
 
 /* Button Styles */
 button {
-    background-color: #559d58;  /* Softer green */
+    background-color: green;  /* Softer green */
     color: white;
     padding: 8px 16px;
     border: none;
@@ -457,7 +469,7 @@ button:hover {
 }
 
 .login-button {
-    background-color: #24a361;
+    background-color: green;
     color: white;
     padding: 1rem 2rem;
     font-size: 1.2rem;
@@ -469,7 +481,7 @@ button:hover {
 }
 
 .login-button:hover {
-    background-color: #218838
+    background-color: #1d7731
 }
 
 /* Form Styling for Action Buttons */
