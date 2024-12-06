@@ -394,11 +394,11 @@ form {
     overflow-y: auto;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
-    width: 40%;  /* Set a fixed width for the form */
+    width: 45%;  /* Set a fixed width for the form */
 }
 
 .form-group {
-    width:75%;
+    width:80%;
     /* text-align: center; */
 }
 
@@ -443,7 +443,7 @@ form button:hover {
 
 .action-button {
     display: inline-block;
-    padding: 0;
+    /* padding: 0; */
 }
 
 .responsive-img {
@@ -476,7 +476,7 @@ th, td {
     white-space: wrap; /* Prevents text from wrapping within the cell, but allows scrolling */
     border: 2px solid rgb(255, 255, 255); /* Makes borders more visible */
     overflow: hidden;    /* Ensures long content doesn’t overflow */
-    text-overflow:ellipsis; /* Adds ellipsis (...) for overflowed text */
+    text-overflow: clip; /* Adds ellipsis (...) for overflowed text */
 }
 
 caption {
@@ -500,7 +500,7 @@ tr:hover {
 button {
     background-color: green;  /* Softer green */
     color: white;
-    /* padding: 8px 16px; */
+    padding: 5px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
