@@ -93,6 +93,16 @@
             <label for="req_zip">Zip:</label>
             <input type="text" id="req_zip" name="req_zip" required>
         </div>
+
+        <div class="form-group">
+          <label for="location_type_id">Type of Location:</label>
+          <select name="location_type_id" id="location_type_id" required>
+              <option value="" disabled selected>Select an Event Activity</option>
+              <% locations.forEach(type => { %>
+                  <option value="<%= type.location_type_id %>"><%= type.location_type_name %></option>
+              <% }) %>
+          </select>
+      </div>
     
         <div class="form-group">
             <label for="req_type_id">Type of Event:</label>
@@ -152,6 +162,12 @@
             <label for="jen_story">Would you like Jen to share her story?</label>
             <input type="checkbox" id="jen_story" name="jen_story">
         </div>
+
+        <div class="form-group">
+          <label for="req_notes">Is there any additional information you'd like to share?</label>
+          <input type="text" id="req_notes" name="req_notes" maxlength="500">
+      </div>
+      
     
         <div class="form-group">
             <button class='cta-button' type="submit">Save</button>
