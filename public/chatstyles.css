@@ -443,7 +443,8 @@ form button:hover {
 
 .action-button {
     display: inline-block;
-    /* padding: 0; */
+    padding: 0;
+    font-size: smaller;
 }
 
 .responsive-img {
@@ -468,9 +469,9 @@ table {
     table-layout: fixed;
     
 }
-
 th, td {
-    padding: 8px;
+    display: flex;
+    padding: 4px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     white-space: wrap; /* Prevents text from wrapping within the cell, but allows scrolling */
@@ -500,7 +501,7 @@ tr:hover {
 button {
     background-color: green;  /* Softer green */
     color: white;
-    padding: 5px;
+    padding: 12px 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
