@@ -208,8 +208,7 @@
       <!-- Volunteers Needed -->
       <div class="form-group">
           <label for="volunteers_needed">Volunteers Needed: </label>
-          <input type="number" id="volunteers_needed" name="volunteers_needed" required min="1" max="75" value="<%= Math.round(request.est_attendees / 10) %>
-          ">
+          <input type="number" id="volunteers_needed" name="volunteers_needed" required min="1" max="75" value="<%= request.rounded_volunteers %>">
       </div>
 
 

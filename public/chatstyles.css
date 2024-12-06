@@ -107,7 +107,7 @@ body {
 
 }
 .hero-text {
-    max-width: 90%;
+    max-width: 50%;
     padding: 2rem;
     width: 80%;
     background-color: rgba(255, 255, 255, 0.764);
@@ -393,8 +393,9 @@ form {
     max-height:80%;
     overflow-y: auto;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
-    width: 45%;  /* Set a fixed width for the form */
+    box-sizing: border-box;  /* Set a fixed width for the form */
+    width: 50%;
+    
 }
 
 .form-group {
@@ -424,8 +425,8 @@ form input {
 
 
 form button {
-    width: 80%;
-    padding: 2px;
+    width: 100%;
+    padding: 8px;
     /* height: 4vh; */
     background-color: green;
     color: white;
@@ -443,7 +444,9 @@ form button:hover {
 
 .action-button {
     display: inline-block;
-    /* padding: 0; */
+    padding: 0;
+    font-size: smaller;
+    width: 100%;
 }
 
 .responsive-img {
@@ -468,9 +471,8 @@ table {
     table-layout: fixed;
     
 }
-
 th, td {
-    padding: 8px;
+    padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     white-space: wrap; /* Prevents text from wrapping within the cell, but allows scrolling */
@@ -500,12 +502,12 @@ tr:hover {
 button {
     background-color: green;  /* Softer green */
     color: white;
-    padding: 5px;
+    padding: 11px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    width: 80%;
+    width: 100%;
 }
 
 button:hover {
