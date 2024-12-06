@@ -425,8 +425,8 @@ form input {
 
 form button {
     width: 80%;
-    padding: 10px;
-    height: 4vh;
+    padding: 2px;
+    /* height: 4vh; */
     background-color: green;
     color: white;
     /* border:#333 solid 10px; */
@@ -500,13 +500,12 @@ tr:hover {
 button {
     background-color: green;  /* Softer green */
     color: white;
-    padding: 8px 16px;
+    /* padding: 8px 16px; */
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     width: 80%;
-    height: 4vh;
 }
 
 button:hover {
@@ -521,9 +520,10 @@ button:hover {
 
 .login-button {
     background-color: green;
-    width:auto;
+    width: auto;
     color: white;
     padding: 1rem 2rem;
+    /* padding: 2px; */
     font-size: 1.2rem;
     border: none;
     border-radius: 3px;
@@ -536,7 +536,6 @@ button:hover {
     background-color: #1d7731
 }
 
-/* Form Styling for Action Buttons */
 form {
     display: inline-block;
 }
