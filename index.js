@@ -67,7 +67,10 @@ app.use((req, res, next) => {
         return res.redirect('/login');
     }
 
-    if (req.session.volunteer.role_name !== "Admin" && req.path !== '/dashboard') {
+    if (req.session.volunteer.role_name !== "Admin" 
+            && req.path !== '/dashboard'
+            && req.path !== '/deleteSignup'
+            && req.path !== '/signupEvent') {
         console.log('Access denied. Redirecting to dashboard.');
         return res.redirect('/');
     }
