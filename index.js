@@ -328,7 +328,7 @@ app.get('/manageRequests', (req, res) => {
                 hours.push(i + 0.5); // Add half hour increments
             }}
     
-            res.render("createRequest", {eventTypes, locations, states, hours});
+            res.render("createRequest", { volunteer: req.session.volunteer, eventTypes, locations, states, hours});
         
 
         })

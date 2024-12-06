@@ -13,11 +13,20 @@
                 <a href="/">Turtle Shelter Project</a>
             </div>
             <ul class="nav-links">
-                <li><a href="#donate">Donate</a></li>
-                <li><a href="/addVolunteer">Volunteer</a></li>
-                <li><a href="/login">Sign In</a></li>
-                <li><a href="/createRequest">Request an Event</a></li>
-            </ul>
+              <li><a href="#donate">Donate</a></li>
+              <li><a href="/createRequest">Request an Event</a></li>
+              <% if (!volunteer || volunteer === null) { %>
+                  <li><a href="/addVolunteer">Volunteer</a></li>
+                  <li><a href="/login">Sign In</a></li>
+              <% } else { %>
+                  <% if (volunteer.role_name && volunteer.role_name.toLowerCase() === 'admin') { %>
+                      <li><a href="/dashboard">Dashboard</a></li>
+                  <% } else { %>
+                      <li><a href="/dashboard">Event Sign Up</a></li>    
+                  <% } %>
+                  <li><a href="/logout">Logout</a></li>
+              <% } %>
+          </ul>
         </nav>
     </header>
 
