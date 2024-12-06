@@ -394,6 +394,7 @@ form {
     overflow-y: auto;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;  /* Set a fixed width for the form */
+    width: 50%;
 }
 
 .form-group {
@@ -444,7 +445,7 @@ form button:hover {
     display: inline-block;
     padding: 0;
     font-size: smaller;
-
+    width: 100%;
 }
 
 .responsive-img {
