@@ -196,13 +196,13 @@ body {
                             <td><%= vol_events[iCount].volunteers_needed %></td>
                             <td><%= vol_events[iCount].volunteers_signed_up %></td>
                             <td>
-                                <% if (vol_events[iCount].volunteers_signed_up >= vol_events[iCount].volunteers_needed) { %>
-                                    <button class="center-button" disabled>Sign Up (Full)</button>
-                                <% } else if (vol_events[iCount].signed_up_vol_id) { %>
+                                <% if (vol_events[iCount].signed_up_vol_id) { %>
                                     <!-- Show Delete button if already signed up -->
                                     <form class="center-button" action="/deleteSignup/<%= vol_events[iCount].event_id %>" method="POST" onsubmit="return confirm('Are you sure you want to remove your signup for this event?');">
                                         <button type="submit">Remove Signup</button>
                                     </form>
+                                <% } else if (vol_events[iCount].volunteers_signed_up >= vol_events[iCount].volunteers_needed){ %>
+                                    <button class="center-button" disabled>Sign Up (Full)</button>
                                 <% } else { %>
                                     <!-- Show Sign Up button if not signed up -->
                                     <form class="center-button" action="/signupEvent/<%= vol_events[iCount].event_id %>" method="POST">

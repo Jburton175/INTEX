@@ -50,14 +50,27 @@ app.get('/login', (req, res) => {
 
 
 // Excluded routes that don't require login
-const excludedRoutes = ['/', '/login', '/requestEvent', '/addVolunteer','/createRequest', '/logout'
-                        , '/deleteSignup', '/signupEvent'
+const excludedRoutes = [
+    '/',
+    '/login',
+    '/requestEvent',
+    '/addVolunteer',
+    '/createRequest',
+    '/logout'
 ];
 
 // Middleware to enforce login check
 app.use((req, res, next) => {
+    console.log(req.session.volunteer);
+    console.log(excludedRoutes);
+    console.log(req.path);
+
     // Skip excluded routes and favicon.ico
-    if (excludedRoutes.includes(req.path) || req.path === '/favicon.ico') {
+    if (
+        excludedRoutes.includes(req.path) ||
+        req.path === '/favicon.ico'
+        
+    ) {
         return next();
     }
 
@@ -67,15 +80,18 @@ app.use((req, res, next) => {
         return res.redirect('/login');
     }
 
-    if (req.session.volunteer.role_name !== "Admin" 
-            && req.path !== '/dashboard'
-            && req.path !== '/deleteSignup'
-            && req.path !== '/signupEvent') {
+    // deals with deleteSignup and signupEvent routes with their id's at the end
+    if (req.path !== req.path.match(/^\/(deleteSignup|signupEvent)(\/\d+)?$/)){
+        return next();
+    }
+    // Restrict non-admin users from specific routes
+    if (
+        req.session.volunteer.role_name !== 'Admin'
+        && req.path !== '/dashboard'
+    ) {
         console.log('Access denied. Redirecting to dashboard.');
         return res.redirect('/');
     }
-    
-    
 
     next(); // Allow access if logged in
 });
@@ -329,9 +345,7 @@ app.get('/manageRequests', (req, res) => {
             const hours = [];
             for (let i = 1; i <= 12; i++) {
                 hours.push(i); // Add whole hours
-                if (i < 12) {
-                hours.push(i + 0.5); // Add half hour increments
-            }}
+                }
     
             res.render("createRequest", { volunteer: req.session.volunteer, eventTypes, locations, states, hours});
         
