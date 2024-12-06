@@ -820,8 +820,8 @@ app.get('/createEvent/:id', (req, res) => {
 
 });
   
-// post to create an event
-app.post('/createEvent/:request_id', (req, res) => {
+  // post to create an event
+  app.post('/createEvent/:request_id', (req, res) => {
     const request_id = req.params.request_id;
 
     const event_datetime = req.body.event_datetime;  
@@ -845,6 +845,8 @@ app.post('/createEvent/:request_id', (req, res) => {
     const volunteers_needed = req.body.volunteers_needed;
     const organization_name = req.body.organization_name;
     const event_notes = req.body.event_notes || '';
+    const event_duration = req.body.event_duration;
+    const participants = req.body.participants;
     
     console.log('Request body:', req.body);
     if (!supervisor_id || isNaN(parseInt(supervisor_id))) {
@@ -882,10 +884,12 @@ app.post('/createEvent/:request_id', (req, res) => {
             envelopes: 0,
             vests: 0,
             completed_products: 0,
-            distributed_products:0,
+            distributed_products: 0,
             volunteers_needed: volunteers_needed,
             organization_name: organization_name,
-            event_notes: event_notes
+            event_notes: event_notes,
+            event_duration: event_duration,
+            participants: participants
         })
         .then(() => {
             console.log('Form submitted successfully!');

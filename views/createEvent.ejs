@@ -82,12 +82,14 @@
        <br>
       <div class="form-group">
           <label for="event_duration">Estimated Duration:</label>
+        <input type="number" name="event_duration" id="event_duration" value="<%=request.est_duration%>" hidden>
           <label name="event_duration" id="event_duration"><%=request.est_duration%> hours</label>
       </div>
 
       <!-- Predicted Participants -->
       <div class="form-group">
           <label for="participants">Predicted Participants:</label>
+          <input type="number" name="participants" id="participants" value="<%= request.est_attendees %>" hidden>
           <label for="predicted_participants"><%= request.est_attendees %></label>
       </div>
 
