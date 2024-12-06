@@ -50,7 +50,9 @@ app.get('/login', (req, res) => {
 
 
 // Excluded routes that don't require login
-const excludedRoutes = ['/', '/login', '/requestEvent', '/addVolunteer','/createRequest', '/logout'];
+const excludedRoutes = ['/', '/login', '/requestEvent', '/addVolunteer','/createRequest', '/logout'
+                        , '/deleteSignup', '/signupEvent'
+];
 
 // Middleware to enforce login check
 app.use((req, res, next) => {
