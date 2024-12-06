@@ -752,6 +752,7 @@ app.get('/createEvent/:id', (req, res) => {
   
   // querying data for the chosen request that will become an event
   knex('requests')
+  .select('*', knex.raw('ROUND(request.est_attendees / 10, 0) as rounded_volunteers'))
   .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
   .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
   .where('request_id', id)
