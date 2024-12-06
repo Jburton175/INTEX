@@ -748,77 +748,153 @@ app.post('/deleteVolunteer/:id', (req, res) => {
 
 // render the createEvent page
 app.get('/createEvent/:id', (req, res) => {
-  let id = req.params.id
+  let id = req.params.id;
   
   // querying data for the chosen request that will become an event
   knex('requests')
-  .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
-  .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
-  .where('request_id', id)
-  .first()
-  .then(request => {
+    .select('*', knex.raw('ROUND(requests.est_attendees / 10, 0) as rounded_volunteers'))
+    .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
+    .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
+    .where('requests.request_id', id)
+    .first()
+    .then(request => {
       if (!request) {
-          return res.status(404).send('Request not found');
+        return res.status(404).send('Request not found');
       }
 
       knex('volunteers')
-      .select('vol_first_name', 'vol_last_name', 'vol_id')
-      .where('role_id', 1)
-      .then(admins => {
+        .select('vol_first_name', 'vol_last_name', 'vol_id')
+        .where('role_id', 1)
+        .then(admins => {
           if (admins.length === 0) {
-              return res.status(404).send('Administrators not found');
+            return res.status(404).send('Administrators not found');
           }
 
           knex('event_type')
-          .select('event_type_id', 'event_type_name')
-          .then(types => {
+            .select('event_type_id', 'event_type_name')
+            .then(types => {
               if (types.length === 0) {
-                  return res.status(404).send('Event types not found');
+                return res.status(404).send('Event types not found');
               }
 
               knex('location_type')
-              .select('location_type_id', 'location_type_name')
-              .then(locations => {
+                .select('location_type_id', 'location_type_name')
+                .then(locations => {
                   if (locations.length === 0) {
-                      return res.status(404).send('Location types not found');
+                    return res.status(404).send('Location types not found');
                   }
 
                   const states = [
-                      "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
-                      "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-                      "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
-                      "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-                      "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+                    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+                    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+                    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+                    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+                    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
                   ];
-      
+
                   const hours = [];
                   for (let i = 1; i <= 12; i++) {
-                      hours.push(i); // Add whole hours
-                      if (i < 12) {
+                    hours.push(i); // Add whole hours
+                    if (i < 12) {
                       hours.push(i + 0.5); // Add half hour increments
-                  }}
-      
-                  res.render("createEvent", {request, admins, types, locations, states, hours});
-              })
+                    }
+                  }
 
-          })
-          .catch(error => {
+                  res.render("createEvent", {request, admins, types, locations, states, hours});
+                })
+
+            })
+            .catch(error => {
               console.error('Error fetching event types: ', error);
               res.status(500).send('Internal Server Error');
-          });
-      })
-      .catch(error => {
+            });
+        })
+        .catch(error => {
           console.error('Error fetching administrators: ', error);
           res.status(500).send('Internal Server Error');
-      });
-  })
-  .catch(error => {
+        });
+    })
+    .catch(error => {
       console.error('Error fetching request information: ', error);
       res.status(500).send('Internal Server Error');
-  });
+    });
   // make sure you update event status to approved
-
 });
+
+app.get('/createEvent/:id', (req, res) => {
+let id = req.params.id;
+
+// querying data for the chosen request that will become an event
+knex('requests')
+    .select('*', knex.raw('ROUND(requests.est_attendees / 10, 0) as rounded_volunteers'))
+    .join('request_status', 'requests.request_status_id', '=', 'request_status.request_status_id')
+    .join('event_type', 'requests.req_type_id', '=', 'event_type.event_type_id')
+    .where('requests.request_id', id)
+    .first()
+    .then(request => {
+    if (!request) {
+        return res.status(404).send('Request not found');
+    }
+
+    knex('volunteers')
+        .select('vol_first_name', 'vol_last_name', 'vol_id')
+        .where('role_id', 1)
+        .then(admins => {
+        if (admins.length === 0) {
+            return res.status(404).send('Administrators not found');
+        }
+
+        knex('event_type')
+            .select('event_type_id', 'event_type_name')
+            .then(types => {
+            if (types.length === 0) {
+                return res.status(404).send('Event types not found');
+            }
+
+            knex('location_type')
+                .select('location_type_id', 'location_type_name')
+                .then(locations => {
+                if (locations.length === 0) {
+                    return res.status(404).send('Location types not found');
+                }
+
+                const states = [
+                    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+                    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+                    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+                    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+                    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+                ];
+
+                const hours = [];
+                for (let i = 1; i <= 12; i++) {
+                    hours.push(i); // Add whole hours
+                    if (i < 12) {
+                    hours.push(i + 0.5); // Add half hour increments
+                    }
+                }
+
+                res.render("createEvent", {request, admins, types, locations, states, hours});
+                })
+
+            })
+            .catch(error => {
+            console.error('Error fetching event types: ', error);
+            res.status(500).send('Internal Server Error');
+            });
+        })
+        .catch(error => {
+        console.error('Error fetching administrators: ', error);
+        res.status(500).send('Internal Server Error');
+        });
+    })
+    .catch(error => {
+    console.error('Error fetching request information: ', error);
+    res.status(500).send('Internal Server Error');
+    });
+// make sure you update event status to approved
+});
+  
   
   // post to create an event
   app.post('/createEvent/:request_id', (req, res) => {
